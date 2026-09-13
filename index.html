@@ -1,0 +1,3194 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BEHRAD M PLAYER</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Tahoma,Arial,sans-serif
+}
+
+html{
+    scroll-behavior:smooth
+}
+
+body{
+    background:
+    radial-gradient(circle at 20% 20%,#0066ff20,transparent 30%),
+    radial-gradient(circle at 80% 70%,#ff005520,transparent 30%),
+    #05070d;
+    color:white;
+    overflow-x:hidden
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:#05070dcc;
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid #00bfff22
+}
+
+.nav{
+    max-width:1200px;
+    margin:auto;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px
+}
+
+.logo{
+    font-size:21px;
+    font-weight:900;
+    text-shadow:0 0 15px #00bfff
+}
+
+.logo span{
+    color:#00c8ff
+}
+
+nav{
+    display:flex;
+    gap:8px
+}
+
+nav button{
+    background:transparent;
+    border:0;
+    color:#bbb;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer
+}
+
+nav button:hover{
+    background:#00bfff18;
+    color:white
+}
+
+.hero{
+    min-height:85vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:60px 20px
+}
+
+.hero-content{
+    max-width:850px
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 16px;
+    border:1px solid #00bfff55;
+    border-radius:50px;
+    color:#62ddff;
+    background:#00bfff10;
+    margin-bottom:25px
+}
+
+.hero h1{
+    font-size:clamp(45px,9vw,90px);
+    line-height:1;
+    margin-bottom:25px;
+    text-shadow:0 0 30px #00bfff66
+}
+
+.hero h1 span{
+    color:#00c8ff
+}
+
+.hero p{
+    color:#aeb7c5;
+    font-size:18px;
+    line-height:2
+}
+
+.hero-buttons{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:30px
+}
+
+.main-btn{
+    padding:15px 28px;
+    border:0;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:15px;
+    transition:.25s
+}
+
+.primary{
+    background:linear-gradient(135deg,#00aaff,#006eff);
+    color:white;
+    box-shadow:0 0 25px #00aaff44
+}
+
+.secondary{
+    background:#ffffff0d;
+    color:white;
+    border:1px solid #ffffff18
+}
+
+.main-btn:hover{
+    transform:translateY(-4px) scale(1.03)
+}
+
+section{
+    max-width:1200px;
+    margin:auto;
+    padding:80px 20px
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:40px
+}
+
+.section-title h2{
+    font-size:34px;
+    margin-bottom:10px
+}
+
+.section-title h2 span{
+    color:#00c8ff
+}
+
+.section-title p{
+    color:#8f9aaa
+}
+
+.cards,.games{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px
+}
+
+.card,.game{
+    background:#ffffff08;
+    border:1px solid #ffffff12;
+    border-radius:24px;
+    padding:28px;
+    transition:.3s
+}
+
+.card:hover,.game:hover{
+    transform:translateY(-7px);
+    border-color:#00bfff55
+}
+
+.card-icon{
+    width:60px;
+    height:60px;
+    display:grid;
+    place-items:center;
+    border-radius:18px;
+    font-size:28px;
+    background:#00bfff15;
+    margin-bottom:20px
+}
+
+.card h3,.game h3{
+    margin-bottom:12px
+}
+
+.card p,.game p{
+    color:#9ea8b7;
+    line-height:1.9;
+    font-size:14px
+}
+
+.card-btn,.play-btn{
+    margin-top:18px;
+    padding:11px 18px;
+    border:0;
+    border-radius:11px;
+    color:white;
+    background:#00aeea;
+    font-weight:bold;
+    cursor:pointer
+}
+
+.play-btn{
+    width:100%;
+    background:linear-gradient(135deg,#ff174f,#ff005d)
+}
+
+.game-image{
+    height:140px;
+    border-radius:17px;
+    display:grid;
+    place-items:center;
+    font-size:55px;
+    background:
+    radial-gradient(circle,#00c8ff35,transparent 65%),
+    #101621;
+    margin-bottom:18px
+}
+
+/* =========================
+   GAME SCREENS
+========================= */
+
+.game-screen{
+    display:none;
+    max-width:850px;
+    margin:0 auto;
+    padding:20px
+}
+
+.game-screen.active{
+    display:block
+}
+
+.game-wrapper{
+    background:#080c14;
+    border:1px solid #00bfff35;
+    border-radius:25px;
+    padding:20px;
+    box-shadow:0 0 50px #00bfff10
+}
+
+.game-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px
+}
+
+.game-top button{
+    background:#ff174f;
+    color:white;
+    border:0;
+    padding:9px 15px;
+    border-radius:10px;
+    cursor:pointer
+}
+
+canvas{
+    display:block;
+    width:100%;
+    max-width:700px;
+    height:auto;
+    margin:auto;
+    border-radius:18px;
+    touch-action:none
+}
+
+#flappyCanvas{
+    background:#65cfff
+}
+
+#carCanvas{
+    background:#151923
+}
+
+#spaceCanvas{
+    background:#02040c
+}
+
+.game-info{
+    text-align:center;
+    color:#8f9aaa;
+    margin-top:12px;
+    line-height:2
+}
+
+.game-info strong{
+    color:#00c8ff
+}
+
+.mobile-controls{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:15px
+}
+
+.control-btn{
+    width:75px;
+    height:55px;
+    border:1px solid #00bfff55;
+    border-radius:15px;
+    background:#00bfff15;
+    color:white;
+    font-size:25px;
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none
+}
+
+.control-btn:active{
+    transform:scale(.92);
+    background:#00bfff35
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message-box{
+    max-width:700px;
+    margin:auto;
+    padding:30px;
+    border-radius:25px;
+    background:#ffffff08;
+    border:1px solid #ffffff12
+}
+
+textarea{
+    width:100%;
+    height:180px;
+    resize:vertical;
+    padding:18px;
+    color:white;
+    background:#080c14;
+    border:1px solid #ffffff15;
+    border-radius:16px;
+    outline:none;
+    font-size:15px
+}
+
+textarea:focus{
+    border-color:#00bfff
+}
+
+.send-btn{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    border:0;
+    border-radius:13px;
+    color:white;
+    background:linear-gradient(135deg,#00b7ff,#006cff);
+    font-weight:bold;
+    cursor:pointer
+}
+
+.status{
+    text-align:center;
+    margin-top:15px;
+    color:#62ddff
+}
+
+footer{
+    text-align:center;
+    padding:35px 20px;
+    color:#697384;
+    border-top:1px solid #ffffff0d
+}
+
+footer strong{
+    color:#00c8ff
+}
+
+@media(max-width:850px){
+
+    nav{
+        display:none
+    }
+
+    .cards,.games{
+        grid-template-columns:1fr
+    }
+
+    section{
+        padding:65px 15px
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="nav">
+
+    <div class="logo">
+        BEHRAD <span>M</span> PLAYER
+    </div>
+
+    <nav>
+        <button onclick="go('home')">خانه</button>
+        <button onclick="go('features')">بخش‌ها</button>
+        <button onclick="go('games')">مینی‌گیم‌ها</button>
+        <button onclick="go('message')">پیام</button>
+    </nav>
+
+</div>
+</header>
+
+<main>
+
+<!-- =========================
+     HOME
+========================= -->
+
+<section class="hero" id="home">
+
+<div class="hero-content">
+
+    <div class="badge">
+        🎮 سایت رسمی BEHRAD M PLAYER
+    </div>
+
+    <h1>
+        BEHRAD <span>M PLAYER</span>
+    </h1>
+
+    <p>
+        به دنیای گیم، ویدیو و مینی‌گیم‌های
+        BEHRAD M PLAYER خوش اومدی! 🚀
+    </p>
+
+    <div class="hero-buttons">
+
+        <button class="main-btn primary" onclick="aparat()">
+            🎬 مشاهده ویدیوها
+        </button>
+
+        <button class="main-btn secondary" onclick="go('games')">
+            🕹️ مینی‌گیم‌ها
+        </button>
+
+    </div>
+
+</div>
+</section>
+
+
+<!-- =========================
+     FEATURES
+========================= -->
+
+<section id="features">
+
+<div class="section-title">
+
+    <h2>
+        امکانات <span>سایت</span>
+    </h2>
+
+    <p>
+        همه‌چیز در یک جا 🚀
+    </p>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+    <div class="card-icon">🎬</div>
+
+    <h3>ویدیوها</h3>
+
+    <p>
+        با یک کلیک وارد کانال رسمی
+        BEHRAD M PLAYER در آپارات شو.
+    </p>
+
+    <button class="card-btn" onclick="aparat()">
+        ورود به آپارات
+    </button>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-icon">🕹️</div>
+
+    <h3>مینی‌گیم‌ها</h3>
+
+    <p>
+        بازی‌های کوچک و سرگرم‌کننده
+        مستقیماً داخل سایت.
+    </p>
+
+    <button class="card-btn" onclick="go('games')">
+        بازی‌ها
+    </button>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-icon">💬</div>
+
+    <h3>پیام به من</h3>
+
+    <p>
+        پیام خودت رو بنویس.
+        اتصال روبیکا در مرحله بعد اضافه می‌شود.
+    </p>
+
+    <button class="card-btn" onclick="go('message')">
+        ارسال پیام
+    </button>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- =========================
+     GAMES
+========================= -->
+
+<section id="games">
+
+<div class="section-title">
+
+    <h2>
+        🕹️ <span>مینی‌گیم‌ها</span>
+    </h2>
+
+    <p>
+        بازی کن و رکورد بزن! 🏆
+    </p>
+
+</div>
+
+
+<div class="games">
+
+
+<!-- FLAPPY CARD -->
+
+<div class="game">
+
+    <div class="game-image">
+        🐦
+    </div>
+
+    <h3>
+        Flappy Bird
+    </h3>
+
+    <p>
+        پرنده رو کنترل کن و از لوله‌ها رد شو!
+    </p>
+
+    <button class="play-btn" onclick="openFlappy()">
+        ▶ بازی کردن
+    </button>
+
+</div>
+
+
+<!-- CAR CARD -->
+
+<div class="game">
+
+    <div class="game-image">
+        🚗
+    </div>
+
+    <h3>
+        بازی ماشین
+    </h3>
+
+    <p>
+        با ماشین از ماشین‌ها فرار کن و رکوردت رو بالا ببر!
+    </p>
+
+    <button class="play-btn" onclick="openCar()">
+        ▶ بازی کردن
+    </button>
+
+</div>
+
+
+<!-- SPACE CARD -->
+
+<div class="game">
+
+    <div class="game-image">
+        🚀
+    </div>
+
+    <h3>
+        فرار فضایی
+    </h3>
+
+    <p>
+        سفینه رو حرکت بده و از شهاب‌سنگ‌ها فرار کن!
+    </p>
+
+    <button class="play-btn" onclick="openSpace()">
+        ▶ بازی کردن
+    </button>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- =========================
+     FLAPPY SCREEN
+========================= -->
+
+<div class="game-screen" id="flappyScreen">
+
+<div class="game-wrapper">
+
+<div class="game-top">
+
+    <strong>
+        🐦 FLAPPY BIRD
+    </strong>
+
+    <button onclick="closeFlappy()">
+        ✕ خروج
+    </button>
+
+</div>
+
+<canvas
+id="flappyCanvas"
+width="700"
+height="500">
+</canvas>
+
+<div class="game-info">
+
+    <div>
+        🏆 امتیاز:
+        <strong id="score">0</strong>
+    </div>
+
+    <div>
+        👑 رکورد:
+        <strong id="best">0</strong>
+    </div>
+
+    <div id="gameMessage">
+        برای شروع کلیک کن یا Space بزن!
+    </div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =========================
+     CAR GAME
+========================= -->
+
+<div class="game-screen" id="carScreen">
+
+<div class="game-wrapper">
+
+<div class="game-top">
+
+    <strong>
+        🚗 HIGHWAY RUSH
+    </strong>
+
+    <button onclick="closeCar()">
+        ✕ خروج
+    </button>
+
+</div>
+
+<canvas
+id="carCanvas"
+width="700"
+height="500">
+</canvas>
+
+<div class="game-info">
+
+    <div>
+        🏆 امتیاز:
+        <strong id="carScore">0</strong>
+    </div>
+
+    <div>
+        👑 رکورد:
+        <strong id="carBest">0</strong>
+    </div>
+
+    <div id="carMessage">
+        برای شروع ← → یا A / D بزن!
+    </div>
+
+</div>
+
+<div class="mobile-controls">
+
+    <button
+    class="control-btn"
+    onpointerdown="carLeft=true"
+    onpointerup="carLeft=false"
+    onpointerleave="carLeft=false">
+        ◀
+    </button>
+
+    <button
+    class="control-btn"
+    onpointerdown="carRight=true"
+    onpointerup="carRight=false"
+    onpointerleave="carRight=false">
+        ▶
+    </button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =========================
+     SPACE GAME
+========================= -->
+
+<div class="game-screen" id="spaceScreen">
+
+<div class="game-wrapper">
+
+<div class="game-top">
+
+    <strong>
+        🚀 SPACE DODGE
+    </strong>
+
+    <button onclick="closeSpace()">
+        ✕ خروج
+    </button>
+
+</div>
+
+<canvas
+id="spaceCanvas"
+width="700"
+height="500">
+</canvas>
+
+<div class="game-info">
+
+    <div>
+        🏆 امتیاز:
+        <strong id="spaceScore">0</strong>
+    </div>
+
+    <div>
+        👑 رکورد:
+        <strong id="spaceBest">0</strong>
+    </div>
+
+    <div id="spaceMessage">
+        برای شروع ← → یا A / D بزن!
+    </div>
+
+</div>
+
+<div class="mobile-controls">
+
+    <button
+    class="control-btn"
+    onpointerdown="spaceLeft=true"
+    onpointerup="spaceLeft=false"
+    onpointerleave="spaceLeft=false">
+        ◀
+    </button>
+
+    <button
+    class="control-btn"
+    onpointerdown="spaceRight=true"
+    onpointerup="spaceRight=false"
+    onpointerleave="spaceRight=false">
+        ▶
+    </button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =========================
+     MESSAGE
+========================= -->
+
+<section id="message">
+
+<div class="section-title">
+
+    <h2>
+        💬 پیام <span>به من</span>
+    </h2>
+
+    <p>
+        پیامت رو بنویس؛ بعداً به ربات روبیکا وصلش می‌کنیم.
+    </p>
+
+</div>
+
+<div class="message-box">
+
+<textarea
+id="messageInput"
+maxlength="1000"
+placeholder="پیامت رو اینجا بنویس..."></textarea>
+
+<button class="send-btn" onclick="sendMessage()">
+    🚀 ارسال پیام
+</button>
+
+<div class="status" id="status"></div>
+
+</div>
+</section>
+
+</main>
+
+
+<footer>
+
+<p>
+    ساخته شده با ❤️ برای
+    <strong>BEHRAD M PLAYER</strong>
+</p>
+
+<p style="margin-top:10px">
+    © 2026 BEHRAD M PLAYER
+</p>
+
+</footer>
+
+
+<script>
+
+/* =========================
+   GENERAL
+========================= */
+
+function go(id){
+
+    document.getElementById(id)
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+function aparat(){
+
+    window.open(
+        "https://www.aparat.com/BEHRAD_M_PLAYER_1393",
+        "_blank"
+    );
+
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function sendMessage(){
+
+    const input=
+        document.getElementById("messageInput");
+
+    const status=
+        document.getElementById("status");
+
+    const message=
+        input.value.trim();
+
+    if(!message){
+
+        status.textContent=
+            "⚠️ اول پیامت رو بنویس!";
+
+        return;
+    }
+
+    status.textContent=
+        "✅ پیام آماده شد! اتصال ربات روبیکا رو در مرحله بعد اضافه می‌کنیم.";
+
+    input.value="";
+
+}
+
+
+/* =========================================================
+   FLAPPY BIRD
+========================================================= */
+
+const canvas=
+    document.getElementById("flappyCanvas");
+
+const ctx=
+    canvas.getContext("2d");
+
+let bird;
+let pipes;
+let score=0;
+
+let best=
+    Number(
+        localStorage.getItem("flappyBest") || 0
+    );
+
+let playing=false;
+let gameOver=false;
+let animation;
+
+document.getElementById("best")
+.textContent=best;
+
+
+function openFlappy(){
+
+    closeCar();
+    closeSpace();
+
+    document
+    .getElementById("flappyScreen")
+    .classList.add("active");
+
+    document
+    .getElementById("flappyScreen")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+    resetFlappy();
+
+}
+
+
+function closeFlappy(){
+
+    playing=false;
+
+    cancelAnimationFrame(animation);
+
+    document
+    .getElementById("flappyScreen")
+    .classList.remove("active");
+
+}
+
+
+function resetFlappy(){
+
+    bird={
+        x:130,
+        y:240,
+        size:22,
+        velocity:0
+    };
+
+    pipes=[];
+
+    score=0;
+
+    gameOver=false;
+    playing=false;
+
+    document
+    .getElementById("score")
+    .textContent="0";
+
+    document
+    .getElementById("gameMessage")
+    .textContent=
+        "برای شروع کلیک کن یا Space بزن!";
+
+    drawFlappy();
+
+}
+
+
+function startFlappy(){
+
+    if(gameOver){
+
+        resetFlappy();
+
+    }
+
+    if(playing)return;
+
+    playing=true;
+
+    document
+    .getElementById("gameMessage")
+    .textContent=
+        "پرواز کن! 🐦";
+
+    animation=
+        requestAnimationFrame(gameLoop);
+
+}
+
+
+function flap(){
+
+    if(!playing){
+
+        startFlappy();
+
+    }
+
+    bird.velocity=-7.5;
+
+}
+
+
+function createPipe(){
+
+    const gap=150;
+
+    const minTop=60;
+
+    const maxTop=
+        canvas.height-gap-70;
+
+    const top=
+        Math.floor(
+            Math.random()*
+            (maxTop-minTop)+
+            minTop
+        );
+
+    pipes.push({
+
+        x:canvas.width,
+
+        width:65,
+
+        top:top,
+
+        gap:gap,
+
+        passed:false
+
+    });
+
+}
+
+
+function collision(){
+
+    if(
+        bird.y-bird.size<0 ||
+        bird.y+bird.size>
+        canvas.height-25
+    ){
+
+        return true;
+
+    }
+
+    for(const pipe of pipes){
+
+        const hitX=
+            bird.x+bird.size>pipe.x &&
+            bird.x-bird.size<
+            pipe.x+pipe.width;
+
+        const hitY=
+            bird.y-bird.size<
+            pipe.top ||
+
+            bird.y+bird.size>
+            pipe.top+pipe.gap;
+
+        if(hitX && hitY){
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+
+function endFlappy(){
+
+    playing=false;
+    gameOver=true;
+
+    cancelAnimationFrame(animation);
+
+    if(score>best){
+
+        best=score;
+
+        localStorage.setItem(
+            "flappyBest",
+            best
+        );
+
+        document
+        .getElementById("best")
+        .textContent=best;
+
+    }
+
+    document
+    .getElementById("gameMessage")
+    .textContent=
+        "💀 Game Over — برای شروع دوباره کلیک کن!";
+
+}
+
+
+function gameLoop(){
+
+    if(!playing)return;
+
+    bird.velocity+=0.38;
+
+    bird.y+=bird.velocity;
+
+
+    if(
+        pipes.length===0 ||
+        pipes[pipes.length-1].x<
+        canvas.width-260
+    ){
+
+        createPipe();
+
+    }
+
+
+    for(const pipe of pipes){
+
+        pipe.x-=3.2;
+
+        if(
+            !pipe.passed &&
+            pipe.x+pipe.width<
+            bird.x
+        ){
+
+            pipe.passed=true;
+
+            score++;
+
+            document
+            .getElementById("score")
+            .textContent=score;
+
+        }
+
+    }
+
+
+    pipes=pipes.filter(
+        pipe=>pipe.x+pipe.width>0
+    );
+
+
+    if(collision()){
+
+        endFlappy();
+
+        drawFlappy();
+
+        return;
+
+    }
+
+
+    drawFlappy();
+
+    animation=
+        requestAnimationFrame(gameLoop);
+
+}
+
+
+function drawFlappy(){
+
+    const sky=
+        ctx.createLinearGradient(
+            0,0,0,canvas.height
+        );
+
+    sky.addColorStop(
+        0,
+        "#42c8ff"
+    );
+
+    sky.addColorStop(
+        1,
+        "#b9efff"
+    );
+
+    ctx.fillStyle=sky;
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* Clouds */
+
+    ctx.fillStyle=
+        "rgba(255,255,255,.65)";
+
+    for(let i=0;i<4;i++){
+
+        const x=80+i*190;
+
+        const y=
+            70+(i%2)*80;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,y,25,0,Math.PI*2
+        );
+
+        ctx.arc(
+            x+25,y-10,
+            32,0,Math.PI*2
+        );
+
+        ctx.arc(
+            x+55,y,
+            25,0,Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+
+    /* Pipes */
+
+    for(const pipe of pipes){
+
+        ctx.fillStyle="#20a83a";
+
+        ctx.fillRect(
+            pipe.x,
+            0,
+            pipe.width,
+            pipe.top
+        );
+
+        ctx.fillRect(
+            pipe.x,
+            pipe.top+pipe.gap,
+            pipe.width,
+            canvas.height
+        );
+
+        ctx.fillStyle="#16882d";
+
+        ctx.fillRect(
+            pipe.x-7,
+            pipe.top-18,
+            pipe.width+14,
+            18
+        );
+
+        ctx.fillRect(
+            pipe.x-7,
+            pipe.top+pipe.gap,
+            pipe.width+14,
+            18
+        );
+
+    }
+
+
+    /* Ground */
+
+    ctx.fillStyle="#73c63b";
+
+    ctx.fillRect(
+        0,
+        canvas.height-25,
+        canvas.width,
+        25
+    );
+
+
+    /* Bird */
+
+    ctx.save();
+
+    ctx.translate(
+        bird.x,
+        bird.y
+    );
+
+    let angle=
+        Math.min(
+            Math.max(
+                bird.velocity*.05,
+                -0.4
+            ),
+            0.6
+        );
+
+    ctx.rotate(angle);
+
+
+    ctx.fillStyle="#ffd21c";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        bird.size,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle="#f2a900";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        -5,
+        7,
+        12,
+        7,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle="white";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        8,
+        -7,
+        7,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle="black";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        10,
+        -7,
+        3,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle="#ff7b00";
+
+    ctx.beginPath();
+
+    ctx.moveTo(18,0);
+
+    ctx.lineTo(36,7);
+
+    ctx.lineTo(18,13);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.restore();
+
+
+    if(!playing){
+
+        ctx.fillStyle=
+            "rgba(0,0,0,.38)";
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        ctx.fillStyle="white";
+
+        ctx.textAlign="center";
+
+        ctx.font=
+            "bold 32px Tahoma";
+
+        ctx.fillText(
+            gameOver ?
+            "GAME OVER" :
+            "FLAPPY BIRD",
+            canvas.width/2,
+            canvas.height/2-20
+        );
+
+        ctx.font=
+            "18px Tahoma";
+
+        ctx.fillText(
+            gameOver ?
+            "برای بازی دوباره کلیک کن" :
+            "کلیک یا Space برای شروع",
+            canvas.width/2,
+            canvas.height/2+25
+        );
+
+    }
+
+}
+
+
+/* Flappy controls */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(
+            e.code==="Space" ||
+            e.code==="ArrowUp"
+        ){
+
+            if(
+                document
+                .getElementById("flappyScreen")
+                .classList.contains("active")
+            ){
+
+                e.preventDefault();
+
+                flap();
+
+            }
+
+        }
+
+    }
+);
+
+
+canvas.addEventListener(
+    "mousedown",
+    flap
+);
+
+
+canvas.addEventListener(
+    "touchstart",
+    function(e){
+
+        e.preventDefault();
+
+        flap();
+
+    },
+    {passive:false}
+);
+
+
+/* =========================================================
+   CAR GAME
+========================================================= */
+
+const carCanvas=
+    document.getElementById("carCanvas");
+
+const carCtx=
+    carCanvas.getContext("2d");
+
+let car={
+    x:350,
+    y:420,
+    width:58,
+    height:90,
+    speed:7
+};
+
+let carEnemies=[];
+let carScore=0;
+
+let carBest=
+    Number(
+        localStorage.getItem("carBest") || 0
+    );
+
+let carPlaying=false;
+let carOver=false;
+let carAnimation;
+
+let carLeft=false;
+let carRight=false;
+
+let carRoadOffset=0;
+
+
+document.getElementById("carBest")
+.textContent=carBest;
+
+
+function openCar(){
+
+    closeFlappy();
+    closeSpace();
+
+    document
+    .getElementById("carScreen")
+    .classList.add("active");
+
+    document
+    .getElementById("carScreen")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+    resetCar();
+
+}
+
+
+function closeCar(){
+
+    carPlaying=false;
+
+    cancelAnimationFrame(carAnimation);
+
+    document
+    .getElementById("carScreen")
+    .classList.remove("active");
+
+}
+
+
+function resetCar(){
+
+    car={
+        x:350,
+        y:400,
+        width:58,
+        height:90,
+        speed:7
+    };
+
+    carEnemies=[];
+
+    carScore=0;
+
+    carPlaying=false;
+    carOver=false;
+
+    carRoadOffset=0;
+
+    document
+    .getElementById("carScore")
+    .textContent="0";
+
+    document
+    .getElementById("carMessage")
+    .textContent=
+        "برای شروع ← → یا A / D بزن!";
+
+    drawCar();
+
+}
+
+
+function startCar(){
+
+    if(carOver){
+
+        resetCar();
+
+    }
+
+    if(carPlaying)return;
+
+    carPlaying=true;
+
+    document
+    .getElementById("carMessage")
+    .textContent=
+        "فرار کن! 🚗💨";
+
+    carAnimation=
+        requestAnimationFrame(carLoop);
+
+}
+
+
+function createEnemyCar(){
+
+    const lanes=[
+        220,
+        310,
+        400,
+        490
+    ];
+
+    const lane=
+        lanes[
+            Math.floor(
+                Math.random()*lanes.length
+            )
+        ];
+
+    carEnemies.push({
+
+        x:lane,
+
+        y:-100,
+
+        width:58,
+
+        height:90,
+
+        speed:
+            4+
+            Math.random()*2+
+            carScore*.01
+
+    });
+
+}
+
+
+function carCollision(a,b){
+
+    return(
+        a.x < b.x+b.width-8 &&
+        a.x+a.width > b.x+8 &&
+        a.y < b.y+b.height-8 &&
+        a.y+a.height > b.y+8
+    );
+
+}
+
+
+function endCar(){
+
+    carPlaying=false;
+    carOver=true;
+
+    cancelAnimationFrame(carAnimation);
+
+    if(carScore>carBest){
+
+        carBest=carScore;
+
+        localStorage.setItem(
+            "carBest",
+            carBest
+        );
+
+        document
+        .getElementById("carBest")
+        .textContent=carBest;
+
+    }
+
+    document
+    .getElementById("carMessage")
+    .textContent=
+        "💥 تصادف کردی! برای دوباره بازی کردن کلیک کن.";
+
+}
+
+
+function carLoop(){
+
+    if(!carPlaying)return;
+
+
+    /* Movement */
+
+    if(carLeft){
+
+        car.x-=car.speed;
+
+    }
+
+    if(carRight){
+
+        car.x+=car.speed;
+
+    }
+
+
+    if(car.x<160){
+
+        car.x=160;
+
+    }
+
+    if(car.x>
+        carCanvas.width-160-car.width){
+
+        car.x=
+            carCanvas.width-
+            160-
+            car.width;
+
+    }
+
+
+    /* Road */
+
+    carRoadOffset+=7;
+
+
+    /* Spawn */
+
+    if(
+        carEnemies.length===0 ||
+        carEnemies[
+            carEnemies.length-1
+        ].y>150
+    ){
+
+        createEnemyCar();
+
+    }
+
+
+    /* Enemies */
+
+    for(const enemy of carEnemies){
+
+        enemy.y+=enemy.speed;
+
+        if(
+            carCollision(car,enemy)
+        ){
+
+            endCar();
+
+            drawCar();
+
+            return;
+
+        }
+
+
+        if(
+            !enemy.passed &&
+            enemy.y>car.y+car.height
+        ){
+
+            enemy.passed=true;
+
+            carScore++;
+
+            document
+            .getElementById("carScore")
+            .textContent=carScore;
+
+        }
+
+    }
+
+
+    carEnemies=
+        carEnemies.filter(
+            enemy=>enemy.y<carCanvas.height+120
+        );
+
+
+    drawCar();
+
+
+    carAnimation=
+        requestAnimationFrame(carLoop);
+
+}
+
+
+function drawCar(){
+
+    /* Sky */
+
+    const bg=
+        carCtx.createLinearGradient(
+            0,
+            0,
+            0,
+            carCanvas.height
+        );
+
+    bg.addColorStop(
+        0,
+        "#111a2e"
+    );
+
+    bg.addColorStop(
+        1,
+        "#03050a"
+    );
+
+    carCtx.fillStyle=bg;
+
+    carCtx.fillRect(
+        0,
+        0,
+        carCanvas.width,
+        carCanvas.height
+    );
+
+
+    /* Side grass */
+
+    carCtx.fillStyle="#132b1b";
+
+    carCtx.fillRect(
+        0,
+        0,
+        155,
+        carCanvas.height
+    );
+
+    carCtx.fillRect(
+        545,
+        0,
+        155,
+        carCanvas.height
+    );
+
+
+    /* Road */
+
+    carCtx.fillStyle="#252a32";
+
+    carCtx.fillRect(
+        155,
+        0,
+        390,
+        carCanvas.height
+    );
+
+
+    /* Road borders */
+
+    carCtx.fillStyle="#e8e8e8";
+
+    carCtx.fillRect(
+        155,
+        0,
+        6,
+        carCanvas.height
+    );
+
+    carCtx.fillRect(
+        539,
+        0,
+        6,
+        carCanvas.height
+    );
+
+
+    /* Lane lines */
+
+    carCtx.fillStyle="#ffffffaa";
+
+    for(
+        let y=-80+(carRoadOffset%100);
+        y<carCanvas.height;
+        y+=100
+    ){
+
+        carCtx.fillRect(
+            247,
+            y,
+            7,
+            55
+        );
+
+        carCtx.fillRect(
+            337,
+            y,
+            7,
+            55
+        );
+
+        carCtx.fillRect(
+            427,
+            y,
+            7,
+            55
+        );
+
+    }
+
+
+    /* Enemy cars */
+
+    for(const enemy of carEnemies){
+
+        drawCarObject(
+            carCtx,
+            enemy.x,
+            enemy.y,
+            enemy.width,
+            enemy.height,
+            "#e51d35"
+        );
+
+    }
+
+
+    /* Player */
+
+    drawCarObject(
+        carCtx,
+        car.x,
+        car.y,
+        car.width,
+        car.height,
+        "#00bfff"
+    );
+
+
+    /* Overlay */
+
+    if(!carPlaying){
+
+        carCtx.fillStyle=
+            "rgba(0,0,0,.45)";
+
+        carCtx.fillRect(
+            0,
+            0,
+            carCanvas.width,
+            carCanvas.height
+        );
+
+        carCtx.fillStyle="white";
+
+        carCtx.textAlign="center";
+
+        carCtx.font=
+            "bold 32px Tahoma";
+
+        carCtx.fillText(
+            carOver ?
+            "GAME OVER" :
+            "HIGHWAY RUSH",
+            carCanvas.width/2,
+            220
+        );
+
+        carCtx.font=
+            "18px Tahoma";
+
+        carCtx.fillText(
+            carOver ?
+            "برای شروع دوباره ← → بزن" :
+            "← → یا A / D برای حرکت",
+            carCanvas.width/2,
+            260
+        );
+
+    }
+
+}
+
+
+function drawCarObject(
+    c,
+    x,
+    y,
+    w,
+    h,
+    color
+){
+
+    /* Shadow */
+
+    c.fillStyle="rgba(0,0,0,.4)";
+
+    c.fillRect(
+        x+5,
+        y+7,
+        w,
+        h
+    );
+
+
+    /* Body */
+
+    c.fillStyle=color;
+
+    c.beginPath();
+
+    c.roundRect(
+        x,
+        y,
+        w,
+        h,
+        12
+    );
+
+    c.fill();
+
+
+    /* Windows */
+
+    c.fillStyle="#07121d";
+
+    c.beginPath();
+
+    c.roundRect(
+        x+10,
+        y+12,
+        w-20,
+        27,
+        7
+    );
+
+    c.fill();
+
+
+    c.fillStyle="#183b55";
+
+    c.beginPath();
+
+    c.roundRect(
+        x+11,
+        y+15,
+        w-22,
+        18,
+        5
+    );
+
+    c.fill();
+
+
+    /* Lights */
+
+    c.fillStyle="#fff";
+
+    c.fillRect(
+        x+7,
+        y+5,
+        12,
+        7
+    );
+
+    c.fillRect(
+        x+w-19,
+        y+5,
+        12,
+        7
+    );
+
+
+    c.fillStyle="#ff3333";
+
+    c.fillRect(
+        x+7,
+        y+h-12,
+        12,
+        7
+    );
+
+    c.fillRect(
+        x+w-19,
+        y+h-12,
+        12,
+        7
+    );
+
+
+    /* Wheels */
+
+    c.fillStyle="#050505";
+
+    c.fillRect(
+        x-6,
+        y+17,
+        8,
+        22
+    );
+
+    c.fillRect(
+        x+w-2,
+        y+17,
+        8,
+        22
+    );
+
+    c.fillRect(
+        x-6,
+        y+h-39,
+        8,
+        22
+    );
+
+    c.fillRect(
+        x+w-2,
+        y+h-39,
+        8,
+        22
+    );
+
+}
+
+
+/* Car keyboard */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(
+            document
+            .getElementById("carScreen")
+            .classList.contains("active")
+        ){
+
+            if(
+                e.code==="ArrowLeft" ||
+                e.code==="KeyA"
+            ){
+
+                e.preventDefault();
+
+                carLeft=true;
+
+                startCar();
+
+            }
+
+            if(
+                e.code==="ArrowRight" ||
+                e.code==="KeyD"
+            ){
+
+                e.preventDefault();
+
+                carRight=true;
+
+                startCar();
+
+            }
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    function(e){
+
+        if(
+            e.code==="ArrowLeft" ||
+            e.code==="KeyA"
+        ){
+
+            carLeft=false;
+
+        }
+
+        if(
+            e.code==="ArrowRight" ||
+            e.code==="KeyD"
+        ){
+
+            carRight=false;
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SPACE DODGE
+========================================================= */
+
+const spaceCanvas=
+    document.getElementById("spaceCanvas");
+
+const spaceCtx=
+    spaceCanvas.getContext("2d");
+
+
+let spaceship={
+    x:320,
+    y:420,
+    width:60,
+    height:65,
+    speed:7
+};
+
+let meteors=[];
+let stars=[];
+
+let spaceScore=0;
+
+let spaceBest=
+    Number(
+        localStorage.getItem("spaceBest") || 0
+    );
+
+let spacePlaying=false;
+let spaceOver=false;
+let spaceAnimation;
+
+let spaceLeft=false;
+let spaceRight=false;
+
+
+document.getElementById("spaceBest")
+.textContent=spaceBest;
+
+
+/* Stars */
+
+for(let i=0;i<90;i++){
+
+    stars.push({
+
+        x:
+            Math.random()*
+            spaceCanvas.width,
+
+        y:
+            Math.random()*
+            spaceCanvas.height,
+
+        size:
+            Math.random()*2+1,
+
+        speed:
+            Math.random()*2+1
+
+    });
+
+}
+
+
+function openSpace(){
+
+    closeFlappy();
+    closeCar();
+
+    document
+    .getElementById("spaceScreen")
+    .classList.add("active");
+
+    document
+    .getElementById("spaceScreen")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+    resetSpace();
+
+}
+
+
+function closeSpace(){
+
+    spacePlaying=false;
+
+    cancelAnimationFrame(
+        spaceAnimation
+    );
+
+    document
+    .getElementById("spaceScreen")
+    .classList.remove("active");
+
+}
+
+
+function resetSpace(){
+
+    spaceship={
+        x:320,
+        y:420,
+        width:60,
+        height:65,
+        speed:7
+    };
+
+    meteors=[];
+
+    spaceScore=0;
+
+    spacePlaying=false;
+    spaceOver=false;
+
+    document
+    .getElementById("spaceScore")
+    .textContent="0";
+
+    document
+    .getElementById("spaceMessage")
+    .textContent=
+        "برای شروع ← → یا A / D بزن!";
+
+    drawSpace();
+
+}
+
+
+function startSpace(){
+
+    if(spaceOver){
+
+        resetSpace();
+
+    }
+
+    if(spacePlaying)return;
+
+    spacePlaying=true;
+
+    document
+    .getElementById("spaceMessage")
+    .textContent=
+        "زنده بمون! 🚀";
+
+    spaceAnimation=
+        requestAnimationFrame(
+            spaceLoop
+        );
+
+}
+
+
+function createMeteor(){
+
+    meteors.push({
+
+        x:
+            30+
+            Math.random()*
+            (spaceCanvas.width-60),
+
+        y:-50,
+
+        size:
+            18+
+            Math.random()*20,
+
+        speed:
+            3+
+            Math.random()*3+
+            spaceScore*.015,
+
+        rotation:
+            Math.random()*Math.PI,
+
+        rotationSpeed:
+            (Math.random()-.5)*.08
+
+    });
+
+}
+
+
+function meteorCollision(){
+
+    for(const meteor of meteors){
+
+        const dx=
+            spaceship.x+
+            spaceship.width/2-
+            meteor.x;
+
+        const dy=
+            spaceship.y+
+            spaceship.height/2-
+            meteor.y;
+
+        const distance=
+            Math.sqrt(
+                dx*dx+dy*dy
+            );
+
+        if(
+            distance<
+            meteor.size+
+            25
+        ){
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+
+function endSpace(){
+
+    spacePlaying=false;
+    spaceOver=true;
+
+    cancelAnimationFrame(
+        spaceAnimation
+    );
+
+    if(spaceScore>spaceBest){
+
+        spaceBest=spaceScore;
+
+        localStorage.setItem(
+            "spaceBest",
+            spaceBest
+        );
+
+        document
+        .getElementById("spaceBest")
+        .textContent=spaceBest;
+
+    }
+
+    document
+    .getElementById("spaceMessage")
+    .textContent=
+        "💥 سفینه نابود شد! دوباره تلاش کن!";
+
+}
+
+
+function spaceLoop(){
+
+    if(!spacePlaying)return;
+
+
+    /* Player */
+
+    if(spaceLeft){
+
+        spaceship.x-=
+            spaceship.speed;
+
+    }
+
+    if(spaceRight){
+
+        spaceship.x+=
+            spaceship.speed;
+
+    }
+
+
+    if(
+        spaceship.x<10
+    ){
+
+        spaceship.x=10;
+
+    }
+
+
+    if(
+        spaceship.x+
+        spaceship.width>
+        spaceCanvas.width-10
+    ){
+
+        spaceship.x=
+            spaceCanvas.width-
+            spaceship.width-
+            10;
+
+    }
+
+
+    /* Stars */
+
+    for(const star of stars){
+
+        star.y+=star.speed;
+
+        if(
+            star.y>
+            spaceCanvas.height
+        ){
+
+            star.y=-5;
+
+            star.x=
+                Math.random()*
+                spaceCanvas.width;
+
+        }
+
+    }
+
+
+    /* Spawn */
+
+    if(
+        meteors.length<4+
+        Math.floor(spaceScore/8)
+    ){
+
+        if(Math.random()<.035){
+
+            createMeteor();
+
+        }
+
+    }
+
+
+    /* Meteors */
+
+    for(const meteor of meteors){
+
+        meteor.y+=meteor.speed;
+
+        meteor.rotation+=
+            meteor.rotationSpeed;
+
+        if(
+            meteor.y>
+            spaceCanvas.height+70
+        ){
+
+            meteor.passed=true;
+
+            spaceScore++;
+
+            document
+            .getElementById("spaceScore")
+            .textContent=spaceScore;
+
+        }
+
+    }
+
+
+    meteors=
+        meteors.filter(
+            meteor=>
+            meteor.y<
+            spaceCanvas.height+80
+        );
+
+
+    if(meteorCollision()){
+
+        endSpace();
+
+        drawSpace();
+
+        return;
+
+    }
+
+
+    drawSpace();
+
+
+    spaceAnimation=
+        requestAnimationFrame(
+            spaceLoop
+        );
+
+}
+
+
+function drawSpace(){
+
+    /* Background */
+
+    const bg=
+        spaceCtx.createLinearGradient(
+            0,
+            0,
+            0,
+            spaceCanvas.height
+        );
+
+    bg.addColorStop(
+        0,
+        "#02030a"
+    );
+
+    bg.addColorStop(
+        1,
+        "#0b1230"
+    );
+
+    spaceCtx.fillStyle=bg;
+
+    spaceCtx.fillRect(
+        0,
+        0,
+        spaceCanvas.width,
+        spaceCanvas.height
+    );
+
+
+    /* Stars */
+
+    for(const star of stars){
+
+        spaceCtx.fillStyle=
+            "rgba(255,255,255,.8)";
+
+        spaceCtx.beginPath();
+
+        spaceCtx.arc(
+            star.x,
+            star.y,
+            star.size,
+            0,
+            Math.PI*2
+        );
+
+        spaceCtx.fill();
+
+    }
+
+
+    /* Planet glow */
+
+    const glow=
+        spaceCtx.createRadialGradient(
+            570,
+            100,
+            10,
+            570,
+            100,
+            100
+        );
+
+    glow.addColorStop(
+        0,
+        "rgba(0,200,255,.35)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+    spaceCtx.fillStyle=glow;
+
+    spaceCtx.fillRect(
+        450,
+        0,
+        240,
+        220
+    );
+
+
+    /* Meteors */
+
+    for(const meteor of meteors){
+
+        drawMeteor(
+            spaceCtx,
+            meteor
+        );
+
+    }
+
+
+    /* Spaceship */
+
+    drawSpaceship();
+
+
+    /* Overlay */
+
+    if(!spacePlaying){
+
+        spaceCtx.fillStyle=
+            "rgba(0,0,0,.45)";
+
+        spaceCtx.fillRect(
+            0,
+            0,
+            spaceCanvas.width,
+            spaceCanvas.height
+        );
+
+        spaceCtx.fillStyle="white";
+
+        spaceCtx.textAlign="center";
+
+        spaceCtx.font=
+            "bold 32px Tahoma";
+
+        spaceCtx.fillText(
+            spaceOver ?
+            "GAME OVER" :
+            "SPACE DODGE",
+            spaceCanvas.width/2,
+            220
+        );
+
+        spaceCtx.font=
+            "18px Tahoma";
+
+        spaceCtx.fillText(
+            spaceOver ?
+            "برای شروع دوباره ← → بزن" :
+            "← → یا A / D برای حرکت",
+            spaceCanvas.width/2,
+            260
+        );
+
+    }
+
+}
+
+
+function drawMeteor(c,m){
+
+    c.save();
+
+    c.translate(
+        m.x,
+        m.y
+    );
+
+    c.rotate(
+        m.rotation
+    );
+
+
+    c.fillStyle="#777";
+
+    c.beginPath();
+
+    const points=9;
+
+    for(let i=0;i<points;i++){
+
+        const angle=
+            i/points*
+            Math.PI*2;
+
+        const radius=
+            m.size*
+            (
+                .75+
+                Math.random()*.35
+            );
+
+        const x=
+            Math.cos(angle)*
+            radius;
+
+        const y=
+            Math.sin(angle)*
+            radius;
+
+        if(i===0){
+
+            c.moveTo(x,y);
+
+        }else{
+
+            c.lineTo(x,y);
+
+        }
+
+    }
+
+    c.closePath();
+
+    c.fill();
+
+
+    /* Meteor holes */
+
+    c.fillStyle="#444";
+
+    c.beginPath();
+
+    c.arc(
+        -5,
+        -3,
+        4,
+        0,
+        Math.PI*2
+    );
+
+    c.fill();
+
+    c.beginPath();
+
+    c.arc(
+        7,
+        5,
+        3,
+        0,
+        Math.PI*2
+    );
+
+    c.fill();
+
+
+    c.restore();
+
+}
+
+
+function drawSpaceship(){
+
+    const x=
+        spaceship.x+
+        spaceship.width/2;
+
+    const y=
+        spaceship.y;
+
+
+    /* Engine flame */
+
+    spaceCtx.fillStyle="#ff8c00";
+
+    spaceCtx.beginPath();
+
+    spaceCtx.moveTo(
+        x-12,
+        y+57
+    );
+
+    spaceCtx.lineTo(
+        x,
+        y+80+
+        Math.random()*12
+    );
+
+    spaceCtx.lineTo(
+        x+12,
+        y+57
+    );
+
+    spaceCtx.closePath();
+
+    spaceCtx.fill();
+
+
+    /* Ship body */
+
+    spaceCtx.fillStyle="#d9e8ff";
+
+    spaceCtx.beginPath();
+
+    spaceCtx.moveTo(
+        x,
+        y
+    );
+
+    spaceCtx.lineTo(
+        x-30,
+        y+60
+    );
+
+    spaceCtx.lineTo(
+        x,
+        y+50
+    );
+
+    spaceCtx.lineTo(
+        x+30,
+        y+60
+    );
+
+    spaceCtx.closePath();
+
+    spaceCtx.fill();
+
+
+    /* Blue glass */
+
+    spaceCtx.fillStyle="#00bfff";
+
+    spaceCtx.beginPath();
+
+    spaceCtx.arc(
+        x,
+        y+32,
+        11,
+        0,
+        Math.PI*2
+    );
+
+    spaceCtx.fill();
+
+
+    /* Wings */
+
+    spaceCtx.fillStyle="#57708f";
+
+    spaceCtx.beginPath();
+
+    spaceCtx.moveTo(
+        x-15,
+        y+42
+    );
+
+    spaceCtx.lineTo(
+        x-35,
+        y+62
+    );
+
+    spaceCtx.lineTo(
+        x-8,
+        y+57
+    );
+
+    spaceCtx.closePath();
+
+    spaceCtx.fill();
+
+
+    spaceCtx.beginPath();
+
+    spaceCtx.moveTo(
+        x+15,
+        y+42
+    );
+
+    spaceCtx.lineTo(
+        x+35,
+        y+62
+    );
+
+    spaceCtx.lineTo(
+        x+8,
+        y+57
+    );
+
+    spaceCtx.closePath();
+
+    spaceCtx.fill();
+
+}
+
+
+/* Space keyboard */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(
+            document
+            .getElementById("spaceScreen")
+            .classList.contains("active")
+        ){
+
+            if(
+                e.code==="ArrowLeft" ||
+                e.code==="KeyA"
+            ){
+
+                e.preventDefault();
+
+                spaceLeft=true;
+
+                startSpace();
+
+            }
+
+            if(
+                e.code==="ArrowRight" ||
+                e.code==="KeyD"
+            ){
+
+                e.preventDefault();
+
+                spaceRight=true;
+
+                startSpace();
+
+            }
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    function(e){
+
+        if(
+            e.code==="ArrowLeft" ||
+            e.code==="KeyA"
+        ){
+
+            spaceLeft=false;
+
+        }
+
+        if(
+            e.code==="ArrowRight" ||
+            e.code==="KeyD"
+        ){
+
+            spaceRight=false;
+
+        }
+
+    }
+);
+
+
+/* Mouse / touch start for car */
+
+document
+.getElementById("carCanvas")
+.addEventListener(
+    "pointerdown",
+    function(e){
+
+        startCar();
+
+        const rect=
+            carCanvas.getBoundingClientRect();
+
+        const x=
+            e.clientX-
+            rect.left;
+
+        if(
+            x<
+            rect.width/2
+        ){
+
+            carLeft=true;
+
+        }else{
+
+            carRight=true;
+
+        }
+
+    }
+);
+
+
+document
+.getElementById("carCanvas")
+.addEventListener(
+    "pointerup",
+    function(){
+
+        carLeft=false;
+        carRight=false;
+
+    }
+);
+
+
+/* Mouse / touch start for space */
+
+document
+.getElementById("spaceCanvas")
+.addEventListener(
+    "pointerdown",
+    function(e){
+
+        startSpace();
+
+        const rect=
+            spaceCanvas.getBoundingClientRect();
+
+        const x=
+            e.clientX-
+            rect.left;
+
+        if(
+            x<
+            rect.width/2
+        ){
+
+            spaceLeft=true;
+
+        }else{
+
+            spaceRight=true;
+
+        }
+
+    }
+);
+
+
+document
+.getElementById("spaceCanvas")
+.addEventListener(
+    "pointerup",
+    function(){
+
+        spaceLeft=false;
+        spaceRight=false;
+
+    }
+);
+
+
+/* Initial drawings */
+
+resetFlappy();
+resetCar();
+resetSpace();
+
+</script>
+
+</body>
+</html>
+```
