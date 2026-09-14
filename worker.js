@@ -2,21 +2,46 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // تست واقعی اتصال به D1
     if (url.pathname === "/api/test-db") {
-      return new Response(
-        JSON.stringify({
-          ok: true,
-          db_binding_exists: !!env.DB,
-          message: env.DB
-            ? "DB binding is available ✅"
-            : "DB binding is NOT available ❌"
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json; charset=UTF-8"
+      try {
+        const result = await env.DB
+          .prepare(`
+            SELECT name
+            FROM sqlite_master
+            WHERE type = 'table'
+            ORDER BY name
+          `)
+          .all();
+
+        return new Response(
+          JSON.stringify({
+            ok: true,
+            message: "D1 Database connected successfully 🚀",
+            database: true,
+            tables: result.results
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json; charset=UTF-8"
+            }
           }
-        }
-      );
+        );
+      } catch (error) {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            message: "D1 Database query failed ❌",
+            error: error.message
+          }),
+          {
+            status: 500,
+            headers: {
+              "Content-Type": "application/json; charset=UTF-8"
+            }
+          }
+        );
+      }
     }
 
     return new Response(
