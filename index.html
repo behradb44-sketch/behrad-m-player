@@ -1,17 +1,23 @@
-```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#03050c">
 
-<title>BEHRAD M PLAYER — SYSTEM UPDATE</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<meta name="theme-color" content="#02040b">
+
+<title>BEHRAD M PLAYER — NEXUS ULTRA</title>
 
 <style>
+
 /* =========================================================
    BEHRAD M PLAYER
-   GOD MODE — CINEMATIC 3D MAINTENANCE
+   NEXUS ULTRA
+   ONE FILE / ONE EXPERIENCE
 ========================================================= */
 
 *{
@@ -24,12 +30,12 @@ html,
 body{
     width:100%;
     height:100%;
+    overflow:hidden;
 }
 
 body{
-    overflow:hidden;
-    background:#020308;
-    color:#fff;
+    background:#02040a;
+    color:white;
     font-family:
         Tahoma,
         Arial,
@@ -38,282 +44,309 @@ body{
 }
 
 /* =========================================================
-   WEBGL
+   CANVAS
 ========================================================= */
 
-#webgl{
+#scene{
     position:fixed;
     inset:0;
     width:100%;
     height:100%;
     z-index:0;
-    display:block;
 }
 
 /* =========================================================
-   CINEMATIC OVERLAYS
+   BACKGROUND
 ========================================================= */
 
-.noise{
+.background{
     position:fixed;
     inset:0;
-    z-index:5;
-    pointer-events:none;
-    opacity:.025;
-
-    background-image:
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
-
-    mix-blend-mode:screen;
-}
-
-.scanlines{
-    position:fixed;
-    inset:0;
-    z-index:6;
-    pointer-events:none;
-
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent 0px,
-            transparent 4px,
-            rgba(255,255,255,.012) 5px
-        );
-}
-
-.vignette{
-    position:fixed;
-    inset:0;
-    z-index:7;
+    z-index:1;
     pointer-events:none;
 
     background:
         radial-gradient(
-            ellipse at center,
-            transparent 35%,
-            rgba(0,0,0,.18) 65%,
-            rgba(0,0,0,.8) 100%
+            circle at 15% 20%,
+            rgba(0,110,255,.16),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 85% 75%,
+            rgba(255,0,65,.14),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(0,40,100,.06),
+            transparent 60%
         );
 }
 
 /* =========================================================
-   MOUSE LIGHT
+   AURORA
 ========================================================= */
 
-.mouse-light{
+.aurora{
     position:fixed;
-    z-index:8;
+    width:70vw;
+    height:70vw;
 
-    width:450px;
-    height:450px;
+    left:50%;
+    top:50%;
+
+    transform:
+        translate(-50%,-50%);
 
     border-radius:50%;
 
     pointer-events:none;
 
     background:
-        radial-gradient(
-            circle,
-            rgba(0,145,255,.11),
-            rgba(0,145,255,.025) 35%,
-            transparent 70%
-        );
-
-    transform:
-        translate(-50%,-50%);
-
-    mix-blend-mode:screen;
-}
-
-/* =========================================================
-   UI
-========================================================= */
-
-.interface{
-    position:relative;
-    z-index:20;
-
-    width:100%;
-    height:100%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:25px;
-
-    perspective:1800px;
-}
-
-/* =========================================================
-   MAIN GLASS PANEL
-========================================================= */
-
-.panel{
-    position:relative;
-
-    width:min(980px,94vw);
-
-    padding:
-        42px
-        52px
-        35px;
-
-    border-radius:34px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(8,17,34,.74),
-            rgba(3,7,16,.58)
-        );
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    backdrop-filter:
-        blur(24px)
-        saturate(160%);
-
-    -webkit-backdrop-filter:
-        blur(24px)
-        saturate(160%);
-
-    box-shadow:
-        0 45px 130px rgba(0,0,0,.72),
-        0 0 100px rgba(0,90,255,.08),
-        inset 0 1px 0 rgba(255,255,255,.1);
-
-    transform-style:preserve-3d;
-
-    will-change:transform;
-
-    transition:
-        transform .08s linear;
-}
-
-/* animated border */
-
-.panel::before{
-    content:"";
-
-    position:absolute;
-    inset:-1px;
-
-    border-radius:35px;
-
-    background:
         conic-gradient(
-            from var(--border-angle),
-            transparent 0deg,
-            transparent 55deg,
-            rgba(0,140,255,.95) 90deg,
-            transparent 125deg,
-            transparent 210deg,
-            rgba(255,20,70,.95) 255deg,
-            transparent 300deg,
-            transparent 360deg
+            from 0deg,
+            rgba(0,140,255,0),
+            rgba(0,140,255,.06),
+            rgba(255,20,70,.05),
+            rgba(0,140,255,0),
+            rgba(255,20,70,.06),
+            rgba(0,140,255,0)
         );
 
-    -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-
-    -webkit-mask-composite:xor;
-
-    mask-composite:exclude;
-
-    padding:1px;
-
-    pointer-events:none;
+    filter:blur(70px);
 
     animation:
-        borderRotation 7s linear infinite;
+        auroraSpin 25s linear infinite;
+
+    z-index:2;
 }
 
-@property --border-angle{
-    syntax:"<angle>";
-    initial-value:0deg;
-    inherits:false;
-}
+@keyframes auroraSpin{
+    from{
+        transform:
+            translate(-50%,-50%)
+            rotate(0deg);
+    }
 
-@keyframes borderRotation{
     to{
-        --border-angle:360deg;
+        transform:
+            translate(-50%,-50%)
+            rotate(360deg);
     }
 }
 
-/* inner shine */
+/* =========================================================
+   NOISE
+========================================================= */
 
-.panel::after{
-    content:"";
+.noise{
+    position:fixed;
+    inset:0;
 
-    position:absolute;
+    z-index:30;
 
-    top:0;
-    left:10%;
+    pointer-events:none;
 
-    width:80%;
-    height:1px;
+    opacity:.035;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   SCANLINES
+========================================================= */
+
+.scanlines{
+    position:fixed;
+    inset:0;
+
+    z-index:31;
+
+    pointer-events:none;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 5px,
+            rgba(255,255,255,.014) 6px
+        );
+
+    opacity:.55;
+}
+
+/* =========================================================
+   VIGNETTE
+========================================================= */
+
+.vignette{
+    position:fixed;
+    inset:0;
+
+    z-index:32;
+
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle,
+            transparent 30%,
+            rgba(0,0,0,.18) 60%,
+            rgba(0,0,0,.82) 100%
+        );
+}
+
+/* =========================================================
+   COLOR ABERRATION
+========================================================= */
+
+.chromatic{
+    position:fixed;
+    inset:0;
+
+    z-index:33;
+
+    pointer-events:none;
+
+    opacity:.13;
+
+    mix-blend-mode:screen;
 
     background:
         linear-gradient(
             90deg,
-            transparent,
-            rgba(0,150,255,.9),
-            white,
-            rgba(255,20,70,.9),
-            transparent
+            rgba(0,100,255,.06),
+            transparent 45%,
+            rgba(255,0,60,.06)
         );
-
-    box-shadow:
-        0 0 20px rgba(0,130,255,.6),
-        0 0 20px rgba(255,0,60,.3);
-
-    opacity:.65;
 }
 
 /* =========================================================
-   TOP BAR
+   HUD
 ========================================================= */
 
-.topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+.hud{
+    position:fixed;
+    inset:0;
 
-    margin-bottom:35px;
+    z-index:50;
 
-    position:relative;
-    z-index:5;
+    pointer-events:none;
 }
 
-.brand{
+/* =========================================================
+   CORNERS
+========================================================= */
+
+.corner{
+    position:absolute;
+
+    width:100px;
+    height:100px;
+
+    opacity:.55;
+}
+
+.corner.tl{
+    left:24px;
+    top:24px;
+
+    border-left:
+        1px solid
+        #008cff;
+
+    border-top:
+        1px solid
+        #008cff;
+}
+
+.corner.tr{
+    right:24px;
+    top:24px;
+
+    border-right:
+        1px solid
+        #ff174d;
+
+    border-top:
+        1px solid
+        #ff174d;
+}
+
+.corner.bl{
+    left:24px;
+    bottom:24px;
+
+    border-left:
+        1px solid
+        #ff174d;
+
+    border-bottom:
+        1px solid
+        #ff174d;
+}
+
+.corner.br{
+    right:24px;
+    bottom:24px;
+
+    border-right:
+        1px solid
+        #008cff;
+
+    border-bottom:
+        1px solid
+        #008cff;
+}
+
+/* =========================================================
+   TOP HUD
+========================================================= */
+
+.top{
+    position:absolute;
+
+    top:30px;
+    left:35px;
+    right:35px;
+
     display:flex;
+
+    justify-content:space-between;
+
     align-items:center;
+}
+
+.logo{
+    display:flex;
+
+    align-items:center;
+
     gap:12px;
 
-    font-size:13px;
-    font-weight:900;
+    color:#dceaff;
+
+    font-size:10px;
 
     letter-spacing:3px;
 
-    color:#dce9ff;
+    font-weight:900;
 }
 
-.brand-logo{
-    position:relative;
-
-    width:42px;
-    height:42px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
+.logoBox{
+    width:43px;
+    height:43px;
 
     border-radius:13px;
+
+    display:grid;
+
+    place-items:center;
+
+    font-size:10px;
 
     background:
         linear-gradient(
@@ -323,256 +356,427 @@ body{
         );
 
     box-shadow:
-        0 0 25px rgba(0,110,255,.35),
-        0 0 25px rgba(255,0,60,.2);
+        0 0 30px
+        rgba(0,120,255,.35),
 
-    font-size:10px;
-    font-weight:1000;
-
-    transform:translateZ(25px);
+        0 0 30px
+        rgba(255,20,70,.18);
 }
 
-.brand-logo::after{
-    content:"";
-
-    position:absolute;
-    inset:4px;
-
-    border-radius:10px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.35);
-}
-
-.online{
-    display:flex;
-    align-items:center;
-    gap:9px;
-
+.live{
     padding:
         9px
         14px;
 
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
     border-radius:50px;
 
     background:
-        rgba(255,255,255,.035);
+        rgba(4,10,20,.42);
 
-    border:
-        1px solid
-        rgba(255,255,255,.08);
+    backdrop-filter:
+        blur(15px);
 
     color:#71809b;
 
-    font-size:9px;
+    font-size:8px;
 
-    letter-spacing:1px;
+    letter-spacing:2px;
 }
 
-.online-dot{
+.liveDot{
+    display:inline-block;
+
     width:7px;
     height:7px;
 
     border-radius:50%;
 
-    background:#00ff91;
+    background:#00ff9d;
 
     box-shadow:
-        0 0 8px #00ff91,
-        0 0 18px rgba(0,255,145,.5);
+        0 0 8px #00ff9d,
+        0 0 18px #00ff9d;
+
+    margin-left:7px;
 
     animation:
-        onlinePulse 1.5s infinite;
+        livePulse 1.4s infinite;
 }
 
-@keyframes onlinePulse{
+@keyframes livePulse{
     50%{
         opacity:.2;
-        transform:scale(.7);
+        transform:scale(.65);
     }
 }
 
 /* =========================================================
-   CENTRAL CORE
+   SIDE HUD
 ========================================================= */
 
-.core-area{
-    position:relative;
+.sideHud{
+    position:absolute;
 
-    width:190px;
-    height:190px;
-
-    margin:
-        0
-        auto
-        20px;
-
-    transform-style:preserve-3d;
+    top:50%;
 
     transform:
-        translateZ(70px);
+        translateY(-50%);
+
+    color:#52627b;
+
+    font-size:7px;
+
+    line-height:2.3;
+
+    letter-spacing:2px;
 }
 
-.core-glow{
-    position:absolute;
-    inset:15%;
+.sideHud.left{
+    left:30px;
+}
 
-    border-radius:50%;
+.sideHud.right{
+    right:30px;
+
+    text-align:right;
+}
+
+.hudLine{
+    width:85px;
+
+    height:1px;
+
+    margin:
+        8px 0;
 
     background:
-        radial-gradient(
-            circle,
-            rgba(0,140,255,.16),
-            rgba(255,0,60,.08),
-            transparent 70%
+        linear-gradient(
+            90deg,
+            #008cff,
+            transparent
+        );
+}
+
+.sideHud.right .hudLine{
+    margin-left:auto;
+
+    background:
+        linear-gradient(
+            270deg,
+            #ff174d,
+            transparent
+        );
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.interface{
+    position:fixed;
+    inset:0;
+
+    z-index:60;
+
+    display:grid;
+
+    place-items:center;
+
+    padding:20px;
+
+    perspective:1800px;
+}
+
+/* =========================================================
+   GLASS PANEL
+========================================================= */
+
+.panel{
+    width:
+        min(
+            820px,
+            94vw
         );
 
-    filter:blur(15px);
+    padding:
+        38px
+        45px
+        30px;
+
+    position:relative;
+
+    border-radius:36px;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8,18,38,.7),
+            rgba(2,5,13,.52)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    backdrop-filter:
+        blur(28px)
+        saturate(160%);
+
+    -webkit-backdrop-filter:
+        blur(28px)
+        saturate(160%);
+
+    box-shadow:
+
+        0 60px 160px
+        rgba(0,0,0,.78),
+
+        0 0 100px
+        rgba(0,100,255,.07),
+
+        inset
+        0 1px
+        rgba(255,255,255,.12);
+
+    transform-style:
+        preserve-3d;
+
+    will-change:
+        transform;
+}
+
+/* animated border */
+
+.panel::before{
+    content:"";
+
+    position:absolute;
+
+    inset:-2px;
+
+    border-radius:38px;
+
+    padding:1px;
+
+    background:
+        conic-gradient(
+            from 0deg,
+            transparent,
+            #008cff,
+            transparent 30%,
+            transparent 50%,
+            #ff174d,
+            transparent 78%,
+            transparent
+        );
+
+    -webkit-mask:
+        linear-gradient(#000 0 0)
+        content-box,
+
+        linear-gradient(#000 0 0);
+
+    -webkit-mask-composite:
+        xor;
+
+    mask-composite:
+        exclude;
 
     animation:
-        glowPulse 3s ease-in-out infinite alternate;
+        borderSpin
+        7s
+        linear
+        infinite;
+
+    pointer-events:none;
 }
 
-@keyframes glowPulse{
-    from{
-        transform:scale(.9);
-        opacity:.5;
-    }
-
+@keyframes borderSpin{
     to{
-        transform:scale(1.15);
-        opacity:1;
+        transform:
+            rotate(360deg);
     }
 }
 
-.ring{
+/* =========================================================
+   REFLECTION
+========================================================= */
+
+.reflection{
     position:absolute;
+
+    width:300px;
+    height:700px;
+
+    top:-300px;
+    left:-400px;
+
+    transform:
+        rotate(25deg);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.08),
+            transparent
+        );
+
+    filter:
+        blur(20px);
+
+    animation:
+        reflection
+        7s
+        ease-in-out
+        infinite;
+
+    pointer-events:none;
+}
+
+@keyframes reflection{
+
+    0%{
+        left:-450px;
+    }
+
+    50%{
+        left:100%;
+    }
+
+    100%{
+        left:120%;
+    }
+}
+
+/* =========================================================
+   ENERGY CORE UI
+========================================================= */
+
+.coreUI{
+    width:170px;
+    height:170px;
+
+    margin:
+        0 auto
+        16px;
+
+    position:relative;
+
+    transform-style:
+        preserve-3d;
+
+    transform:
+        translateZ(90px);
+}
+
+.coreUI .ring{
+    position:absolute;
+
     inset:0;
 
     border-radius:50%;
 
     border:
         1px solid
-        rgba(0,145,255,.6);
+        rgba(0,140,255,.65);
 
     box-shadow:
-        0 0 25px rgba(0,130,255,.13);
+        0 0 25px
+        rgba(0,130,255,.16);
 
-    transform-style:preserve-3d;
-}
-
-.ring.r1{
     animation:
-        ringOne
+        ringA
         8s
         linear
         infinite;
 }
 
-.ring.r2{
-    inset:17px;
+.coreUI .ring:nth-child(2){
+
+    inset:18px;
 
     border-color:
-        rgba(255,23,77,.6);
+        rgba(255,20,70,.6);
 
     animation:
-        ringTwo
-        6s
+        ringB
+        5s
         linear
         infinite;
 }
 
-.ring.r3{
-    inset:36px;
+.coreUI .ring:nth-child(3){
+
+    inset:37px;
 
     border:
         1px dashed
         rgba(255,255,255,.22);
 
     animation:
-        ringOne
-        13s
+        ringA
+        12s
         linear
         infinite;
 }
 
-.ring.r4{
-    inset:52px;
+.coreUI .ring:nth-child(4){
+
+    inset:55px;
 
     border-color:
         rgba(0,200,255,.4);
 
     animation:
-        ringTwo
-        5s
+        ringB
+        4s
         linear
         infinite;
 }
 
-@keyframes ringOne{
-    from{
-        transform:
-            rotateX(65deg)
-            rotateZ(0deg);
-    }
+.coreCenter{
 
-    to{
-        transform:
-            rotateX(65deg)
-            rotateZ(360deg);
-    }
-}
-
-@keyframes ringTwo{
-    from{
-        transform:
-            rotateY(68deg)
-            rotateZ(360deg);
-    }
-
-    to{
-        transform:
-            rotateY(68deg)
-            rotateZ(0deg);
-    }
-}
-
-.core-center{
     position:absolute;
 
     left:50%;
     top:50%;
 
-    width:70px;
-    height:70px;
+    width:60px;
+    height:60px;
 
     transform:
         translate(-50%,-50%)
-        translateZ(35px);
+        translateZ(50px);
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:grid;
 
-    border-radius:22px;
+    place-items:center;
+
+    border-radius:18px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(0,120,255,.2),
-            rgba(255,20,70,.16)
+            rgba(0,130,255,.25),
+            rgba(255,20,70,.18)
         );
 
     border:
         1px solid
-        rgba(255,255,255,.15);
+        rgba(255,255,255,.16);
 
     box-shadow:
-        0 0 45px rgba(0,130,255,.2),
-        inset 0 0 30px rgba(255,255,255,.04);
+        0 0 50px
+        rgba(0,130,255,.3);
 
-    font-size:27px;
+    font-size:23px;
 
     animation:
         centerFloat
@@ -581,83 +785,129 @@ body{
         infinite;
 }
 
+@keyframes ringA{
+
+    from{
+        transform:
+            rotateX(65deg)
+            rotateZ(0deg);
+    }
+
+    to{
+        transform:
+            rotateX(65deg)
+            rotateZ(360deg);
+    }
+}
+
+@keyframes ringB{
+
+    from{
+        transform:
+            rotateY(67deg)
+            rotateZ(360deg);
+    }
+
+    to{
+        transform:
+            rotateY(67deg)
+            rotateZ(0deg);
+    }
+}
+
 @keyframes centerFloat{
+
     50%{
         transform:
             translate(-50%,-50%)
-            translateZ(55px)
-            scale(1.07);
+            translateZ(70px)
+            scale(1.08);
     }
 }
 
 /* =========================================================
-   HEADLINE
+   TEXT
 ========================================================= */
 
 .eyebrow{
+
+    position:relative;
+
     text-align:center;
 
-    color:#65748f;
+    color:#697993;
 
-    font-size:9px;
+    font-size:8px;
 
     letter-spacing:5px;
 
-    margin-bottom:14px;
+    margin-bottom:13px;
 }
 
 h1{
+
+    position:relative;
+
     text-align:center;
 
     font-size:
-        clamp(36px,6vw,72px);
+        clamp(
+            34px,
+            6vw,
+            72px
+        );
 
     line-height:1.2;
 
     font-weight:1000;
 
-    margin-bottom:19px;
-
     background:
         linear-gradient(
             100deg,
-            #007cff 0%,
-            #9bdeff 27%,
-            #ffffff 50%,
-            #ff9bae 73%,
-            #ff174d 100%
+            #008cff,
+            #c8efff,
+            #ffffff,
+            #ffb5c0,
+            #ff174d
         );
 
-    -webkit-background-clip:text;
-    background-clip:text;
+    -webkit-background-clip:
+        text;
 
     color:transparent;
 
     filter:
         drop-shadow(
-            0 0 25px
+            0 0 30px
             rgba(0,120,255,.2)
         );
 
-    transform:translateZ(45px);
+    transform:
+        translateZ(50px);
 }
 
 .description{
-    max-width:680px;
 
-    margin:auto;
+    position:relative;
+
+    max-width:650px;
+
+    margin:
+        18px
+        auto
+        0;
 
     text-align:center;
 
-    color:#8795ae;
+    color:#8997ae;
 
-    font-size:14px;
+    font-size:13px;
 
     line-height:2.1;
 }
 
 .description strong{
-    color:#e0ebff;
+    color:#e8f1ff;
 }
 
 /* =========================================================
@@ -665,52 +915,50 @@ h1{
 ========================================================= */
 
 .status{
-    max-width:680px;
+
+    position:relative;
+
+    max-width:650px;
 
     margin:
-        31px
+        29px
         auto
-        12px;
+        9px;
 
     display:flex;
+
+    align-items:center;
+
     justify-content:space-between;
-    align-items:center;
 
-    color:#6f7c94;
+    color:#687791;
 
-    font-size:10px;
+    font-size:9px;
 }
 
-.status-left{
+.statusLive{
+
     display:flex;
+
     align-items:center;
-    gap:8px;
 }
 
-.status-dot{
+.statusLive::before{
+
+    content:"";
+
     width:7px;
     height:7px;
+
+    margin-left:8px;
 
     border-radius:50%;
 
     background:#008cff;
 
     box-shadow:
-        0 0 10px #008cff;
-
-    animation:
-        statusPulse 1.3s infinite;
-}
-
-@keyframes statusPulse{
-    50%{
-        opacity:.2;
-    }
-}
-
-.percent{
-    color:#dbe8ff;
-    font-weight:bold;
+        0 0 10px
+        #008cff;
 }
 
 /* =========================================================
@@ -718,57 +966,57 @@ h1{
 ========================================================= */
 
 .progress{
-    max-width:680px;
+
+    position:relative;
+
+    max-width:650px;
 
     height:7px;
 
     margin:auto;
 
-    border-radius:50px;
+    border-radius:20px;
 
     background:
         rgba(255,255,255,.05);
-
-    overflow:hidden;
 
     border:
         1px solid
         rgba(255,255,255,.05);
-}
-
-.progress-bar{
-    position:relative;
-
-    width:67%;
-    height:100%;
-
-    border-radius:50px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #0055ff,
-            #00b8ff,
-            #ff174d
-        );
-
-    box-shadow:
-        0 0 15px rgba(0,130,255,.7),
-        0 0 30px rgba(255,0,60,.2);
 
     overflow:hidden;
 }
 
-.progress-bar::after{
+.progressFill{
+
+    height:100%;
+
+    width:73%;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #005cff,
+            #00c5ff,
+            #ff174d
+        );
+
+    box-shadow:
+        0 0 20px
+        rgba(0,130,255,.6);
+
+    position:relative;
+}
+
+.progressFill::after{
+
     content:"";
 
     position:absolute;
 
-    top:0;
-    right:-150px;
-
-    width:150px;
-    height:100%;
+    inset:0;
 
     background:
         linear-gradient(
@@ -778,17 +1026,21 @@ h1{
             transparent
         );
 
+    transform:
+        translateX(-100%);
+
     animation:
-        progressShine 2s linear infinite;
+        progressLight
+        2s
+        linear
+        infinite;
 }
 
-@keyframes progressShine{
-    from{
-        transform:translateX(0);
-    }
+@keyframes progressLight{
 
     to{
-        transform:translateX(-850px);
+        transform:
+            translateX(100%);
     }
 }
 
@@ -797,87 +1049,46 @@ h1{
 ========================================================= */
 
 .footer{
+
+    position:relative;
+
     display:flex;
-    align-items:center;
+
     justify-content:space-between;
 
-    margin-top:31px;
+    margin-top:28px;
 
-    color:#4c5970;
+    color:#536079;
 
-    font-size:8px;
+    font-size:7px;
 
-    letter-spacing:1px;
+    letter-spacing:1.5px;
 }
 
-.footer strong{
+.footer b{
     color:#008cff;
 }
 
 /* =========================================================
-   DECORATIVE CORNERS
+   CURSOR
 ========================================================= */
 
-.corner{
-    position:absolute;
+.cursorDot{
 
-    width:32px;
-    height:32px;
-
-    opacity:.7;
-}
-
-.corner.one{
-    left:18px;
-    top:18px;
-
-    border-left:1px solid #008cff;
-    border-top:1px solid #008cff;
-}
-
-.corner.two{
-    right:18px;
-    top:18px;
-
-    border-right:1px solid #ff174d;
-    border-top:1px solid #ff174d;
-}
-
-.corner.three{
-    left:18px;
-    bottom:18px;
-
-    border-left:1px solid #ff174d;
-    border-bottom:1px solid #ff174d;
-}
-
-.corner.four{
-    right:18px;
-    bottom:18px;
-
-    border-right:1px solid #008cff;
-    border-bottom:1px solid #008cff;
-}
-
-/* =========================================================
-   CUSTOM CURSOR
-========================================================= */
-
-.cursor-dot{
     position:fixed;
 
-    width:8px;
-    height:8px;
+    z-index:999;
+
+    width:7px;
+    height:7px;
 
     border-radius:50%;
 
     background:#fff;
 
     box-shadow:
-        0 0 10px #008cff,
-        0 0 25px #008cff;
-
-    z-index:9999;
+        0 0 12px #008cff,
+        0 0 30px #008cff;
 
     pointer-events:none;
 
@@ -885,8 +1096,11 @@ h1{
         translate(-50%,-50%);
 }
 
-.cursor-ring{
+.cursorRing{
+
     position:fixed;
+
+    z-index:998;
 
     width:45px;
     height:45px;
@@ -897,104 +1111,116 @@ h1{
         1px solid
         rgba(0,140,255,.6);
 
-    z-index:9998;
-
     pointer-events:none;
 
     transform:
         translate(-50%,-50%);
 
-    box-shadow:
-        0 0 18px rgba(0,120,255,.08);
-
     transition:
-        width .25s ease,
-        height .25s ease,
-        border-color .25s ease;
+        width .25s,
+        height .25s,
+        border-color .25s;
 }
 
-.cursor-ring::after{
+.cursorRing::after{
+
     content:"";
 
     position:absolute;
+
     inset:9px;
 
     border-radius:50%;
 
     border:
         1px solid
-        rgba(255,23,77,.35);
+        rgba(255,20,70,.45);
 }
 
 /* =========================================================
-   LOADING SCREEN
+   LOADER
 ========================================================= */
 
 .loader{
+
     position:fixed;
+
     inset:0;
 
-    z-index:10000;
+    z-index:9999;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:grid;
 
-    background:#020308;
+    place-items:center;
+
+    background:
+        #02040a;
 
     transition:
-        opacity 1s ease,
-        visibility 1s ease;
+        opacity 1s,
+        visibility 1s;
 }
 
 .loader.hide{
+
     opacity:0;
+
     visibility:hidden;
 }
 
-.loader-content{
+.loaderContent{
+
     text-align:center;
 }
 
-.loader-logo{
-    font-size:45px;
+.loaderLogo{
+
+    font-size:52px;
+
     font-weight:1000;
 
-    letter-spacing:8px;
+    letter-spacing:10px;
 
     background:
         linear-gradient(
             90deg,
             #008cff,
-            #fff,
+            white,
             #ff174d
         );
 
-    -webkit-background-clip:text;
+    -webkit-background-clip:
+        text;
+
     color:transparent;
 
     animation:
         loaderPulse
-        1.5s
+        1.3s
         ease-in-out
         infinite alternate;
 }
 
-.loader-text{
+.loaderText{
+
     margin-top:15px;
 
-    color:#66738c;
+    color:#62718a;
 
-    font-size:9px;
+    font-size:8px;
 
     letter-spacing:4px;
 }
 
-.loader-line{
-    width:180px;
+.loaderLine{
+
+    width:200px;
+
     height:2px;
 
-    margin:25px auto 0;
+    margin:
+        25px
+        auto;
 
     background:
         rgba(255,255,255,.08);
@@ -1002,7 +1228,8 @@ h1{
     overflow:hidden;
 }
 
-.loader-line::after{
+.loaderLine::after{
+
     content:"";
 
     display:block;
@@ -1019,26 +1246,32 @@ h1{
         );
 
     animation:
-        loaderLine 1.2s infinite;
+        loaderMove
+        1s
+        infinite;
 }
 
 @keyframes loaderPulse{
+
     to{
         filter:
             drop-shadow(
-                0 0 20px
-                rgba(0,140,255,.45)
+                0 0 25px
+                rgba(0,130,255,.5)
             );
     }
 }
 
-@keyframes loaderLine{
+@keyframes loaderMove{
+
     from{
-        transform:translateX(-300%);
+        transform:
+            translateX(-300%);
     }
 
     to{
-        transform:translateX(500%);
+        transform:
+            translateX(500%);
     }
 }
 
@@ -1046,282 +1279,455 @@ h1{
    MOBILE
 ========================================================= */
 
-@media(max-width:700px){
+@media(max-width:800px){
 
     body{
         cursor:auto;
     }
 
-    .cursor-dot,
-    .cursor-ring,
-    .mouse-light{
+    .cursorDot,
+    .cursorRing{
         display:none;
     }
 
-    .interface{
-        padding:13px;
+    .sideHud{
+        display:none;
+    }
+
+    .top{
+
+        left:15px;
+        right:15px;
+
+        top:15px;
+    }
+
+    .corner{
+
+        width:60px;
+        height:60px;
+    }
+
+    .corner.tl{
+        left:12px;
+        top:12px;
+    }
+
+    .corner.tr{
+        right:12px;
+        top:12px;
+    }
+
+    .corner.bl{
+        left:12px;
+        bottom:12px;
+    }
+
+    .corner.br{
+        right:12px;
+        bottom:12px;
     }
 
     .panel{
+
+        width:
+            min(
+                94vw,
+                680px
+            );
+
         padding:
-            30px
+            28px
             20px
-            27px;
+            25px;
 
-        border-radius:25px;
+        border-radius:27px;
     }
 
-    .topbar{
-        margin-bottom:25px;
+    .coreUI{
+
+        width:125px;
+        height:125px;
     }
 
-    .brand{
-        font-size:9px;
-        letter-spacing:1.5px;
+    .coreCenter{
+
+        width:48px;
+        height:48px;
+
+        font-size:19px;
     }
 
-    .brand-logo{
+    .description{
+
+        font-size:11px;
+    }
+
+    .footer{
+
+        font-size:6px;
+    }
+}
+
+@media(max-width:480px){
+
+    .logo{
+
+        font-size:7px;
+
+        letter-spacing:1px;
+    }
+
+    .logoBox{
+
         width:34px;
         height:34px;
     }
 
-    .online{
-        font-size:7px;
+    .live{
+
         padding:7px 9px;
+
+        font-size:6px;
     }
 
-    .core-area{
-        width:125px;
-        height:125px;
-        margin-bottom:15px;
+    .panel{
+
+        padding:
+            24px
+            17px
+            21px;
     }
 
-    .core-center{
-        width:56px;
-        height:56px;
-        font-size:20px;
+    .coreUI{
+
+        width:105px;
+        height:105px;
+
+        margin-bottom:10px;
+    }
+
+    .coreCenter{
+
+        width:43px;
+        height:43px;
     }
 
     h1{
-        font-size:34px;
+
+        font-size:33px;
     }
 
     .description{
-        font-size:12px;
+
+        font-size:10px;
+
+        line-height:2;
     }
 
-    .footer{
-        font-size:6px;
+    .footer div:last-child{
+
+        display:none;
     }
 }
 
 </style>
 </head>
 
+
 <body>
 
-<!-- =======================================================
-     LOADING
-======================================================= -->
+<!-- ======================================================
+     WEBGL CANVAS
+====================================================== -->
 
-<div class="loader" id="loader">
+<canvas id="scene"></canvas>
 
-    <div class="loader-content">
 
-        <div class="loader-logo">
-            BMP
+<!-- ======================================================
+     BACKGROUND FX
+====================================================== -->
+
+<div class="background"></div>
+
+<div class="aurora"></div>
+
+<div class="noise"></div>
+
+<div class="scanlines"></div>
+
+<div class="chromatic"></div>
+
+<div class="vignette"></div>
+
+
+<!-- ======================================================
+     HUD
+====================================================== -->
+
+<div class="hud">
+
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+
+    <div class="top">
+
+        <div class="logo">
+
+            <div class="logoBox">
+                BMP
+            </div>
+
+            BEHRAD M PLAYER
+
         </div>
 
-        <div class="loader-text">
-            INITIALIZING SYSTEM
+
+        <div class="live">
+
+            <span class="liveDot"></span>
+
+            SYSTEM ONLINE
+
         </div>
 
-        <div class="loader-line"></div>
+    </div>
+
+
+    <div class="sideHud left">
+
+        NEXUS CORE
+
+        <div class="hudLine"></div>
+
+        WEBGL ACTIVE
+
+        <br>
+
+        REALTIME RENDER
+
+        <br>
+
+        GPU PARTICLES
+
+        <br>
+
+        3D ENVIRONMENT
+
+    </div>
+
+
+    <div class="sideHud right">
+
+        BUILD 2026
+
+        <div class="hudLine"></div>
+
+        SYSTEM STATUS
+
+        <br>
+
+        01010101
+
+        <br>
+
+        11001010
+
+        <br>
+
+        BMP ONLINE
 
     </div>
 
 </div>
 
 
-<!-- =======================================================
-     WEBGL
-======================================================= -->
-
-<canvas id="webgl"></canvas>
-
-
-<!-- CINEMATIC OVERLAYS -->
-
-<div class="noise"></div>
-<div class="scanlines"></div>
-<div class="vignette"></div>
-
-<div class="mouse-light" id="mouseLight"></div>
-
-
-<!-- =======================================================
-     UI
-======================================================= -->
+<!-- ======================================================
+     MAIN UI
+====================================================== -->
 
 <div class="interface">
 
-    <section class="panel" id="panel">
+    <main
+        class="panel"
+        id="panel"
+    >
 
-        <div class="corner one"></div>
-        <div class="corner two"></div>
-        <div class="corner three"></div>
-        <div class="corner four"></div>
-
-
-        <!-- TOP -->
-
-        <div class="topbar">
-
-            <div class="brand">
-
-                <div class="brand-logo">
-                    BMP
-                </div>
-
-                BEHRAD M PLAYER
-
-            </div>
+        <div class="reflection"></div>
 
 
-            <div class="online">
+        <!-- 3D UI CORE -->
 
-                <span class="online-dot"></span>
+        <div class="coreUI">
 
-                SYSTEM ONLINE
+            <div class="ring"></div>
 
-            </div>
+            <div class="ring"></div>
 
-        </div>
+            <div class="ring"></div>
+
+            <div class="ring"></div>
 
 
-        <!-- CORE -->
+            <div class="coreCenter">
 
-        <div class="core-area">
-
-            <div class="core-glow"></div>
-
-            <div class="ring r1"></div>
-            <div class="ring r2"></div>
-            <div class="ring r3"></div>
-            <div class="ring r4"></div>
-
-            <div class="core-center">
                 ⚙
+
             </div>
 
         </div>
 
-
-        <!-- TITLE -->
 
         <div class="eyebrow">
-            WEBSITE MAINTENANCE
+
+            BEHRAD M PLAYER • NEXUS ULTRA
+
         </div>
 
 
         <h1>
+
             سایت در حال UPDATE است
+
         </h1>
 
 
         <p class="description">
 
-            سیستم در حال ارتقا و آماده‌سازی نسل جدید
-            <strong>BEHRAD M PLAYER</strong>
+            سیستم در حال ساخت نسل جدید
+
+            <strong>
+                BEHRAD M PLAYER
+            </strong>
+
             است.
 
             <br>
 
-            قابلیت‌های جدید در حال بارگذاری هستند؛
-            کمی صبر کنید... 🚀
+            یک تجربه‌ی سریع‌تر،
+            سه‌بعدی‌تر،
+            خفن‌تر و حرفه‌ای‌تر
+            در راه است 🚀
 
         </p>
 
 
-        <!-- STATUS -->
-
         <div class="status">
 
-            <div class="status-left">
+            <div class="statusLive">
 
-                <span class="status-dot"></span>
-
-                <span>
-                    SYSTEM UPDATE IN PROGRESS
-                </span>
+                SYSTEM UPDATE IN PROGRESS
 
             </div>
 
-            <div class="percent">
-                67%
-            </div>
+            <strong>
+
+                73%
+
+            </strong>
 
         </div>
 
-
-        <!-- PROGRESS -->
 
         <div class="progress">
 
-            <div class="progress-bar"></div>
+            <div class="progressFill"></div>
 
         </div>
 
-
-        <!-- FOOTER -->
 
         <div class="footer">
 
             <div>
+
                 © 2026
-                <strong>BEHRAD M PLAYER</strong>
+
+                <b>
+                    BEHRAD M PLAYER
+                </b>
+
             </div>
 
+
             <div>
-                BUILD 2.0.26 • SECURE SYSTEM
+
+                WEBGL • NEXUS ULTRA • SECURE
+
             </div>
 
         </div>
 
-    </section>
+    </main>
 
 </div>
 
 
-<!-- =======================================================
+<!-- ======================================================
      CURSOR
-======================================================= -->
+====================================================== -->
 
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div
+    class="cursorDot"
+    id="cursorDot"
+></div>
+
+<div
+    class="cursorRing"
+    id="cursorRing"
+></div>
 
 
-<!-- =======================================================
+<!-- ======================================================
+     LOADER
+====================================================== -->
+
+<div
+    class="loader"
+    id="loader"
+>
+
+    <div class="loaderContent">
+
+        <div class="loaderLogo">
+            BMP
+        </div>
+
+        <div class="loaderText">
+            INITIALIZING NEXUS ULTRA
+        </div>
+
+        <div class="loaderLine"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
      THREE.JS
-======================================================= -->
+====================================================== -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 
 <script>
 
 /* =========================================================
-   GLOBAL
+   CORE
 ========================================================= */
 
 const canvas =
-    document.getElementById("webgl");
+    document.getElementById("scene");
 
 const scene =
     new THREE.Scene();
 
 scene.fog =
     new THREE.FogExp2(
-        0x020308,
+        0x02040a,
         0.00065
     );
 
@@ -1332,14 +1738,17 @@ scene.fog =
 
 const camera =
     new THREE.PerspectiveCamera(
-        55,
-        window.innerWidth /
-        window.innerHeight,
+        58,
+        innerWidth / innerHeight,
         1,
         5000
     );
 
-camera.position.z=850;
+camera.position.set(
+    0,
+    20,
+    900
+);
 
 
 /* =========================================================
@@ -1348,22 +1757,35 @@ camera.position.z=850;
 
 const renderer =
     new THREE.WebGLRenderer({
-        canvas,
+
+        canvas:canvas,
+
         antialias:true,
+
         alpha:true,
-        powerPreference:"high-performance"
+
+        powerPreference:
+            "high-performance"
+
     });
 
+
+const mobile =
+    innerWidth < 700;
+
+
 renderer.setPixelRatio(
+
     Math.min(
-        window.devicePixelRatio,
-        1.7
+        devicePixelRatio,
+        mobile ? 1.25 : 1.7
     )
+
 );
 
 renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
+    innerWidth,
+    innerHeight
 );
 
 renderer.outputEncoding =
@@ -1371,473 +1793,1032 @@ renderer.outputEncoding =
 
 
 /* =========================================================
-   PARTICLE FIELD
+   COLORS
 ========================================================= */
 
-const particleCount =
-    Math.min(
-        4200,
-        Math.floor(
-            window.innerWidth *
-            window.innerHeight /
-            180
-        )
-    );
-
-const positions =
-    new Float32Array(
-        particleCount*3
-    );
-
-const colors =
-    new Float32Array(
-        particleCount*3
-    );
-
-const colorBlue =
+const BLUE =
     new THREE.Color(
         0x008cff
     );
 
-const colorRed =
+const RED =
     new THREE.Color(
         0xff174d
     );
 
-for(
-    let i=0;
-    i<particleCount;
-    i++
+
+/* =========================================================
+   PARTICLE SYSTEM
+========================================================= */
+
+function createParticles(
+    count,
+    radius,
+    size,
+    opacity
 ){
 
-    const i3=i*3;
+    const geometry =
+        new THREE.BufferGeometry();
 
-    const radius =
-        500 +
-        Math.random()*1500;
 
-    const theta =
-        Math.random() *
-        Math.PI*2;
-
-    const phi =
-        Math.acos(
-            2*Math.random()-1
+    const positions =
+        new Float32Array(
+            count * 3
         );
 
-    positions[i3] =
-        radius *
-        Math.sin(phi) *
-        Math.cos(theta);
 
-    positions[i3+1] =
-        radius *
-        Math.cos(phi);
-
-    positions[i3+2] =
-        radius *
-        Math.sin(phi) *
-        Math.sin(theta);
+    const colors =
+        new Float32Array(
+            count * 3
+        );
 
 
-    const color =
-        Math.random() < .52
-        ? colorBlue
-        : colorRed;
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
 
-    colors[i3] =
-        color.r;
-
-    colors[i3+1] =
-        color.g;
-
-    colors[i3+2] =
-        color.b;
-}
+        const p =
+            i * 3;
 
 
-const particleGeometry =
-    new THREE.BufferGeometry();
-
-particleGeometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(
-        positions,
-        3
-    )
-);
-
-particleGeometry.setAttribute(
-    "color",
-    new THREE.BufferAttribute(
-        colors,
-        3
-    )
-);
+        const r =
+            radius *
+            (
+                .3 +
+                Math.random()*.7
+            );
 
 
-const particleMaterial =
-    new THREE.PointsMaterial({
-
-        size:3.2,
-
-        vertexColors:true,
-
-        transparent:true,
-
-        opacity:.72,
-
-        blending:
-            THREE.AdditiveBlending,
-
-        depthWrite:false,
-
-        sizeAttenuation:true
-    });
+        const theta =
+            Math.random() *
+            Math.PI *
+            2;
 
 
-const particles =
-    new THREE.Points(
-        particleGeometry,
-        particleMaterial
+        const phi =
+            Math.acos(
+                2 *
+                Math.random() -
+                1
+            );
+
+
+        positions[p] =
+            r *
+            Math.sin(phi) *
+            Math.cos(theta);
+
+
+        positions[p+1] =
+            r *
+            Math.cos(phi);
+
+
+        positions[p+2] =
+            r *
+            Math.sin(phi) *
+            Math.sin(theta);
+
+
+        const color =
+            Math.random() < .55
+                ? BLUE
+                : RED;
+
+
+        colors[p] =
+            color.r;
+
+        colors[p+1] =
+            color.g;
+
+        colors[p+2] =
+            color.b;
+
+    }
+
+
+    geometry.setAttribute(
+        "position",
+
+        new THREE.BufferAttribute(
+            positions,
+            3
+        )
     );
 
-scene.add(particles);
+
+    geometry.setAttribute(
+        "color",
+
+        new THREE.BufferAttribute(
+            colors,
+            3
+        )
+    );
+
+
+    const material =
+        new THREE.PointsMaterial({
+
+            size:size,
+
+            vertexColors:true,
+
+            transparent:true,
+
+            opacity:opacity,
+
+            depthWrite:false,
+
+            blending:
+                THREE.AdditiveBlending,
+
+            sizeAttenuation:true
+
+        });
+
+
+    return new THREE.Points(
+        geometry,
+        material
+    );
+
+}
 
 
 /* =========================================================
-   STAR DUST
+   STAR FIELD
 ========================================================= */
 
-const dustGeometry =
-    new THREE.BufferGeometry();
+const stars =
+    createParticles(
 
-const dustPositions =
-    new Float32Array(1500*3);
+        mobile
+            ? 1400
+            : 3500,
 
-for(
-    let i=0;
-    i<1500;
-    i++
-){
+        1900,
 
-    const i3=i*3;
+        mobile
+            ? 2.3
+            : 3.5,
 
-    dustPositions[i3] =
-        (Math.random()-.5)*5000;
+        .72
 
-    dustPositions[i3+1] =
-        (Math.random()-.5)*3000;
+    );
 
-    dustPositions[i3+2] =
-        (Math.random()-.5)*4000;
-}
+scene.add(stars);
 
-dustGeometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(
-        dustPositions,
-        3
-    )
-);
 
-const dustMaterial =
-    new THREE.PointsMaterial({
-
-        color:0x7890b5,
-
-        size:1,
-
-        transparent:true,
-
-        opacity:.35,
-
-        depthWrite:false
-    });
+/* =========================================================
+   DEEP SPACE DUST
+========================================================= */
 
 const dust =
-    new THREE.Points(
-        dustGeometry,
-        dustMaterial
+    createParticles(
+
+        mobile
+            ? 500
+            : 1200,
+
+        3000,
+
+        1.1,
+
+        .3
+
     );
 
 scene.add(dust);
 
 
 /* =========================================================
-   NEON GRID
+   WORLD
 ========================================================= */
 
-const gridGroup =
+const world =
     new THREE.Group();
 
-const gridMaterialBlue =
-    new THREE.LineBasicMaterial({
-        color:0x006eff,
-        transparent:true,
-        opacity:.11,
-        blending:
-            THREE.AdditiveBlending
-    });
-
-const gridMaterialRed =
-    new THREE.LineBasicMaterial({
-        color:0xff174d,
-        transparent:true,
-        opacity:.07,
-        blending:
-            THREE.AdditiveBlending
-    });
-
-
-for(
-    let i=-1200;
-    i<=1200;
-    i+=100
-){
-
-    const pointsA=[];
-
-    pointsA.push(
-        new THREE.Vector3(
-            i,
-            -500,
-            -900
-        )
-    );
-
-    pointsA.push(
-        new THREE.Vector3(
-            i,
-            -500,
-            1500
-        )
-    );
-
-    const geometryA =
-        new THREE.BufferGeometry()
-        .setFromPoints(
-            pointsA
-        );
-
-    gridGroup.add(
-        new THREE.Line(
-            geometryA,
-            i%200===0
-            ? gridMaterialBlue
-            : gridMaterialRed
-        )
-    );
-}
-
-
-for(
-    let z=-900;
-    z<=1500;
-    z+=100
-){
-
-    const pointsB=[];
-
-    pointsB.push(
-        new THREE.Vector3(
-            -1200,
-            -500,
-            z
-        )
-    );
-
-    pointsB.push(
-        new THREE.Vector3(
-            1200,
-            -500,
-            z
-        )
-    );
-
-    const geometryB =
-        new THREE.BufferGeometry()
-        .setFromPoints(
-            pointsB
-        );
-
-    gridGroup.add(
-        new THREE.Line(
-            geometryB,
-            z%200===0
-            ? gridMaterialBlue
-            : gridMaterialRed
-        )
-    );
-}
-
-scene.add(gridGroup);
+scene.add(world);
 
 
 /* =========================================================
-   FLOATING CUBES
+   FLOOR GRID
 ========================================================= */
 
-const cubes =
-    new THREE.Group();
-
-const cubeMaterials=[
-    new THREE.MeshBasicMaterial({
-        color:0x008cff,
-        wireframe:true,
-        transparent:true,
-        opacity:.22
-    }),
-
-    new THREE.MeshBasicMaterial({
-        color:0xff174d,
-        wireframe:true,
-        transparent:true,
-        opacity:.18
-    })
-];
-
-for(
-    let i=0;
-    i<35;
-    i++
-){
-
-    const size =
-        15+
-        Math.random()*45;
-
-    const geometry =
-        new THREE.BoxGeometry(
-            size,
-            size,
-            size
-        );
-
-    const mesh =
-        new THREE.Mesh(
-            geometry,
-            cubeMaterials[
-                i%2
-            ]
-        );
-
-    mesh.position.set(
-        (Math.random()-.5)*1800,
-        (Math.random()-.5)*1100,
-        (Math.random()-.5)*1700
+const grid =
+    new THREE.GridHelper(
+        2800,
+        56,
+        0x007cff,
+        0x142542
     );
 
-    mesh.rotation.set(
-        Math.random()*Math.PI,
-        Math.random()*Math.PI,
-        Math.random()*Math.PI
-    );
+grid.position.y =
+    -470;
 
-    mesh.userData={
-        speed:
-            .001+
-            Math.random()*.006,
+grid.material.transparent =
+    true;
 
-        float:
-            Math.random()*Math.PI*2
-    };
+grid.material.opacity =
+    .13;
 
-    cubes.add(mesh);
-}
-
-scene.add(cubes);
+world.add(grid);
 
 
 /* =========================================================
-   CENTRAL 3D ENERGY CORE
+   CENTRAL CORE
 ========================================================= */
 
 const core =
     new THREE.Group();
 
-const coreGeo =
-    new THREE.IcosahedronGeometry(
-        85,
-        2
-    );
-
-const coreMat =
-    new THREE.MeshBasicMaterial({
-        color:0x008cff,
-        wireframe:true,
-        transparent:true,
-        opacity:.13,
-        blending:
-            THREE.AdditiveBlending
-    });
-
-const coreMesh =
-    new THREE.Mesh(
-        coreGeo,
-        coreMat
-    );
-
-core.add(coreMesh);
-
-
-const coreGeo2 =
-    new THREE.IcosahedronGeometry(
-        60,
-        1
-    );
-
-const coreMat2 =
-    new THREE.MeshBasicMaterial({
-        color:0xff174d,
-        wireframe:true,
-        transparent:true,
-        opacity:.14,
-        blending:
-            THREE.AdditiveBlending
-    });
-
-const coreMesh2 =
-    new THREE.Mesh(
-        coreGeo2,
-        coreMat2
-    );
-
-core.add(coreMesh2);
-
-
 core.position.set(
     0,
-    40,
-    -100
+    30,
+    -120
 );
 
-scene.add(core);
+world.add(core);
 
 
 /* =========================================================
-   MOUSE
+   CORE WIREFRAMES
 ========================================================= */
 
-let mouseX=0;
-let mouseY=0;
+const core1 =
+    new THREE.Mesh(
 
-let smoothMouseX=0;
-let smoothMouseY=0;
+        new THREE.IcosahedronGeometry(
+            110,
+            2
+        ),
+
+        new THREE.MeshBasicMaterial({
+
+            color:0x008cff,
+
+            wireframe:true,
+
+            transparent:true,
+
+            opacity:.18,
+
+            blending:
+                THREE.AdditiveBlending
+
+        })
+
+    );
+
+
+const core2 =
+    new THREE.Mesh(
+
+        new THREE.IcosahedronGeometry(
+            76,
+            2
+        ),
+
+        new THREE.MeshBasicMaterial({
+
+            color:0xff174d,
+
+            wireframe:true,
+
+            transparent:true,
+
+            opacity:.17,
+
+            blending:
+                THREE.AdditiveBlending
+
+        })
+
+    );
+
+
+const core3 =
+    new THREE.Mesh(
+
+        new THREE.DodecahedronGeometry(
+            46,
+            2
+        ),
+
+        new THREE.MeshBasicMaterial({
+
+            color:0xffffff,
+
+            wireframe:true,
+
+            transparent:true,
+
+            opacity:.1,
+
+            blending:
+                THREE.AdditiveBlending
+
+        })
+
+    );
+
+
+core.add(
+    core1,
+    core2,
+    core3
+);
+
+
+/* =========================================================
+   CORE LIGHTS
+========================================================= */
+
+const blueLight =
+    new THREE.PointLight(
+        0x008cff,
+        4,
+        800
+    );
+
+const redLight =
+    new THREE.PointLight(
+        0xff174d,
+        3,
+        700
+    );
+
+redLight.position.x =
+    150;
+
+core.add(
+    blueLight,
+    redLight
+);
+
+
+/* =========================================================
+   CORE RINGS
+========================================================= */
+
+for(
+    let i=0;
+    i<9;
+    i++
+){
+
+    const ring =
+        new THREE.Mesh(
+
+            new THREE.TorusGeometry(
+
+                120 +
+                i*25,
+
+                1.2 +
+                i%3,
+
+                10,
+
+                160
+
+            ),
+
+            new THREE.MeshBasicMaterial({
+
+                color:
+                    i%2
+                    ? 0xff174d
+                    : 0x008cff,
+
+                transparent:true,
+
+                opacity:
+                    .2 +
+                    Math.random()*.22,
+
+                blending:
+                    THREE.AdditiveBlending
+
+            })
+
+        );
+
+
+    ring.rotation.x =
+        Math.random() *
+        Math.PI;
+
+    ring.rotation.y =
+        Math.random() *
+        Math.PI;
+
+
+    ring.userData.speed =
+        (
+            .0015 +
+            Math.random()*.004
+        ) *
+        (
+            i%2
+                ? -1
+                : 1
+        );
+
+
+    core.add(
+        ring
+    );
+
+}
+
+
+/* =========================================================
+   ENERGY BEAMS
+========================================================= */
+
+const beams =
+    new THREE.Group();
+
+world.add(
+    beams
+);
+
+
+for(
+    let i=0;
+    i<28;
+    i++
+){
+
+    const material =
+        new THREE.LineBasicMaterial({
+
+            color:
+                i%2
+                    ? 0xff174d
+                    : 0x008cff,
+
+            transparent:true,
+
+            opacity:.12,
+
+            blending:
+                THREE.AdditiveBlending
+
+        });
+
+
+    const points=[];
+
+
+    const a =
+        Math.random() *
+        Math.PI *
+        2;
+
+
+    const radius =
+        180 +
+        Math.random()*500;
+
+
+    points.push(
+
+        new THREE.Vector3(
+
+            Math.cos(a) *
+            radius,
+
+            -450,
+
+            Math.sin(a) *
+            radius -
+            150
+
+        )
+
+    );
+
+
+    points.push(
+
+        new THREE.Vector3(
+
+            0,
+
+            100 +
+            Math.random()*350,
+
+            -120
+
+        )
+
+    );
+
+
+    const geometry =
+        new THREE.BufferGeometry()
+        .setFromPoints(
+            points
+        );
+
+
+    beams.add(
+
+        new THREE.Line(
+            geometry,
+            material
+        )
+
+    );
+
+}
+
+
+/* =========================================================
+   FLOATING SHARDS
+========================================================= */
+
+const shards =
+    new THREE.Group();
+
+world.add(
+    shards
+);
+
+
+const shardCount =
+    mobile
+        ? 20
+        : 48;
+
+
+for(
+    let i=0;
+    i<shardCount;
+    i++
+){
+
+    const shard =
+        new THREE.Mesh(
+
+            new THREE.OctahedronGeometry(
+
+                12 +
+                Math.random()*32,
+
+                0
+
+            ),
+
+            new THREE.MeshBasicMaterial({
+
+                color:
+                    i%2
+                        ? 0xff174d
+                        : 0x008cff,
+
+                wireframe:true,
+
+                transparent:true,
+
+                opacity:.16
+
+            })
+
+        );
+
+
+    const angle =
+        Math.random() *
+        Math.PI *
+        2;
+
+
+    const radius =
+        350 +
+        Math.random()*1000;
+
+
+    shard.position.set(
+
+        Math.cos(angle) *
+        radius,
+
+        (Math.random()-.5) *
+        700,
+
+        Math.sin(angle) *
+        radius -
+        350
+
+    );
+
+
+    shard.userData = {
+
+        angle:angle,
+
+        radius:radius,
+
+        speed:
+            .001 +
+            Math.random()*.003
+
+    };
+
+
+    shards.add(
+        shard
+    );
+
+}
+
+
+/* =========================================================
+   FUTURE CITY
+========================================================= */
+
+const city =
+    new THREE.Group();
+
+world.add(
+    city
+);
+
+
+const buildingMaterialBlue =
+    new THREE.MeshBasicMaterial({
+
+        color:0x071a38,
+
+        transparent:true,
+
+        opacity:.82
+
+    });
+
+
+const buildingMaterialRed =
+    new THREE.MeshBasicMaterial({
+
+        color:0x220712,
+
+        transparent:true,
+
+        opacity:.78
+
+    });
+
+
+const buildingCount =
+    mobile
+        ? 45
+        : 110;
+
+
+for(
+    let i=0;
+    i<buildingCount;
+    i++
+){
+
+    const width =
+        25 +
+        Math.random()*60;
+
+
+    const height =
+        80 +
+        Math.random()*350;
+
+
+    const depth =
+        25 +
+        Math.random()*70;
+
+
+    const geometry =
+        new THREE.BoxGeometry(
+            width,
+            height,
+            depth
+        );
+
+
+    const building =
+        new THREE.Mesh(
+
+            geometry,
+
+            i%2
+                ? buildingMaterialBlue
+                : buildingMaterialRed
+
+        );
+
+
+    const side =
+        Math.random()<.5
+            ? -1
+            : 1;
+
+
+    building.position.set(
+
+        side *
+        (
+            400 +
+            Math.random()*850
+        ),
+
+        height/2 - 450,
+
+        -100 -
+        Math.random()*1000
+
+    );
+
+
+    building.rotation.y =
+        Math.random()*.25;
+
+
+    city.add(
+        building
+    );
+
+}
+
+
+/* =========================================================
+   NEON WINDOWS
+========================================================= */
+
+const windowGeometry =
+    new THREE.BufferGeometry();
+
+
+const windowPositions=[];
+
+
+const windowCount =
+    mobile
+        ? 400
+        : 1000;
+
+
+for(
+    let i=0;
+    i<windowCount;
+    i++
+){
+
+    const side =
+        Math.random()<.5
+            ? -1
+            : 1;
+
+
+    windowPositions.push(
+
+        side *
+        (
+            405 +
+            Math.random()*850
+        ),
+
+        -400 +
+        Math.random()*320,
+
+        -100 -
+        Math.random()*1000
+
+    );
+
+}
+
+
+windowGeometry.setAttribute(
+
+    "position",
+
+    new THREE.Float32BufferAttribute(
+
+        windowPositions,
+        3
+
+    )
+
+);
+
+
+const windowPoints =
+    new THREE.Points(
+
+        windowGeometry,
+
+        new THREE.PointsMaterial({
+
+            color:0x008cff,
+
+            size:
+                mobile
+                    ? 2
+                    : 2.8,
+
+            transparent:true,
+
+            opacity:.7,
+
+            blending:
+                THREE.AdditiveBlending
+
+        })
+
+    );
+
+
+city.add(
+    windowPoints
+);
+
+
+/* =========================================================
+   MOUSE / TOUCH
+========================================================= */
+
+const input = {
+
+    x:0,
+
+    y:0
+
+};
+
+
+const smoothInput = {
+
+    x:0,
+
+    y:0
+
+};
+
+
+function updateInput(
+    x,
+    y
+){
+
+    input.x =
+        x /
+        innerWidth -
+        .5;
+
+    input.y =
+        y /
+        innerHeight -
+        .5;
+
+}
+
 
 window.addEventListener(
-    "mousemove",
-    e=>{
 
-        mouseX =
-            (e.clientX /
-            window.innerWidth-.5);
+    "pointermove",
 
-        mouseY =
-            (e.clientY /
-            window.innerHeight-.5);
+    event=>{
+
+        updateInput(
+            event.clientX,
+            event.clientY
+        );
+
+    },
+
+    {
+        passive:true
     }
+
 );
+
+
+/* =========================================================
+   TOUCH MOTION
+========================================================= */
+
+window.addEventListener(
+
+    "touchmove",
+
+    event=>{
+
+        if(
+            event.touches.length
+        ){
+
+            updateInput(
+
+                event.touches[0].clientX,
+
+                event.touches[0].clientY
+
+            );
+
+        }
+
+    },
+
+    {
+        passive:true
+    }
+
+);
+
+
+/* =========================================================
+   CLICK ENERGY PULSE
+========================================================= */
+
+window.addEventListener(
+
+    "pointerdown",
+
+    ()=>{
+
+        core.scale.set(
+            1.16,
+            1.16,
+            1.16
+        );
+
+
+        setTimeout(
+
+            ()=>{
+
+                core.scale.set(
+                    1,
+                    1,
+                    1
+                );
+
+            },
+
+            170
+
+        );
+
+    }
+
+);
+
+
+/* =========================================================
+   PANEL TILT
+========================================================= */
+
+const panel =
+    document.getElementById(
+        "panel"
+    );
+
+
+let panelRX=0;
+let panelRY=0;
+
+
+function animatePanel(){
+
+    panelRX +=
+        (
+            -smoothInput.y*5 -
+            panelRX
+        )*.07;
+
+
+    panelRY +=
+        (
+            smoothInput.x*7 -
+            panelRY
+        )*.07;
+
+
+    panel.style.transform =
+        `
+        rotateX(${panelRX}deg)
+        rotateY(${panelRY}deg)
+        translateZ(0)
+        `;
+
+}
 
 
 /* =========================================================
@@ -1854,10 +2835,6 @@ const cursorRing =
         "cursorRing"
     );
 
-const mouseLight =
-    document.getElementById(
-        "mouseLight"
-    );
 
 let cursorX=0;
 let cursorY=0;
@@ -1865,61 +2842,35 @@ let cursorY=0;
 let ringX=0;
 let ringY=0;
 
+
 window.addEventListener(
-    "mousemove",
-    e=>{
 
-        cursorX=e.clientX;
-        cursorY=e.clientY;
+    "pointermove",
 
-        mouseLight.style.left=
-            e.clientX+"px";
+    event=>{
 
-        mouseLight.style.top=
-            e.clientY+"px";
+        cursorX =
+            event.clientX;
+
+        cursorY =
+            event.clientY;
+
     }
+
 );
 
 
 /* =========================================================
-   PANEL PARALLAX
-========================================================= */
-
-const panel =
-    document.getElementById(
-        "panel"
-    );
-
-let targetRX=0;
-let targetRY=0;
-
-let currentRX=0;
-let currentRY=0;
-
-window.addEventListener(
-    "mousemove",
-    e=>{
-
-        const x =
-            e.clientX /
-            window.innerWidth-.5;
-
-        const y =
-            e.clientY /
-            window.innerHeight-.5;
-
-        targetRY=x*7;
-        targetRX=-y*5;
-    }
-);
-
-
-/* =========================================================
-   ANIMATION LOOP
+   CLOCK
 ========================================================= */
 
 const clock =
     new THREE.Clock();
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
 
 function animate(){
 
@@ -1927,155 +2878,281 @@ function animate(){
         animate
     );
 
-    const time =
+
+    const t =
         clock.getElapsedTime();
 
 
-    /* smooth mouse */
+    /* smooth input */
 
-    smoothMouseX +=
-        (mouseX-smoothMouseX)
-        *0.035;
+    smoothInput.x +=
+        (
+            input.x -
+            smoothInput.x
+        )*.035;
 
-    smoothMouseY +=
-        (mouseY-smoothMouseY)
-        *0.035;
+
+    smoothInput.y +=
+        (
+            input.y -
+            smoothInput.y
+        )*.035;
 
 
     /* camera */
 
     camera.position.x +=
         (
-            smoothMouseX*110
-            -
+            smoothInput.x *
+            130 -
             camera.position.x
         )*.025;
 
+
     camera.position.y +=
         (
-            -smoothMouseY*70
-            -
+            20 -
+            smoothInput.y *
+            85 -
             camera.position.y
         )*.025;
+
 
     camera.lookAt(
         0,
         0,
-        -100
+        -120
     );
 
 
-    /* particles */
+    /* stars */
 
-    particles.rotation.y =
-        time*.012;
+    stars.rotation.y +=
+        .0007;
 
-    particles.rotation.x =
-        smoothMouseY*.08;
+    stars.rotation.x =
+        smoothInput.y*.04;
 
-    particles.rotation.z =
-        smoothMouseX*.05;
+
+    stars.rotation.z =
+        smoothInput.x*.025;
 
 
     /* dust */
 
-    dust.rotation.y =
-        time*.003;
+    dust.rotation.y -=
+        .00025;
+
+
+    /* world */
+
+    world.rotation.y =
+        smoothInput.x*.025;
 
 
     /* grid */
 
-    gridGroup.rotation.y =
-        smoothMouseX*.035;
-
-
-    /* cubes */
-
-    cubes.rotation.y =
-        time*.025;
-
-    cubes.rotation.x =
-        smoothMouseY*.04;
-
-    cubes.children.forEach(
-        cube=>{
-
-            cube.rotation.x +=
-                cube.userData.speed;
-
-            cube.rotation.y +=
-                cube.userData.speed*1.4;
-
-            cube.position.y +=
-                Math.sin(
-                    time+
-                    cube.userData.float
-                )*.08;
-        }
-    );
+    grid.position.z =
+        (
+            (t*25)%100
+        ) -
+        50;
 
 
     /* core */
 
     core.rotation.x =
-        time*.18;
+        t*.14;
 
     core.rotation.y =
-        time*.25;
+        t*.22;
 
     core.rotation.z =
-        smoothMouseX*.5;
+        smoothInput.x*.5;
+
 
     core.position.x =
-        smoothMouseX*35;
+        smoothInput.x*45;
+
 
     core.position.y =
-        40-
-        smoothMouseY*25;
+        30 -
+        smoothInput.y*28;
+
+
+    /* core rings */
+
+    core.children.forEach(
+
+        object=>{
+
+            if(
+                object.userData &&
+                object.userData.speed
+            ){
+
+                object.rotation.z +=
+                    object.userData.speed;
+
+            }
+
+        }
+
+    );
+
+
+    /* shards */
+
+    shards.children.forEach(
+
+        shard=>{
+
+            shard.userData.angle +=
+                shard.userData.speed;
+
+
+            shard.position.x =
+                Math.cos(
+                    shard.userData.angle
+                ) *
+                shard.userData.radius;
+
+
+            shard.position.z =
+                Math.sin(
+                    shard.userData.angle
+                ) *
+                shard.userData.radius -
+                350;
+
+
+            shard.rotation.x +=
+                .002;
+
+
+            shard.rotation.y +=
+                .003;
+
+        }
+
+    );
+
+
+    /* city */
+
+    city.rotation.y =
+        smoothInput.x*.015;
 
 
     /* panel */
 
-    currentRX +=
-        (targetRX-currentRX)*.06;
-
-    currentRY +=
-        (targetRY-currentRY)*.06;
-
-    panel.style.transform =
-        `rotateX(${currentRX}deg)
-         rotateY(${currentRY}deg)`;
+    animatePanel();
 
 
     /* cursor */
 
-    cursorDot.style.left=
-        cursorX+"px";
+    if(
+        innerWidth > 800
+    ){
 
-    cursorDot.style.top=
-        cursorY+"px";
+        cursorDot.style.left =
+            cursorX+"px";
+
+        cursorDot.style.top =
+            cursorY+"px";
 
 
-    ringX +=
-        (cursorX-ringX)*.12;
+        ringX +=
+            (
+                cursorX -
+                ringX
+            )*.12;
 
-    ringY +=
-        (cursorY-ringY)*.12;
 
-    cursorRing.style.left=
-        ringX+"px";
+        ringY +=
+            (
+                cursorY -
+                ringY
+            )*.12;
 
-    cursorRing.style.top=
-        ringY+"px";
 
+        cursorRing.style.left =
+            ringX+"px";
+
+
+        cursorRing.style.top =
+            ringY+"px";
+
+    }
+
+
+    /* render */
 
     renderer.render(
         scene,
         camera
     );
+
 }
 
+
 animate();
+
+
+/* =========================================================
+   CURSOR HOVER FX
+========================================================= */
+
+document
+.querySelectorAll(
+    ".panel,.logoBox,.live,.coreUI"
+)
+.forEach(
+
+    element=>{
+
+        element.addEventListener(
+
+            "mouseenter",
+
+            ()=>{
+
+                cursorRing.style.width =
+                    "72px";
+
+                cursorRing.style.height =
+                    "72px";
+
+                cursorRing.style.borderColor =
+                    "rgba(255,23,77,.8)";
+
+            }
+
+        );
+
+
+        element.addEventListener(
+
+            "mouseleave",
+
+            ()=>{
+
+                cursorRing.style.width =
+                    "45px";
+
+                cursorRing.style.height =
+                    "45px";
+
+                cursorRing.style.borderColor =
+                    "rgba(0,140,255,.6)";
+
+            }
+
+        );
+
+    }
+
+);
 
 
 /* =========================================================
@@ -2083,72 +3160,41 @@ animate();
 ========================================================= */
 
 window.addEventListener(
+
     "resize",
+
     ()=>{
 
         camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
+            innerWidth /
+            innerHeight;
+
 
         camera.updateProjectionMatrix();
 
+
         renderer.setPixelRatio(
+
             Math.min(
-                window.devicePixelRatio,
-                1.7
+
+                devicePixelRatio,
+
+                innerWidth < 700
+                    ? 1.25
+                    : 1.7
+
             )
+
         );
+
 
         renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
+            innerWidth,
+            innerHeight
         );
+
     }
-);
 
-
-/* =========================================================
-   CURSOR INTERACTION
-========================================================= */
-
-const interactive =
-    document.querySelectorAll(
-        ".panel,.brand-logo,.online,.core-area"
-    );
-
-interactive.forEach(
-    element=>{
-
-        element.addEventListener(
-            "mouseenter",
-            ()=>{
-
-                cursorRing.style.width=
-                    "70px";
-
-                cursorRing.style.height=
-                    "70px";
-
-                cursorRing.style.borderColor=
-                    "rgba(255,23,77,.8)";
-            }
-        );
-
-        element.addEventListener(
-            "mouseleave",
-            ()=>{
-
-                cursorRing.style.width=
-                    "45px";
-
-                cursorRing.style.height=
-                    "45px";
-
-                cursorRing.style.borderColor=
-                    "rgba(0,140,255,.6)";
-            }
-        );
-    }
 );
 
 
@@ -2157,23 +3203,33 @@ interactive.forEach(
 ========================================================= */
 
 window.addEventListener(
+
     "load",
+
     ()=>{
 
         setTimeout(
+
             ()=>{
+
                 document
-                    .getElementById("loader")
+                    .getElementById(
+                        "loader"
+                    )
                     .classList
                     .add("hide");
+
             },
-            900
+
+            1200
+
         );
+
     }
+
 );
 
 </script>
 
 </body>
 </html>
-```
