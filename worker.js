@@ -1,19 +1,21 @@
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "behrad-m-player",
+  "compatibility_date": "2026-09-11",
 
-    return new Response(
-      JSON.stringify({
-        ok: true,
-        message: "BEHRAD M PLAYER API is online 🚀",
-        path: url.pathname,
-        database: !!env.DB
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8"
-        }
-      }
-    );
+  "assets": {
+    "directory": "."
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "behrad-m-player-db",
+      "database_id": "d61715ed-a9d8-4852-b128-e63fe80c5287"
+    }
+  ],
+
+  "observability": {
+    "enabled": true
   }
-};
+}
