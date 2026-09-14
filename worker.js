@@ -1,466 +1,365 @@
+const ALLOWED_ORIGIN = "https://behradb44-sketch.github.io";
+
+function corsHeaders(origin) {
+  return {
+    "Access-Control-Allow-Origin": origin === ALLOWED_ORIGIN ? origin : ALLOWED_ORIGIN,
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type,Authorization",
+    "Access-Control-Max-Age": "86400"
+  };
+}
+
+function json(data, status = 200, origin = ALLOWED_ORIGIN) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      ...corsHeaders(origin)
+    }
+  });
+}
+
+function generateToken() {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+
+  return Array.from(bytes)
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function generateId() {
+  return crypto.randomUUID();
+}
+
+async function getUser(request, env) {
+  const auth = request.headers.get("Authorization");
+
+  if (!auth || !auth.startsWith("Bearer ")) {
+    return null;
+  }
+
+  const token = auth.slice(7).trim();
+
+  if (!token) {
+    return null;
+  }
+
+  const result = await env.DB.prepare(`
+    SELECT
+      users.id,
+      users.username,
+      users.name
+    FROM sessions
+    JOIN users ON users.id = sessions.user_id
+    WHERE sessions.token = ?
+      AND sessions.expires_at > ?
+    LIMIT 1
+  `)
+    .bind(token, Date.now())
+    .first();
+
+  return result || null;
+}
+
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
+    const origin = request.headers.get("Origin") || "";
 
-    // =========================
-    // CORS
-    // =========================
-    const origin = request.headers.get("Origin");
-
-    const allowedOrigins = [
-      "https://behradb44-sketch.github.io",
-      "http://localhost:3000",
-      "http://127.0.0.1:5500",
-      "http://localhost:5500"
-    ];
-
-    const corsOrigin =
-      origin && allowedOrigins.includes(origin)
-        ? origin
-        : "*";
-
-    const corsHeaders = {
-      "Access-Control-Allow-Origin": corsOrigin,
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Max-Age": "86400"
-    };
-
-    // =========================
-    // OPTIONS / CORS
-    // =========================
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
-        headers: corsHeaders
+        headers: corsHeaders(origin)
       });
     }
 
-    // =========================
-    // Helper: JSON response
-    // =========================
-    function json(data, status = 200) {
-      return new Response(
-        JSON.stringify(data),
-        {
-          status,
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    try {
+      // Home
+      if (path === "/" && request.method === "GET") {
+        return new Response("BEHRAD M PLAYER API is online 🚀", {
+          status: 200,
           headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json; charset=UTF-8"
+            "Content-Type": "text/plain; charset=utf-8",
+            ...corsHeaders(origin)
           }
-        }
-      );
-    }
+        });
+      }
 
-    // =========================
-    // ROOT
-    // =========================
-    if (url.pathname === "/" && request.method === "GET") {
-      return json({
-        ok: true,
-        message: "BEHRAD M PLAYER API is running 🚀"
-      });
-    }
-
-    // =========================
-    // TEST DATABASE
-    // =========================
-    if (
-      url.pathname === "/api/test-db" &&
-      request.method === "GET"
-    ) {
-      try {
-        const tables = await env.DB
-          .prepare(`
-            SELECT name
-            FROM sqlite_master
-            WHERE type = 'table'
-            ORDER BY name
-          `)
-          .all();
-
+      // Health check
+      if (path === "/api/health" && request.method === "GET") {
         return json({
           ok: true,
-          message: "D1 Database connected successfully 🚀",
-          database: true,
-          tables: tables.results || []
-        });
-
-      } catch (error) {
-        return json({
-          ok: false,
-          message: "Database connection failed ❌",
-          error: error.message
-        }, 500);
+          status: "online",
+          service: "BEHRAD M PLAYER API"
+        }, 200, origin);
       }
-    }
 
-    // =========================================================
-    // USER REGISTRATION
-    // NAME + USERNAME
-    // =========================================================
-    if (
-      url.pathname === "/api/visitor-signup" &&
-      request.method === "POST"
-    ) {
-      try {
+      // Register
+      if (path === "/api/register" && request.method === "POST") {
         const body = await request.json();
 
-        const name =
-          typeof body.name === "string"
-            ? body.name.trim()
-            : "";
+        const username = String(body.username || "").trim();
+        const name = String(body.name || "").trim();
 
-        const username =
-          typeof body.username === "string"
-            ? body.username.trim()
-            : "";
-
-        // -------------------------
-        // Validate name
-        // -------------------------
-        if (!name) {
+        if (!username || !name) {
           return json({
             ok: false,
-            message: "لطفاً اسم خودت را وارد کن."
-          }, 400);
+            error: "نام کاربری و نام الزامی هستند."
+          }, 400, origin);
         }
 
-        if (name.length < 2 || name.length > 50) {
+        if (username.length < 3 || username.length > 24) {
           return json({
             ok: false,
-            message: "اسم باید بین ۲ تا ۵۰ کاراکتر باشد."
-          }, 400);
+            error: "نام کاربری باید بین ۳ تا ۲۴ کاراکتر باشد."
+          }, 400, origin);
         }
 
-        // -------------------------
-        // Validate username
-        // -------------------------
-        if (!username) {
+        if (name.length < 1 || name.length > 40) {
           return json({
             ok: false,
-            message: "لطفاً نام کاربری را وارد کن."
-          }, 400);
+            error: "نام باید بین ۱ تا ۴۰ کاراکتر باشد."
+          }, 400, origin);
         }
 
-        if (username.length < 3 || username.length > 30) {
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
           return json({
             ok: false,
-            message: "نام کاربری باید بین ۳ تا ۳۰ کاراکتر باشد."
-          }, 400);
+            error: "نام کاربری فقط می‌تواند شامل حروف انگلیسی، عدد و _ باشد."
+          }, 400, origin);
         }
 
-        // فقط:
-        // حروف انگلیسی
-        // عدد
-        // _
-        // -
-        const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-
-        if (!usernameRegex.test(username)) {
-          return json({
-            ok: false,
-            message:
-              "نام کاربری فقط می‌تواند شامل حروف انگلیسی، عدد، _ و - باشد."
-          }, 400);
-        }
-
-        // =====================================================
-        // Normalize username
-        // برای جلوگیری از:
-        //
-        // Behrad
-        // BEHRAD
-        // behrad
-        //
-        // به عنوان سه کاربر متفاوت
-        // =====================================================
-        const usernameNormalized =
-          username.toLowerCase();
-
-        // =====================================================
-        // CHECK DUPLICATE USERNAME
-        // =====================================================
-        const existingUser = await env.DB
-          .prepare(`
-            SELECT id, name, username
-            FROM visitors
-            WHERE username_normalized = ?
-            LIMIT 1
-          `)
-          .bind(usernameNormalized)
+        const existingUser = await env.DB.prepare(`
+          SELECT id
+          FROM users
+          WHERE username = ?
+          LIMIT 1
+        `)
+          .bind(username)
           .first();
 
         if (existingUser) {
           return json({
             ok: false,
-            message: "این نام کاربری قبلاً انتخاب شده است."
-          }, 409);
+            error: "این نام کاربری قبلاً استفاده شده است."
+          }, 409, origin);
         }
 
-        // =====================================================
-        // INSERT NEW USER
-        // =====================================================
-        try {
-          const result = await env.DB
-            .prepare(`
-              INSERT INTO visitors
-              (
-                name,
-                username,
-                username_normalized
-              )
-              VALUES (?, ?, ?)
-            `)
-            .bind(
-              name,
-              username,
-              usernameNormalized
-            )
-            .run();
+        const userId = generateId();
+        const token = generateToken();
 
-          return json({
-            ok: true,
-            message: "ثبت نام با موفقیت انجام شد! 🎉",
-            user: {
-              id: result.meta?.last_row_id || null,
-              name: name,
-              username: username
-            }
-          }, 201);
+        const now = Date.now();
+        const expiresAt = now + (30 * 24 * 60 * 60 * 1000);
 
-        } catch (insertError) {
+        await env.DB.prepare(`
+          INSERT INTO users (
+            id,
+            username,
+            name,
+            created_at
+          )
+          VALUES (?, ?, ?, ?)
+        `)
+          .bind(userId, username, name, now)
+          .run();
 
-          // ===================================================
-          // اگر همزمان دو نفر یک username را ثبت کنند،
-          // UNIQUE INDEX جلوی ثبت دومی را می‌گیرد.
-          // ===================================================
-          const errorText =
-            String(insertError.message || "").toLowerCase();
-
-          if (
-            errorText.includes("unique") ||
-            errorText.includes("constraint")
-          ) {
-            return json({
-              ok: false,
-              message: "این نام کاربری قبلاً انتخاب شده است."
-            }, 409);
-          }
-
-          throw insertError;
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Visitor signup error:",
-          error
-        );
-
-        return json({
-          ok: false,
-          message: "خطایی در ثبت نام رخ داد.",
-          error: error.message
-        }, 500);
-      }
-    }
-
-    // =========================================================
-    // ADMIN SIGNUP
-    // این بخش برای ثبت‌نام مدیر سایت است و دست نمی‌زنیم.
-    // =========================================================
-    if (
-      url.pathname === "/api/signup" &&
-      request.method === "POST"
-    ) {
-      try {
-        const body = await request.json();
-
-        const name =
-          typeof body.name === "string"
-            ? body.name.trim()
-            : "";
-
-        const email =
-          typeof body.email === "string"
-            ? body.email.trim().toLowerCase()
-            : "";
-
-        const password =
-          typeof body.password === "string"
-            ? body.password
-            : "";
-
-        if (!name || !email || !password) {
-          return json({
-            ok: false,
-            message: "Name, email and password are required."
-          }, 400);
-        }
-
-        if (name.length < 2 || name.length > 100) {
-          return json({
-            ok: false,
-            message: "Invalid name."
-          }, 400);
-        }
-
-        if (
-          !email.includes("@") ||
-          email.length < 5 ||
-          email.length > 150
-        ) {
-          return json({
-            ok: false,
-            message: "Invalid email."
-          }, 400);
-        }
-
-        if (password.length < 6) {
-          return json({
-            ok: false,
-            message:
-              "Password must be at least 6 characters."
-          }, 400);
-        }
-
-        // ==========================================
-        // Check existing email
-        // ==========================================
-        const existing = await env.DB
-          .prepare(`
-            SELECT id
-            FROM users
-            WHERE email = ?
-            LIMIT 1
-          `)
-          .bind(email)
-          .first();
-
-        if (existing) {
-          return json({
-            ok: false,
-            message: "This email is already registered."
-          }, 409);
-        }
-
-        // ==========================================
-        // PBKDF2 password hashing
-        // ==========================================
-        const encoder =
-          new TextEncoder();
-
-        const saltBytes =
-          crypto.getRandomValues(
-            new Uint8Array(16)
-          );
-
-        const passwordKey =
-          await crypto.subtle.importKey(
-            "raw",
-            encoder.encode(password),
-            {
-              name: "PBKDF2"
-            },
-            false,
-            ["deriveBits"]
-          );
-
-        const hashBuffer =
-          await crypto.subtle.deriveBits(
-            {
-              name: "PBKDF2",
-              salt: saltBytes,
-              iterations: 100000,
-              hash: "SHA-256"
-            },
-            passwordKey,
-            256
-          );
-
-        const hashArray =
-          Array.from(
-            new Uint8Array(hashBuffer)
-          );
-
-        const salt =
-          Array.from(saltBytes);
-
-        const hashHex =
-          hashArray
-            .map(
-              b =>
-                b.toString(16).padStart(2, "0")
-            )
-            .join("");
-
-        const saltHex =
-          salt
-            .map(
-              b =>
-                b.toString(16).padStart(2, "0")
-            )
-            .join("");
-
-        const passwordHash =
-          `${saltHex}:${hashHex}`;
-
-        // ==========================================
-        // Create account
-        // ==========================================
-        const result =
-          await env.DB
-            .prepare(`
-              INSERT INTO users
-              (
-                name,
-                email,
-                password_hash,
-                verified
-              )
-              VALUES (?, ?, ?, 0)
-            `)
-            .bind(
-              name,
-              email,
-              passwordHash
-            )
-            .run();
+        await env.DB.prepare(`
+          INSERT INTO sessions (
+            token,
+            user_id,
+            created_at,
+            expires_at
+          )
+          VALUES (?, ?, ?, ?)
+        `)
+          .bind(token, userId, now, expiresAt)
+          .run();
 
         return json({
           ok: true,
-          message: "Account created successfully 🎉",
+          token,
           user: {
-            id:
-              result.meta?.last_row_id || null,
-            name,
-            email,
-            verified: false
+            id: userId,
+            username,
+            name
           }
-        }, 201);
+        }, 201, origin);
+      }
 
-      } catch (error) {
+      // Current user
+      if (path === "/api/me" && request.method === "GET") {
+        const user = await getUser(request, env);
 
-        console.error(
-          "Admin signup error:",
-          error
-        );
+        if (!user) {
+          return json({
+            ok: false,
+            error: "نشست معتبر نیست."
+          }, 401, origin);
+        }
 
         return json({
-          ok: false,
-          message: "Account creation failed.",
-          error: error.message
-        }, 500);
+          ok: true,
+          user
+        }, 200, origin);
       }
-    }
 
-    // =========================================================
-    // 404
-    // =========================================================
-    return json({
-      ok: false,
-      message: "API endpoint not found."
-    }, 404);
+      // Get messages
+      if (path === "/api/messages" && request.method === "GET") {
+        const result = await env.DB.prepare(`
+          SELECT
+            messages.id,
+            messages.text,
+            messages.reply_to,
+            messages.created_at,
+            users.id AS user_id,
+            users.username,
+            users.name
+          FROM messages
+          JOIN users ON users.id = messages.user_id
+          ORDER BY messages.created_at ASC
+          LIMIT 200
+        `).all();
+
+        return json({
+          ok: true,
+          messages: result.results || []
+        }, 200, origin);
+      }
+
+      // Send message
+      if (path === "/api/messages" && request.method === "POST") {
+        const user = await getUser(request, env);
+
+        if (!user) {
+          return json({
+            ok: false,
+            error: "برای ارسال پیام باید وارد حساب باشید."
+          }, 401, origin);
+        }
+
+        const body = await request.json();
+
+        const text = String(body.text || "").trim();
+
+        let replyTo = null;
+
+        if (
+          body.replyTo !== undefined &&
+          body.replyTo !== null &&
+          body.replyTo !== ""
+        ) {
+          const parsedReply = Number(body.replyTo);
+
+          if (!Number.isInteger(parsedReply)) {
+            return json({
+              ok: false,
+              error: "replyTo نامعتبر است."
+            }, 400, origin);
+          }
+
+          replyTo = parsedReply;
+        }
+
+        if (!text) {
+          return json({
+            ok: false,
+            error: "پیام نمی‌تواند خالی باشد."
+          }, 400, origin);
+        }
+
+        if (text.length > 2000) {
+          return json({
+            ok: false,
+            error: "پیام نمی‌تواند بیشتر از ۲۰۰۰ کاراکتر باشد."
+          }, 400, origin);
+        }
+
+        const now = Date.now();
+
+        const result = await env.DB.prepare(`
+          INSERT INTO messages (
+            user_id,
+            text,
+            reply_to,
+            created_at
+          )
+          VALUES (?, ?, ?, ?)
+        `)
+          .bind(user.id, text, replyTo, now)
+          .run();
+
+        return json({
+          ok: true,
+          message: {
+            id: result.meta.last_row_id,
+            user_id: user.id,
+            username: user.username,
+            name: user.name,
+            text,
+            reply_to: replyTo,
+            created_at: now
+          }
+        }, 201, origin);
+      }
+
+      // Logout
+      if (path === "/api/logout" && request.method === "POST") {
+        const auth = request.headers.get("Authorization");
+
+        if (auth && auth.startsWith("Bearer ")) {
+          const token = auth.slice(7).trim();
+
+          if (token) {
+            await env.DB.prepare(`
+              DELETE FROM sessions
+              WHERE token = ?
+            `)
+              .bind(token)
+              .run();
+          }
+        }
+
+        return json({
+          ok: true
+        }, 200, origin);
+      }
+
+      // Old visitor signup endpoint
+      if (path === "/api/visitor-signup" && request.method === "POST") {
+        const body = await request.json();
+
+        const name = String(body.name || "").trim();
+
+        if (!name) {
+          return json({
+            ok: false,
+            error: "نام الزامی است."
+          }, 400, origin);
+        }
+
+        return json({
+          ok: true,
+          message: "ثبت شد."
+        }, 200, origin);
+      }
+
+      // Not found
+      return json({
+        ok: false,
+        error: "Endpoint not found."
+      }, 404, origin);
+
+    } catch (error) {
+      console.error(error);
+
+      return json({
+        ok: false,
+        error: "خطای داخلی سرور.",
+        details: error?.message || "Unknown error"
+      }, 500, origin);
+    }
   }
 };
