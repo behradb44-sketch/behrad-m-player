@@ -1800,7 +1800,7 @@ footer strong{
 
 
     <p>
-        فقط اسم و شماره تلفنت رو وارد کن 🚀
+        فقط اسم و نام کاربری خودت رو وارد کن 🚀
     </p>
 
 </div>
@@ -1826,17 +1826,16 @@ footer strong{
 <div class="signup-field">
 
     <label>
-        📱 شماره تلفن
+        🆔 نام کاربری
     </label>
 
 
     <input
-        id="visitorPhone"
-        type="tel"
-        maxlength="20"
-        autocomplete="tel"
-        inputmode="tel"
-        placeholder="مثلاً 09121234567"
+        id="visitorUsername"
+        type="text"
+        maxlength="30"
+        autocomplete="username"
+        placeholder="مثلاً BEHRAD_M_PLAYER"
         dir="ltr">
 
 </div>
@@ -1987,9 +1986,9 @@ async function visitorSignup(){
             "visitorName"
         );
 
-    const phoneInput =
+    const usernameInput =
         document.getElementById(
-            "visitorPhone"
+            "visitorUsername"
         );
 
     const button =
@@ -2006,8 +2005,8 @@ async function visitorSignup(){
     const name =
         nameInput.value.trim();
 
-    const phone =
-        phoneInput.value.trim();
+    const username =
+        usernameInput.value.trim();
 
 
     if(name.length < 2){
@@ -2040,17 +2039,47 @@ async function visitorSignup(){
     }
 
 
-    if(
-        !/^[0-9+\-\s()]{7,20}$/.test(phone)
-    ){
+    if(username.length < 3){
 
         status.textContent =
-            "⚠️ شماره تلفن معتبر نیست.";
+            "⚠️ نام کاربری باید حداقل ۳ کاراکتر باشه.";
 
         status.className =
             "signup-status error";
 
-        phoneInput.focus();
+        usernameInput.focus();
+
+        return;
+
+    }
+
+
+    if(username.length > 30){
+
+        status.textContent =
+            "⚠️ نام کاربری خیلی طولانیه.";
+
+        status.className =
+            "signup-status error";
+
+        usernameInput.focus();
+
+        return;
+
+    }
+
+
+    if(
+        !/^[a-zA-Z0-9_-]+$/.test(username)
+    ){
+
+        status.textContent =
+            "⚠️ نام کاربری فقط می‌تونه شامل حروف انگلیسی، عدد، _ و - باشه.";
+
+        status.className =
+            "signup-status error";
+
+        usernameInput.focus();
 
         return;
 
@@ -2081,7 +2110,7 @@ async function visitorSignup(){
 
                     body:JSON.stringify({
                         name:name,
-                        phone:phone
+                        username:username
                     })
                 }
             );
@@ -2089,6 +2118,27 @@ async function visitorSignup(){
 
         const data =
             await response.json();
+
+
+        if(response.status === 409){
+
+            status.textContent =
+                "❌ این نام کاربری قبلاً انتخاب شده است.";
+
+            status.className =
+                "signup-status error";
+
+
+            button.disabled=false;
+
+            button.textContent =
+                "🚀 ثبت نام";
+
+            usernameInput.focus();
+
+            return;
+
+        }
 
 
         if(data.ok){
@@ -2105,7 +2155,7 @@ async function visitorSignup(){
 
             nameInput.value="";
 
-            phoneInput.value="";
+            usernameInput.value="";
 
 
             setTimeout(
