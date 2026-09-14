@@ -1,101 +1,76 @@
-function jsonResponse(data, status = 200, origin = "*") {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-      "Access-Control-Allow-Origin": origin,
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Max-Age": "86400",
-      "Cache-Control": "no-store"
-    }
-  });
-}
-
-function corsOrigin(request) {
-  const origin = request.headers.get("Origin");
-
-  const allowedOrigins = [
-    "https://behradb44-sketch.github.io",
-    "http://localhost:3000",
-    "http://127.0.0.1:5500",
-    "http://localhost:5500"
-  ];
-
-  if (origin && allowedOrigins.includes(origin)) {
-    return origin;
-  }
-
-  return "*";
-}
-
-function bytesToHex(bytes) {
-  return Array.from(bytes)
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-function generateSalt() {
-  const salt = new Uint8Array(16);
-  crypto.getRandomValues(salt);
-  return bytesToHex(salt);
-}
-
-async function hashPassword(password, saltHex) {
-  const saltBytes = new Uint8Array(
-    saltHex.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
-  );
-
-  const passwordKey = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(password),
-    {
-      name: "PBKDF2"
-    },
-    false,
-    ["deriveBits"]
-  );
-
-  const derivedBits = await crypto.subtle.deriveBits(
-    {
-      name: "PBKDF2",
-      salt: saltBytes,
-      iterations: 100000,
-      hash: "SHA-256"
-    },
-    passwordKey,
-    256
-  );
-
-  return bytesToHex(new Uint8Array(derivedBits));
-}
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const origin = corsOrigin(request);
 
     // =========================
-    // CORS PREFLIGHT
+    // CORS
+    // =========================
+    const origin = request.headers.get("Origin");
+
+    const allowedOrigins = [
+      "https://behradb44-sketch.github.io",
+      "http://localhost:3000",
+      "http://127.0.0.1:5500",
+      "http://localhost:5500"
+    ];
+
+    const corsOrigin =
+      origin && allowedOrigins.includes(origin)
+        ? origin
+        : "*";
+
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": corsOrigin,
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Max-Age": "86400"
+    };
+
+    // =========================
+    // OPTIONS / CORS
     // =========================
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
-        headers: {
-          "Access-Control-Allow-Origin": origin,
-          "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Max-Age": "86400"
-        }
+        headers: corsHeaders
       });
     }
 
     // =========================
-    // TEST API
+    // Helper: JSON response
     // =========================
-    if (url.pathname === "/api/test-db") {
+    function json(data, status = 200) {
+      return new Response(
+        JSON.stringify(data),
+        {
+          status,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json; charset=UTF-8"
+          }
+        }
+      );
+    }
+
+    // =========================
+    // ROOT
+    // =========================
+    if (url.pathname === "/" && request.method === "GET") {
+      return json({
+        ok: true,
+        message: "BEHRAD M PLAYER API is running 🚀"
+      });
+    }
+
+    // =========================
+    // TEST DATABASE
+    // =========================
+    if (
+      url.pathname === "/api/test-db" &&
+      request.method === "GET"
+    ) {
       try {
-        const result = await env.DB
+        const tables = await env.DB
           .prepare(`
             SELECT name
             FROM sqlite_master
@@ -104,61 +79,31 @@ export default {
           `)
           .all();
 
-        return jsonResponse(
-          {
-            ok: true,
-            message: "D1 Database connected successfully 🚀",
-            database: true,
-            tables: result.results
-          },
-          200,
-          origin
-        );
+        return json({
+          ok: true,
+          message: "D1 Database connected successfully 🚀",
+          database: true,
+          tables: tables.results || []
+        });
 
       } catch (error) {
-        return jsonResponse(
-          {
-            ok: false,
-            message: "D1 Database query failed ❌",
-            error: error.message
-          },
-          500,
-          origin
-        );
+        return json({
+          ok: false,
+          message: "Database connection failed ❌",
+          error: error.message
+        }, 500);
       }
     }
 
-    // =========================
-    // VISITOR SIGNUP
-    // =========================
-    if (url.pathname === "/api/visitor-signup") {
-
-      if (request.method !== "POST") {
-        return jsonResponse(
-          {
-            ok: false,
-            message: "Only POST requests are allowed."
-          },
-          405,
-          origin
-        );
-      }
-
+    // =========================================================
+    // USER REGISTRATION
+    // NAME + USERNAME
+    // =========================================================
+    if (
+      url.pathname === "/api/visitor-signup" &&
+      request.method === "POST"
+    ) {
       try {
-        const contentType =
-          request.headers.get("Content-Type") || "";
-
-        if (!contentType.toLowerCase().includes("application/json")) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "Request must use application/json."
-            },
-            415,
-            origin
-          );
-        }
-
         const body = await request.json();
 
         const name =
@@ -166,126 +111,169 @@ export default {
             ? body.name.trim()
             : "";
 
-        const phone =
-          typeof body.phone === "string"
-            ? body.phone.trim()
+        const username =
+          typeof body.username === "string"
+            ? body.username.trim()
             : "";
 
         // -------------------------
-        // NAME VALIDATION
+        // Validate name
         // -------------------------
+        if (!name) {
+          return json({
+            ok: false,
+            message: "لطفاً اسم خودت را وارد کن."
+          }, 400);
+        }
+
         if (name.length < 2 || name.length > 50) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "Name must be between 2 and 50 characters."
-            },
-            400,
-            origin
-          );
+          return json({
+            ok: false,
+            message: "اسم باید بین ۲ تا ۵۰ کاراکتر باشد."
+          }, 400);
         }
 
         // -------------------------
-        // PHONE VALIDATION
+        // Validate username
         // -------------------------
-        if (!/^[0-9+\-\s()]{7,20}$/.test(phone)) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "Please enter a valid phone number."
-            },
-            400,
-            origin
-          );
+        if (!username) {
+          return json({
+            ok: false,
+            message: "لطفاً نام کاربری را وارد کن."
+          }, 400);
         }
 
-        // -------------------------
-        // CHECK DUPLICATE PHONE
-        // -------------------------
-        const existingVisitor = await env.DB
+        if (username.length < 3 || username.length > 30) {
+          return json({
+            ok: false,
+            message: "نام کاربری باید بین ۳ تا ۳۰ کاراکتر باشد."
+          }, 400);
+        }
+
+        // فقط:
+        // حروف انگلیسی
+        // عدد
+        // _
+        // -
+        const usernameRegex = /^[a-zA-Z0-9_-]+$/;
+
+        if (!usernameRegex.test(username)) {
+          return json({
+            ok: false,
+            message:
+              "نام کاربری فقط می‌تواند شامل حروف انگلیسی، عدد، _ و - باشد."
+          }, 400);
+        }
+
+        // =====================================================
+        // Normalize username
+        // برای جلوگیری از:
+        //
+        // Behrad
+        // BEHRAD
+        // behrad
+        //
+        // به عنوان سه کاربر متفاوت
+        // =====================================================
+        const usernameNormalized =
+          username.toLowerCase();
+
+        // =====================================================
+        // CHECK DUPLICATE USERNAME
+        // =====================================================
+        const existingUser = await env.DB
           .prepare(`
-            SELECT id, name, phone
+            SELECT id, name, username
             FROM visitors
-            WHERE phone = ?
+            WHERE username_normalized = ?
             LIMIT 1
           `)
-          .bind(phone)
+          .bind(usernameNormalized)
           .first();
 
-        if (existingVisitor) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "This phone number is already registered."
-            },
-            409,
-            origin
-          );
+        if (existingUser) {
+          return json({
+            ok: false,
+            message: "این نام کاربری قبلاً انتخاب شده است."
+          }, 409);
         }
 
-        // -------------------------
-        // INSERT VISITOR
-        // -------------------------
-        const result = await env.DB
-          .prepare(`
-            INSERT INTO visitors (
+        // =====================================================
+        // INSERT NEW USER
+        // =====================================================
+        try {
+          const result = await env.DB
+            .prepare(`
+              INSERT INTO visitors
+              (
+                name,
+                username,
+                username_normalized
+              )
+              VALUES (?, ?, ?)
+            `)
+            .bind(
               name,
-              phone
+              username,
+              usernameNormalized
             )
-            VALUES (?, ?)
-          `)
-          .bind(name, phone)
-          .run();
+            .run();
 
-        return jsonResponse(
-          {
+          return json({
             ok: true,
-            message: "Registration successful 🎉",
-            visitor: {
-              id: result.meta.last_row_id,
+            message: "ثبت نام با موفقیت انجام شد! 🎉",
+            user: {
+              id: result.meta?.last_row_id || null,
               name: name,
-              phone: phone
+              username: username
             }
-          },
-          201,
-          origin
-        );
+          }, 201);
+
+        } catch (insertError) {
+
+          // ===================================================
+          // اگر همزمان دو نفر یک username را ثبت کنند،
+          // UNIQUE INDEX جلوی ثبت دومی را می‌گیرد.
+          // ===================================================
+          const errorText =
+            String(insertError.message || "").toLowerCase();
+
+          if (
+            errorText.includes("unique") ||
+            errorText.includes("constraint")
+          ) {
+            return json({
+              ok: false,
+              message: "این نام کاربری قبلاً انتخاب شده است."
+            }, 409);
+          }
+
+          throw insertError;
+        }
 
       } catch (error) {
 
         console.error(
-          "VISITOR SIGNUP ERROR:",
+          "Visitor signup error:",
           error
         );
 
-        return jsonResponse(
-          {
-            ok: false,
-            message: "Visitor registration failed ❌",
-            error: error.message
-          },
-          500,
-          origin
-        );
+        return json({
+          ok: false,
+          message: "خطایی در ثبت نام رخ داد.",
+          error: error.message
+        }, 500);
       }
     }
 
-    // =========================
+    // =========================================================
     // ADMIN SIGNUP
-    // =========================
-    if (url.pathname === "/api/signup") {
-
-      if (request.method !== "POST") {
-        return jsonResponse(
-          {
-            ok: false,
-            message: "Only POST requests are allowed."
-          },
-          405,
-          origin
-        );
-      }
-
+    // این بخش برای ثبت‌نام مدیر سایت است و دست نمی‌زنیم.
+    // =========================================================
+    if (
+      url.pathname === "/api/signup" &&
+      request.method === "POST"
+    ) {
       try {
         const body = await request.json();
 
@@ -304,66 +292,43 @@ export default {
             ? body.password
             : "";
 
-        // -------------------------
-        // NAME
-        // -------------------------
-        if (name.length < 2 || name.length > 50) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "Name must be between 2 and 50 characters."
-            },
-            400,
-            origin
-          );
+        if (!name || !email || !password) {
+          return json({
+            ok: false,
+            message: "Name, email and password are required."
+          }, 400);
         }
 
-        // -------------------------
-        // EMAIL
-        // -------------------------
-        const emailRegex =
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(email)) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "Please enter a valid email address."
-            },
-            400,
-            origin
-          );
+        if (name.length < 2 || name.length > 100) {
+          return json({
+            ok: false,
+            message: "Invalid name."
+          }, 400);
         }
 
-        // -------------------------
-        // PASSWORD
-        // -------------------------
-        if (password.length < 8) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "Password must be at least 8 characters."
-            },
-            400,
-            origin
-          );
+        if (
+          !email.includes("@") ||
+          email.length < 5 ||
+          email.length > 150
+        ) {
+          return json({
+            ok: false,
+            message: "Invalid email."
+          }, 400);
         }
 
-        if (password.length > 128) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "Password is too long."
-            },
-            400,
-            origin
-          );
+        if (password.length < 6) {
+          return json({
+            ok: false,
+            message:
+              "Password must be at least 6 characters."
+          }, 400);
         }
 
-        // -------------------------
-        // CHECK EMAIL
-        // -------------------------
-        const existingUser = await env.DB
+        // ==========================================
+        // Check existing email
+        // ==========================================
+        const existing = await env.DB
           .prepare(`
             SELECT id
             FROM users
@@ -373,97 +338,129 @@ export default {
           .bind(email)
           .first();
 
-        if (existingUser) {
-          return jsonResponse(
-            {
-              ok: false,
-              message: "This email is already registered."
-            },
-            409,
-            origin
-          );
+        if (existing) {
+          return json({
+            ok: false,
+            message: "This email is already registered."
+          }, 409);
         }
 
-        // -------------------------
-        // PASSWORD HASH
-        // -------------------------
-        const salt = generateSalt();
+        // ==========================================
+        // PBKDF2 password hashing
+        // ==========================================
+        const encoder =
+          new TextEncoder();
 
-        const passwordHash =
-          await hashPassword(
-            password,
-            salt
+        const saltBytes =
+          crypto.getRandomValues(
+            new Uint8Array(16)
           );
 
-        const storedPasswordHash =
-          `pbkdf2$100000$${salt}$${passwordHash}`;
+        const passwordKey =
+          await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(password),
+            {
+              name: "PBKDF2"
+            },
+            false,
+            ["deriveBits"]
+          );
 
-        // -------------------------
-        // INSERT USER
-        // -------------------------
-        const result = await env.DB
-          .prepare(`
-            INSERT INTO users (
-              email,
-              name,
-              password_hash,
-              verified
+        const hashBuffer =
+          await crypto.subtle.deriveBits(
+            {
+              name: "PBKDF2",
+              salt: saltBytes,
+              iterations: 100000,
+              hash: "SHA-256"
+            },
+            passwordKey,
+            256
+          );
+
+        const hashArray =
+          Array.from(
+            new Uint8Array(hashBuffer)
+          );
+
+        const salt =
+          Array.from(saltBytes);
+
+        const hashHex =
+          hashArray
+            .map(
+              b =>
+                b.toString(16).padStart(2, "0")
             )
-            VALUES (?, ?, ?, 0)
-          `)
-          .bind(
-            email,
-            name,
-            storedPasswordHash
-          )
-          .run();
+            .join("");
 
-        return jsonResponse(
-          {
-            ok: true,
-            message: "Account created successfully 🎉",
-            user: {
-              id: result.meta.last_row_id,
-              name: name,
-              email: email,
-              verified: false
-            }
-          },
-          201,
-          origin
-        );
+        const saltHex =
+          salt
+            .map(
+              b =>
+                b.toString(16).padStart(2, "0")
+            )
+            .join("");
+
+        const passwordHash =
+          `${saltHex}:${hashHex}`;
+
+        // ==========================================
+        // Create account
+        // ==========================================
+        const result =
+          await env.DB
+            .prepare(`
+              INSERT INTO users
+              (
+                name,
+                email,
+                password_hash,
+                verified
+              )
+              VALUES (?, ?, ?, 0)
+            `)
+            .bind(
+              name,
+              email,
+              passwordHash
+            )
+            .run();
+
+        return json({
+          ok: true,
+          message: "Account created successfully 🎉",
+          user: {
+            id:
+              result.meta?.last_row_id || null,
+            name,
+            email,
+            verified: false
+          }
+        }, 201);
 
       } catch (error) {
 
         console.error(
-          "SIGNUP ERROR:",
+          "Admin signup error:",
           error
         );
 
-        return jsonResponse(
-          {
-            ok: false,
-            message: "Signup failed ❌",
-            error: error.message
-          },
-          500,
-          origin
-        );
+        return json({
+          ok: false,
+          message: "Account creation failed.",
+          error: error.message
+        }, 500);
       }
     }
 
-    // =========================
-    // API ROOT
-    // =========================
-    return jsonResponse(
-      {
-        ok: true,
-        message: "BEHRAD M PLAYER API is online 🚀",
-        path: url.pathname,
-        database: !!env.DB
-      },
-      200,
-      origin
-    );
+    // =========================================================
+    // 404
+    // =========================================================
+    return json({
+      ok: false,
+      message: "API endpoint not found."
+    }, 404);
   }
 };
