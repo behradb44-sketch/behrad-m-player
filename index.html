@@ -2601,14 +2601,6 @@ footer strong{
             <aside class="chat-sidebar">
                 <h3 id="activeRoomTitle">اتاق</h3>
                 <div id="chatStatus" class="chat-status">در حال اتصال...</div>
-                <div id="joinRequests" style="display:none;margin:12px 0;padding:12px;border:1px solid rgba(0,220,255,.25);border-radius:14px;background:rgba(0,20,35,.55)">
-                    <div style="font-weight:800;margin-bottom:6px">🔔 درخواست ورود</div>
-                    <div id="joinRequestText" style="font-size:13px;line-height:1.7;margin-bottom:10px"></div>
-                    <div class="room-card-actions">
-                        <button class="room-small-btn" onclick="acceptJoinRequest()">✅ قبول</button>
-                        <button class="room-small-btn" onclick="rejectJoinRequest()">❌ رد</button>
-                    </div>
-                </div>
                 <div class="room-card-actions">
                     <button class="room-small-btn" onclick="copyActiveCode()">📋 کپی کد</button>
                     <button class="room-small-btn" onclick="leaveRoom()">✕ خروج</button>
@@ -2996,18 +2988,18 @@ async function createRoom(){
         await waitForIce(pc);
 
         const code=encodeSignal({v:1,type:"offer",room:roomName,host:userName,sdp:pc.localDescription});
-        pendingHost={pc,roomName,userName,code,isPublic,channel,pendingRequest:null,accepted:false};
+        pendingHost={pc,roomName,userName,code,isPublic,channel};
         activeRoom={name:roomName,role:"host",userName};
 
         const rooms=loadRooms();
-        rooms.unshift({id:safeId(),name:roomName,role:"host",public:isPublic,code,createdAt:Date.now(),status:"منتظر مهمان"});
+        rooms.unshift({id:safeId(),name:roomName,role:"host",public:isPublic,code,createdAt:Date.now(),status:"آماده / ورود خودکار"});
         saveRooms(rooms);
         renderRooms();
         bmpBroadcastRoomUpdate();
 
         closeRoomModals();
         document.getElementById("activeRoomTitle").textContent=roomName;
-        document.getElementById("chatStatus").textContent="🟡 اتاق آماده است؛ منتظر درخواست مهمان...";
+        document.getElementById("chatStatus").textContent="🟢 اتاق آماده است؛ هر کسی که به آن متصل شود مستقیم وارد چت می‌شود.";
         document.getElementById("activeChat").style.display="block";
         document.getElementById("activeChat").scrollIntoView({behavior:"smooth"});
         addSystemMessage("اتاق ساخته شد. کد اتصال را برای مهمان بفرست.");
@@ -3026,9 +3018,9 @@ async function completeHostConnection(){
         const answer=decodeSignal(code);
         if(answer.type!=="answer")throw new Error("کد پاسخ معتبر نیست");
         await pendingHost.pc.setRemoteDescription(answer.sdp);
-        setRoomStatus("answerStatus","✅ پاسخ ثبت شد؛ وقتی مهمان درخواست ورود بفرستد اینجا نمایش داده می‌شود.");
+        setRoomStatus("answerStatus","✅ پاسخ ثبت شد؛ اتصال که برقرار شود مهمان مستقیم وارد چت می‌شود.");
         closeRoomModals();
-        document.getElementById("chatStatus").textContent="🟡 اتصال فنی برقرار می‌شود؛ منتظر درخواست مهمان...";
+        document.getElementById("chatStatus").textContent="🟡 اتصال فنی برقرار می‌شود؛ ورود مهمان خودکار است.";
     }catch(err){
         console.error(err);
         setRoomStatus("answerStatus","❌ کد پاسخ نامعتبر است.");
@@ -3052,17 +3044,17 @@ async function joinRoom(){
         const answerCode=encodeSignal({v:1,type:"answer",sdp:pc.localDescription});
 
         activePeer=pc;
-        activeRoom={name:offer.room || "اتاق",code,role:"guest",userName,accepted:false};
+        activeRoom={name:offer.room || "اتاق",code,role:"guest",userName,accepted:true};
         document.getElementById("answerCode").value=answerCode;
         document.getElementById("answerBox").style.display="block";
         setRoomStatus("joinRoomStatus","✅ کد مهمان ساخته شد. آن را برای صاحب اتاق بفرست.");
 
         const rooms=loadRooms();
-        rooms.unshift({id:safeId(),name:offer.room || "اتاق",role:"guest",public:false,code,createdAt:Date.now(),status:"منتظر تأیید میزبان"});
+        rooms.unshift({id:safeId(),name:offer.room || "اتاق",role:"guest",public:false,code,createdAt:Date.now(),status:"متصل / ورود خودکار"});
         saveRooms(rooms); renderRooms();
 
         document.getElementById("activeRoomTitle").textContent=offer.room || "اتاق";
-        document.getElementById("chatStatus").textContent="🟡 منتظر تأیید صاحب اتاق...";
+        document.getElementById("chatStatus").textContent="🟢 ورود خودکار؛ به محض برقراری اتصال وارد اتاق می‌شوی.";
         document.getElementById("activeChat").style.display="block";
         document.getElementById("activeChat").scrollIntoView({behavior:"smooth"});
     }catch(err){
@@ -3140,14 +3132,14 @@ function setupDataChannel(channel,userName,isHost){
     activePeer=channel;
     registerPeerChannel(channel);
     channel.__isHost=!!isHost;
-    channel.__approved=false;
+    // ورود به روم بعد از برقراری اتصال کاملاً خودکار است.
+    channel.__approved=true;
 
     channel.onopen=()=>{
         if(isHost){
-            setRoomStatus("chatStatus","🟢 اتصال برقرار شد؛ منتظر درخواست ورود مهمان...");
+            setRoomStatus("chatStatus","🟢 اتصال برقرار شد؛ مهمان مستقیم وارد اتاق شد.");
         }else{
-            setRoomStatus("chatStatus","🟡 اتصال برقرار شد؛ درخواست ورود ارسال شد.");
-            try{channel.send(JSON.stringify({type:"join-request",name:userName}));}catch(_){ }
+            setRoomStatus("chatStatus","🟢 وارد اتاق شدی؛ می‌تونی چت کنی.");
         }
         document.getElementById("chatInput")?.focus();
     };
@@ -3170,55 +3162,12 @@ function setupDataChannel(channel,userName,isHost){
             }else if(data.type==="room-discovery-response") {
                 storeDiscoveredRooms(data.rooms||[]);
                 renderRooms();
-            }else if(data.type==="join-request" && isHost){
-                pendingHost=pendingHost || {};
-                pendingHost.pendingRequest={name:data.name || "مهمان"};
-                channel.__approved=false;
-                const box=document.getElementById("joinRequests");
-                const text=document.getElementById("joinRequestText");
-                if(text)text.textContent=`${data.name || "مهمان"} می‌خواهد وارد این اتاق شود.`;
-                if(box)box.style.display="block";
-                setRoomStatus("chatStatus","🔔 یک درخواست ورود داری.");
-                addSystemMessage(`🔔 درخواست ورود از ${data.name || "مهمان"}`);
-            }else if(data.type==="join-accepted" && !isHost){
-                channel.__approved=true;
-                if(activeRoom)activeRoom.accepted=true;
-                setRoomStatus("chatStatus","🟢 درخواستت قبول شد؛ وارد اتاق شدی.");
-                addSystemMessage("✅ صاحب اتاق درخواست ورودت را قبول کرد.");
-            }else if(data.type==="join-rejected" && !isHost){
-                setRoomStatus("chatStatus","🔴 درخواست ورودت رد شد.");
-                addSystemMessage("❌ صاحب اتاق درخواست ورودت را رد کرد.");
-                setTimeout(()=>{try{channel.close();}catch(_){ }},500);
             }else if(data.type==="chat"){
-                if(channel.__approved || (isHost && pendingHost?.accepted)){
-                    addChatMessage(data.name || "Guest",data.text,false);
-                }
+                addChatMessage(data.name || (isHost ? "Guest" : "Host"),data.text,false);
             }
         }catch(_){ }
     };
-    activeRoom=activeRoom || {name:document.getElementById("activeRoomTitle")?.textContent || "اتاق",role:isHost?"host":"guest",userName,accepted:false};
-}
-
-function acceptJoinRequest(){
-    if(!pendingHost?.channel || pendingHost.channel.readyState!=="open")return;
-    try{pendingHost.channel.send(JSON.stringify({type:"join-accepted"}));}catch(_){return;}
-    pendingHost.accepted=true;
-    pendingHost.channel.__approved=true;
-    if(activeRoom)activeRoom.accepted=true;
-    const box=document.getElementById("joinRequests");
-    if(box)box.style.display="none";
-    setRoomStatus("chatStatus","🟢 مهمان پذیرفته شد؛ چت فعال است.");
-    addSystemMessage("✅ مهمان وارد اتاق شد.");
-}
-
-function rejectJoinRequest(){
-    if(!pendingHost?.channel)return;
-    try{pendingHost.channel.send(JSON.stringify({type:"join-rejected"}));}catch(_){ }
-    const box=document.getElementById("joinRequests");
-    if(box)box.style.display="none";
-    setRoomStatus("chatStatus","🔴 درخواست مهمان رد شد.");
-    addSystemMessage("❌ درخواست مهمان رد شد.");
-    setTimeout(()=>{try{pendingHost.channel.close();}catch(_){ } pendingHost.pendingRequest=null; pendingHost.accepted=false;},250);
+    activeRoom=activeRoom || {name:document.getElementById("activeRoomTitle")?.textContent || "اتاق",role:isHost?"host":"guest",userName,accepted:true};
 }
 
 function sendChatMessage(){
@@ -3227,11 +3176,6 @@ function sendChatMessage(){
     if(!text)return;
     if(!activePeer || activePeer.readyState!=="open"){
         addSystemMessage("⚠️ هنوز اتصال برقرار نیست.");
-        return;
-    }
-    const approved=activePeer.__approved || (activePeer.__isHost && pendingHost?.accepted);
-    if(!approved){
-        addSystemMessage("⏳ هنوز صاحب اتاق درخواست ورود را تأیید نکرده است.");
         return;
     }
     const name=(activeRoom && activeRoom.userName) || document.getElementById("createUserName")?.value.trim() || "Player";
