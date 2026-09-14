@@ -2,7 +2,10 @@ function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
-      "Content-Type": "application/json; charset=UTF-8"
+      "Content-Type": "application/json; charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
     }
   });
 }
@@ -52,9 +55,17 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // ==========================================
-    // تست اتصال D1
-    // ==========================================
+    // Handle CORS preflight
+    if (request.method === "OPTIONS") {
+      return jsonResponse({
+        ok: true,
+        message: "CORS preflight accepted."
+      });
+    }
+
+    // ----------------------------------------
+    // D1 TEST
+    // ----------------------------------------
     if (url.pathname === "/api/test-db") {
       try {
         const result = await env.DB
@@ -84,9 +95,118 @@ export default {
       }
     }
 
-    // ==========================================
-    // ثبت نام
-    // ==========================================
+    // ----------------------------------------
+    // VISITOR SIGNUP
+    // Name + Phone
+    // ----------------------------------------
+    if (url.pathname === "/api/visitor-signup") {
+      if (request.method !== "POST") {
+        return jsonResponse(
+          {
+            ok: false,
+            message: "Only POST requests are allowed."
+          },
+          405
+        );
+      }
+
+      try {
+        const body = await request.json();
+
+        const name =
+          typeof body.name === "string"
+            ? body.name.trim()
+            : "";
+
+        const phone =
+          typeof body.phone === "string"
+            ? body.phone.trim()
+            : "";
+
+        // Validate name
+        if (name.length < 2 || name.length > 50) {
+          return jsonResponse(
+            {
+              ok: false,
+              message: "Name must be between 2 and 50 characters."
+            },
+            400
+          );
+        }
+
+        // Validate phone
+        if (!/^[0-9+\-\s()]{7,20}$/.test(phone)) {
+          return jsonResponse(
+            {
+              ok: false,
+              message: "Please enter a valid phone number."
+            },
+            400
+          );
+        }
+
+        // Check duplicate phone
+        const existingVisitor = await env.DB
+          .prepare(`
+            SELECT id, name, phone
+            FROM visitors
+            WHERE phone = ?
+            LIMIT 1
+          `)
+          .bind(phone)
+          .first();
+
+        if (existingVisitor) {
+          return jsonResponse(
+            {
+              ok: false,
+              message: "This phone number is already registered."
+            },
+            409
+          );
+        }
+
+        // Insert visitor
+        const result = await env.DB
+          .prepare(`
+            INSERT INTO visitors (
+              name,
+              phone
+            )
+            VALUES (?, ?)
+          `)
+          .bind(name, phone)
+          .run();
+
+        return jsonResponse(
+          {
+            ok: true,
+            message: "Registration successful 🎉",
+            visitor: {
+              id: result.meta.last_row_id,
+              name: name,
+              phone: phone
+            }
+          },
+          201
+        );
+
+      } catch (error) {
+        return jsonResponse(
+          {
+            ok: false,
+            message: "Visitor registration failed ❌",
+            error: error.message
+          },
+          500
+        );
+      }
+    }
+
+    // ----------------------------------------
+    // ADMIN SIGNUP
+    // Existing account system
+    // ----------------------------------------
     if (url.pathname === "/api/signup") {
       if (request.method !== "POST") {
         return jsonResponse(
@@ -116,7 +236,6 @@ export default {
             ? body.password
             : "";
 
-        // بررسی نام
         if (name.length < 2 || name.length > 50) {
           return jsonResponse(
             {
@@ -127,7 +246,6 @@ export default {
           );
         }
 
-        // بررسی ایمیل
         const emailRegex =
           /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -141,7 +259,6 @@ export default {
           );
         }
 
-        // بررسی رمز
         if (password.length < 8) {
           return jsonResponse(
             {
@@ -162,7 +279,6 @@ export default {
           );
         }
 
-        // بررسی اینکه ایمیل قبلاً ثبت نشده باشد
         const existingUser = await env.DB
           .prepare(`
             SELECT id
@@ -183,20 +299,15 @@ export default {
           );
         }
 
-        // ساخت Salt تصادفی
         const salt = generateSalt();
-
-        // هش امن رمز
         const passwordHash = await hashPassword(
           password,
           salt
         );
 
-        // ترکیب salt و hash برای ذخیره در یک فیلد
         const storedPasswordHash =
           `pbkdf2$100000$${salt}$${passwordHash}`;
 
-        // ذخیره کاربر
         const result = await env.DB
           .prepare(`
             INSERT INTO users (
@@ -240,9 +351,9 @@ export default {
       }
     }
 
-    // ==========================================
-    // صفحه / وضعیت اصلی Worker
-    // ==========================================
+    // ----------------------------------------
+    // DEFAULT
+    // ----------------------------------------
     return jsonResponse({
       ok: true,
       message: "BEHRAD M PLAYER API is online 🚀",
