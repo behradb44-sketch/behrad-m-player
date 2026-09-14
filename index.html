@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0">
+
 <title>BEHRAD M PLAYER</title>
 
 <style>
+
+/* =========================
+   RESET
+========================= */
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -19,67 +30,182 @@ html{
 
 body{
     background:
-    radial-gradient(circle at 20% 20%,#0066ff20,transparent 30%),
-    radial-gradient(circle at 80% 70%,#ff005520,transparent 30%),
+    radial-gradient(
+        circle at 20% 20%,
+        #0066ff20,
+        transparent 30%
+    ),
+    radial-gradient(
+        circle at 80% 70%,
+        #ff005520,
+        transparent 30%
+    ),
     #05070d;
+
     color:white;
     overflow-x:hidden
 }
+
+
+/* =========================
+   HEADER
+========================= */
 
 header{
     position:sticky;
     top:0;
     z-index:100;
+
     background:#05070dcc;
+
     backdrop-filter:blur(15px);
-    border-bottom:1px solid #00bfff22
+
+    border-bottom:
+        1px solid #00bfff22
 }
 
 .nav{
     max-width:1200px;
+
     margin:auto;
-    height:70px;
+
+    min-height:70px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
+
+    gap:15px;
+
     padding:0 20px
 }
 
 .logo{
     font-size:21px;
+
     font-weight:900;
-    text-shadow:0 0 15px #00bfff
+
+    text-shadow:
+        0 0 15px #00bfff;
+
+    white-space:nowrap
 }
 
 .logo span{
     color:#00c8ff
 }
 
+
+/* =========================
+   NAVIGATION
+========================= */
+
 nav{
     display:flex;
-    gap:8px
+
+    gap:8px;
+
+    flex-wrap:wrap;
+
+    justify-content:center
 }
 
 nav button{
     background:transparent;
+
     border:0;
+
     color:#bbb;
+
     padding:10px 14px;
+
     border-radius:10px;
+
     cursor:pointer
 }
 
 nav button:hover{
     background:#00bfff18;
+
     color:white
 }
 
+
+/* =========================
+   AUTH BUTTONS
+========================= */
+
+.auth-buttons{
+    display:flex;
+
+    gap:8px;
+
+    align-items:center;
+
+    flex-shrink:0
+}
+
+.auth-btn{
+    border:0;
+
+    padding:10px 15px;
+
+    border-radius:11px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-weight:bold;
+
+    transition:.25s;
+
+    white-space:nowrap
+}
+
+.signup-btn{
+    background:
+        linear-gradient(
+            135deg,
+            #00b7ff,
+            #006cff
+        );
+
+    box-shadow:
+        0 0 18px #00b7ff33
+}
+
+.signin-btn{
+    background:#ffffff0d;
+
+    border:
+        1px solid #ffffff18
+}
+
+.auth-btn:hover{
+    transform:
+        translateY(-2px)
+        scale(1.02)
+}
+
+
+/* =========================
+   HERO
+========================= */
+
 .hero{
     min-height:85vh;
+
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
     text-align:center;
+
     padding:60px 20px
 }
 
@@ -89,19 +215,35 @@ nav button:hover{
 
 .badge{
     display:inline-block;
+
     padding:8px 16px;
-    border:1px solid #00bfff55;
+
+    border:
+        1px solid #00bfff55;
+
     border-radius:50px;
+
     color:#62ddff;
+
     background:#00bfff10;
+
     margin-bottom:25px
 }
 
 .hero h1{
-    font-size:clamp(45px,9vw,90px);
+    font-size:
+        clamp(
+            45px,
+            9vw,
+            90px
+        );
+
     line-height:1;
+
     margin-bottom:25px;
-    text-shadow:0 0 30px #00bfff66
+
+    text-shadow:
+        0 0 30px #00bfff66
 }
 
 .hero h1 span{
@@ -110,57 +252,91 @@ nav button:hover{
 
 .hero p{
     color:#aeb7c5;
+
     font-size:18px;
+
     line-height:2
 }
 
 .hero-buttons{
     display:flex;
+
     justify-content:center;
+
     gap:15px;
+
     flex-wrap:wrap;
+
     margin-top:30px
 }
 
 .main-btn{
     padding:15px 28px;
+
     border:0;
+
     border-radius:14px;
+
     cursor:pointer;
+
     font-weight:bold;
+
     font-size:15px;
+
     transition:.25s
 }
 
 .primary{
-    background:linear-gradient(135deg,#00aaff,#006eff);
+    background:
+        linear-gradient(
+            135deg,
+            #00aaff,
+            #006eff
+        );
+
     color:white;
-    box-shadow:0 0 25px #00aaff44
+
+    box-shadow:
+        0 0 25px #00aaff44
 }
 
 .secondary{
     background:#ffffff0d;
+
     color:white;
-    border:1px solid #ffffff18
+
+    border:
+        1px solid #ffffff18
 }
 
 .main-btn:hover{
-    transform:translateY(-4px) scale(1.03)
+    transform:
+        translateY(-4px)
+        scale(1.03)
 }
+
+
+/* =========================
+   SECTIONS
+========================= */
 
 section{
     max-width:1200px;
+
     margin:auto;
+
     padding:80px 20px
 }
 
 .section-title{
     text-align:center;
+
     margin-bottom:40px
 }
 
 .section-title h2{
     font-size:34px;
+
     margin-bottom:10px
 }
 
@@ -172,73 +348,128 @@ section{
     color:#8f9aaa
 }
 
-.cards,.games{
+
+/* =========================
+   CARDS
+========================= */
+
+.cards,
+.games{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:20px
 }
 
-.card,.game{
+.card,
+.game{
     background:#ffffff08;
-    border:1px solid #ffffff12;
+
+    border:
+        1px solid #ffffff12;
+
     border-radius:24px;
+
     padding:28px;
+
     transition:.3s
 }
 
-.card:hover,.game:hover{
-    transform:translateY(-7px);
-    border-color:#00bfff55
+.card:hover,
+.game:hover{
+    transform:
+        translateY(-7px);
+
+    border-color:
+        #00bfff55
 }
 
 .card-icon{
     width:60px;
+
     height:60px;
+
     display:grid;
+
     place-items:center;
+
     border-radius:18px;
+
     font-size:28px;
+
     background:#00bfff15;
+
     margin-bottom:20px
 }
 
-.card h3,.game h3{
+.card h3,
+.game h3{
     margin-bottom:12px
 }
 
-.card p,.game p{
+.card p,
+.game p{
     color:#9ea8b7;
+
     line-height:1.9;
+
     font-size:14px
 }
 
-.card-btn,.play-btn{
+.card-btn,
+.play-btn{
     margin-top:18px;
+
     padding:11px 18px;
+
     border:0;
+
     border-radius:11px;
+
     color:white;
+
     background:#00aeea;
+
     font-weight:bold;
+
     cursor:pointer
 }
 
 .play-btn{
     width:100%;
-    background:linear-gradient(135deg,#ff174f,#ff005d)
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff174f,
+            #ff005d
+        )
 }
 
 .game-image{
     height:140px;
+
     border-radius:17px;
+
     display:grid;
+
     place-items:center;
+
     font-size:55px;
+
     background:
-    radial-gradient(circle,#00c8ff35,transparent 65%),
-    #101621;
+        radial-gradient(
+            circle,
+            #00c8ff35,
+            transparent 65%
+        ),
+        #101621;
+
     margin-bottom:18px
 }
+
 
 /* =========================
    GAME SCREENS
@@ -246,8 +477,11 @@ section{
 
 .game-screen{
     display:none;
+
     max-width:850px;
+
     margin:0 auto;
+
     padding:20px
 }
 
@@ -257,35 +491,55 @@ section{
 
 .game-wrapper{
     background:#080c14;
-    border:1px solid #00bfff35;
+
+    border:
+        1px solid #00bfff35;
+
     border-radius:25px;
+
     padding:20px;
-    box-shadow:0 0 50px #00bfff10
+
+    box-shadow:
+        0 0 50px #00bfff10
 }
 
 .game-top{
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     margin-bottom:15px
 }
 
 .game-top button{
     background:#ff174f;
+
     color:white;
+
     border:0;
+
     padding:9px 15px;
+
     border-radius:10px;
+
     cursor:pointer
 }
 
 canvas{
     display:block;
+
     width:100%;
+
     max-width:700px;
+
     height:auto;
+
     margin:auto;
+
     border-radius:18px;
+
     touch-action:none
 }
 
@@ -303,8 +557,11 @@ canvas{
 
 .game-info{
     text-align:center;
+
     color:#8f9aaa;
+
     margin-top:12px;
+
     line-height:2
 }
 
@@ -312,30 +569,50 @@ canvas{
     color:#00c8ff
 }
 
+
+/* =========================
+   MOBILE CONTROLS
+========================= */
+
 .mobile-controls{
     display:flex;
+
     justify-content:center;
+
     gap:20px;
+
     margin-top:15px
 }
 
 .control-btn{
     width:75px;
+
     height:55px;
-    border:1px solid #00bfff55;
+
+    border:
+        1px solid #00bfff55;
+
     border-radius:15px;
+
     background:#00bfff15;
+
     color:white;
+
     font-size:25px;
+
     cursor:pointer;
+
     user-select:none;
+
     -webkit-user-select:none
 }
 
 .control-btn:active{
     transform:scale(.92);
+
     background:#00bfff35
 }
+
 
 /* =========================
    MESSAGE
@@ -343,23 +620,39 @@ canvas{
 
 .message-box{
     max-width:700px;
+
     margin:auto;
+
     padding:30px;
+
     border-radius:25px;
+
     background:#ffffff08;
-    border:1px solid #ffffff12
+
+    border:
+        1px solid #ffffff12
 }
 
 textarea{
     width:100%;
+
     height:180px;
+
     resize:vertical;
+
     padding:18px;
+
     color:white;
+
     background:#080c14;
-    border:1px solid #ffffff15;
+
+    border:
+        1px solid #ffffff15;
+
     border-radius:16px;
+
     outline:none;
+
     font-size:15px
 }
 
@@ -369,21 +662,37 @@ textarea:focus{
 
 .send-btn{
     width:100%;
+
     margin-top:15px;
+
     padding:15px;
+
     border:0;
+
     border-radius:13px;
+
     color:white;
-    background:linear-gradient(135deg,#00b7ff,#006cff);
+
+    background:
+        linear-gradient(
+            135deg,
+            #00b7ff,
+            #006cff
+        );
+
     font-weight:bold;
+
     cursor:pointer
 }
 
 .status{
     text-align:center;
+
     margin-top:15px;
+
     color:#62ddff
 }
+
 
 /* =========================
    DONATE
@@ -391,51 +700,307 @@ textarea:focus{
 
 .donate-box{
     max-width:700px;
+
     margin:auto;
+
     padding:30px;
+
     border-radius:25px;
+
     background:#ffffff08;
-    border:1px solid #ff174f33;
+
+    border:
+        1px solid #ff174f33;
+
     text-align:center;
-    box-shadow:0 0 35px #ff174f10
+
+    box-shadow:
+        0 0 35px #ff174f10
 }
 
 .donate-box p{
     color:#9ea8b7;
+
     line-height:2;
+
     margin-top:10px
 }
 
 .donate-btn{
     display:inline-block;
+
     margin-top:20px;
+
     padding:15px 28px;
+
     border:0;
+
     border-radius:14px;
+
     color:white;
-    background:linear-gradient(135deg,#ff174f,#ff005d);
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff174f,
+            #ff005d
+        );
+
     font-weight:bold;
+
     font-size:15px;
+
     cursor:pointer;
+
     text-decoration:none;
-    box-shadow:0 0 25px #ff174f33;
+
+    box-shadow:
+        0 0 25px #ff174f33;
+
     transition:.25s
 }
 
 .donate-btn:hover{
-    transform:translateY(-4px) scale(1.03);
-    box-shadow:0 0 35px #ff174f55
+    transform:
+        translateY(-4px)
+        scale(1.03);
+
+    box-shadow:
+        0 0 35px #ff174f55
 }
+
+
+/* =========================
+   SIGNUP MODAL
+========================= */
+
+.signup-modal{
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        rgba(0,0,0,.72);
+
+    backdrop-filter:
+        blur(10px)
+}
+
+.signup-modal.active{
+    display:flex
+}
+
+.signup-box{
+    width:100%;
+
+    max-width:430px;
+
+    padding:30px;
+
+    border-radius:25px;
+
+    background:#080c14;
+
+    border:
+        1px solid #00bfff44;
+
+    box-shadow:
+        0 0 60px #00bfff22;
+
+    position:relative
+}
+
+.signup-close{
+    position:absolute;
+
+    top:15px;
+
+    left:15px;
+
+    width:35px;
+
+    height:35px;
+
+    border:0;
+
+    border-radius:10px;
+
+    background:#ff174f22;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:18px
+}
+
+.signup-title{
+    text-align:center;
+
+    margin-bottom:25px
+}
+
+.signup-title .icon{
+    font-size:45px;
+
+    margin-bottom:10px
+}
+
+.signup-title h2{
+    margin-bottom:8px
+}
+
+.signup-title p{
+    color:#8f9aaa;
+
+    font-size:13px
+}
+
+.signup-field{
+    margin-bottom:17px
+}
+
+.signup-field label{
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#cfd7e3;
+
+    font-size:14px
+}
+
+.signup-field input{
+    width:100%;
+
+    padding:14px 15px;
+
+    border-radius:13px;
+
+    border:
+        1px solid #ffffff15;
+
+    outline:none;
+
+    background:#101621;
+
+    color:white;
+
+    font-size:15px
+}
+
+.signup-field input:focus{
+    border-color:#00bfff;
+
+    box-shadow:
+        0 0 15px #00bfff18
+}
+
+.signup-submit{
+    width:100%;
+
+    padding:15px;
+
+    border:0;
+
+    border-radius:13px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00b7ff,
+            #006cff
+        );
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+    margin-top:5px
+}
+
+.signup-submit:disabled{
+    opacity:.6;
+
+    cursor:not-allowed
+}
+
+.signup-status{
+    text-align:center;
+
+    min-height:24px;
+
+    margin-top:15px;
+
+    font-size:14px;
+
+    line-height:1.7
+}
+
+.signup-status.success{
+    color:#45ff9a
+}
+
+.signup-status.error{
+    color:#ff6685
+}
+
+
+/* =========================
+   FOOTER
+========================= */
 
 footer{
     text-align:center;
+
     padding:35px 20px;
+
     color:#697384;
-    border-top:1px solid #ffffff0d
+
+    border-top:
+        1px solid #ffffff0d
 }
 
 footer strong{
     color:#00c8ff
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1050px){
+
+    .nav{
+        flex-wrap:wrap;
+
+        justify-content:center;
+
+        padding:
+            15px 20px
+    }
+
+    .logo{
+        width:100%;
+
+        text-align:center
+    }
+
 }
 
 @media(max-width:850px){
@@ -444,73 +1009,156 @@ footer strong{
         display:none
     }
 
-    .cards,.games{
+    .cards,
+    .games{
         grid-template-columns:1fr
     }
 
     section{
-        padding:65px 15px
+        padding:
+            65px 15px
     }
+
+    .auth-buttons{
+        width:100%;
+
+        justify-content:center
+    }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- =========================
+     HEADER
+========================= -->
+
 <header>
+
 <div class="nav">
 
     <div class="logo">
         BEHRAD <span>M</span> PLAYER
     </div>
 
+
+    <div class="auth-buttons">
+
+        <button
+            class="auth-btn signup-btn"
+            onclick="openSignup()">
+
+            👤 ثبت نام
+
+        </button>
+
+
+        <button
+            class="auth-btn signin-btn"
+            onclick="adminSignin()">
+
+            🔐 SIGN IN
+
+        </button>
+
+    </div>
+
+
     <nav>
-        <button onclick="go('home')">خانه</button>
-        <button onclick="go('features')">بخش‌ها</button>
-        <button onclick="go('games')">مینی‌گیم‌ها</button>
-        <button onclick="go('donate')">❤️‍🔥 حمایت مالی</button>
-        <button onclick="go('message')">پیام</button>
+
+        <button onclick="go('home')">
+            خانه
+        </button>
+
+        <button onclick="go('features')">
+            بخش‌ها
+        </button>
+
+        <button onclick="go('games')">
+            مینی‌گیم‌ها
+        </button>
+
+        <button onclick="go('donate')">
+            ❤️‍🔥 حمایت مالی
+        </button>
+
+        <button onclick="go('message')">
+            پیام
+        </button>
+
     </nav>
 
 </div>
+
 </header>
 
+
 <main>
+
 
 <!-- =========================
      HOME
 ========================= -->
 
-<section class="hero" id="home">
+<section
+    class="hero"
+    id="home">
 
 <div class="hero-content">
 
+
     <div class="badge">
+
         🎮 سایت رسمی BEHRAD M PLAYER
+
     </div>
 
+
     <h1>
-        BEHRAD <span>M PLAYER</span>
+
+        BEHRAD
+        <span>M PLAYER</span>
+
     </h1>
 
+
     <p>
+
         به دنیای گیم، ویدیو و مینی‌گیم‌های
         BEHRAD M PLAYER خوش اومدی! 🚀
+
     </p>
+
 
     <div class="hero-buttons">
 
-        <button class="main-btn primary" onclick="aparat()">
+        <button
+            class="main-btn primary"
+            onclick="aparat()">
+
             🎬 مشاهده ویدیوها
+
         </button>
 
-        <button class="main-btn secondary" onclick="go('games')">
+
+        <button
+            class="main-btn secondary"
+            onclick="go('games')">
+
             🕹️ مینی‌گیم‌ها
+
         </button>
 
     </div>
 
 </div>
+
 </section>
 
 
@@ -523,8 +1171,12 @@ footer strong{
 <div class="section-title">
 
     <h2>
-        امکانات <span>سایت</span>
+
+        امکانات
+        <span>سایت</span>
+
     </h2>
+
 
     <p>
         همه‌چیز در یک جا 🚀
@@ -532,21 +1184,33 @@ footer strong{
 
 </div>
 
+
 <div class="cards">
 
+
 <div class="card">
 
-    <div class="card-icon">🎬</div>
+    <div class="card-icon">
+        🎬
+    </div>
 
-    <h3>ویدیوها</h3>
+    <h3>
+        ویدیوها
+    </h3>
 
     <p>
+
         با یک کلیک وارد کانال رسمی
         BEHRAD M PLAYER در آپارات شو.
+
     </p>
 
-    <button class="card-btn" onclick="aparat()">
+    <button
+        class="card-btn"
+        onclick="aparat()">
+
         ورود به آپارات
+
     </button>
 
 </div>
@@ -554,17 +1218,27 @@ footer strong{
 
 <div class="card">
 
-    <div class="card-icon">🕹️</div>
+    <div class="card-icon">
+        🕹️
+    </div>
 
-    <h3>مینی‌گیم‌ها</h3>
+    <h3>
+        مینی‌گیم‌ها
+    </h3>
 
     <p>
+
         بازی‌های کوچک و سرگرم‌کننده
         مستقیماً داخل سایت.
+
     </p>
 
-    <button class="card-btn" onclick="go('games')">
+    <button
+        class="card-btn"
+        onclick="go('games')">
+
         بازی‌ها
+
     </button>
 
 </div>
@@ -572,22 +1246,33 @@ footer strong{
 
 <div class="card">
 
-    <div class="card-icon">💬</div>
+    <div class="card-icon">
+        💬
+    </div>
 
-    <h3>پیام به من</h3>
+    <h3>
+        پیام به من
+    </h3>
 
     <p>
+
         پیام خودت رو بنویس.
-        اتصال روبیکا در مرحله بعد اضافه می‌شود.
+
     </p>
 
-    <button class="card-btn" onclick="go('message')">
+    <button
+        class="card-btn"
+        onclick="go('message')">
+
         ارسال پیام
+
     </button>
 
 </div>
 
+
 </div>
+
 </section>
 
 
@@ -600,8 +1285,12 @@ footer strong{
 <div class="section-title">
 
     <h2>
-        🕹️ <span>مینی‌گیم‌ها</span>
+
+        🕹️
+        <span>مینی‌گیم‌ها</span>
+
     </h2>
+
 
     <p>
         بازی کن و رکورد بزن! 🏆
@@ -613,7 +1302,7 @@ footer strong{
 <div class="games">
 
 
-<!-- FLAPPY CARD -->
+<!-- FLAPPY -->
 
 <div class="game">
 
@@ -629,14 +1318,18 @@ footer strong{
         پرنده رو کنترل کن و از لوله‌ها رد شو!
     </p>
 
-    <button class="play-btn" onclick="openFlappy()">
+    <button
+        class="play-btn"
+        onclick="openFlappy()">
+
         ▶ بازی کردن
+
     </button>
 
 </div>
 
 
-<!-- CAR CARD -->
+<!-- CAR -->
 
 <div class="game">
 
@@ -652,14 +1345,18 @@ footer strong{
         با ماشین از ماشین‌ها فرار کن و رکوردت رو بالا ببر!
     </p>
 
-    <button class="play-btn" onclick="openCar()">
+    <button
+        class="play-btn"
+        onclick="openCar()">
+
         ▶ بازی کردن
+
     </button>
 
 </div>
 
 
-<!-- SPACE CARD -->
+<!-- SPACE -->
 
 <div class="game">
 
@@ -675,13 +1372,19 @@ footer strong{
         سفینه رو حرکت بده و از شهاب‌سنگ‌ها فرار کن!
     </p>
 
-    <button class="play-btn" onclick="openSpace()">
+    <button
+        class="play-btn"
+        onclick="openSpace()">
+
         ▶ بازی کردن
+
     </button>
 
 </div>
 
+
 </div>
+
 </section>
 
 
@@ -694,14 +1397,24 @@ footer strong{
 <div class="section-title">
 
     <h2>
-        ❤️‍🔥 <span>حمایت مالی</span> ❤️‍🔥
+
+        ❤️‍🔥
+        <span>حمایت مالی</span>
+        ❤️‍🔥
+
     </h2>
 
+
     <p>
-        اگر از محتوا و سایت BEHRAD M PLAYER خوشت اومد، می‌تونی ازم حمایت کنی! 🙏🔥
+
+        اگر از محتوا و سایت
+        BEHRAD M PLAYER خوشت اومد،
+        می‌تونی ازم حمایت کنی! 🙏🔥
+
     </p>
 
 </div>
+
 
 <div class="donate-box">
 
@@ -709,20 +1422,31 @@ footer strong{
         ❤️‍🔥
     </div>
 
+
     <h3 style="margin-top:15px">
-        حمایت مالی از BEHRAD M PLAYER
+
+        حمایت مالی از
+        BEHRAD M PLAYER
+
     </h3>
 
+
     <p>
-        حمایت شما کمک می‌کنه محتوا، بازی‌ها و پروژه‌های خفن‌تری بسازیم! 🎮🚀
+
+        حمایت شما کمک می‌کنه محتوا،
+        بازی‌ها و پروژه‌های خفن‌تری بسازیم! 🎮🚀
+
     </p>
+
 
     <a
         class="donate-btn"
         href="https://reymit.ir/bmpaparat"
         target="_blank"
         rel="noopener noreferrer">
+
         ❤️‍🔥 حمایت مالی ❤️‍🔥
+
     </a>
 
 </div>
@@ -734,9 +1458,12 @@ footer strong{
      FLAPPY SCREEN
 ========================= -->
 
-<div class="game-screen" id="flappyScreen">
+<div
+    class="game-screen"
+    id="flappyScreen">
 
 <div class="game-wrapper">
+
 
 <div class="game-top">
 
@@ -744,37 +1471,50 @@ footer strong{
         🐦 FLAPPY BIRD
     </strong>
 
+
     <button onclick="closeFlappy()">
         ✕ خروج
     </button>
 
 </div>
 
+
 <canvas
-id="flappyCanvas"
-width="700"
-height="500">
+    id="flappyCanvas"
+    width="700"
+    height="500">
 </canvas>
+
 
 <div class="game-info">
 
     <div>
+
         🏆 امتیاز:
         <strong id="score">0</strong>
+
     </div>
+
 
     <div>
+
         👑 رکورد:
         <strong id="best">0</strong>
+
     </div>
+
 
     <div id="gameMessage">
+
         برای شروع کلیک کن یا Space بزن!
+
     </div>
 
 </div>
 
+
 </div>
+
 </div>
 
 
@@ -782,9 +1522,12 @@ height="500">
      CAR GAME
 ========================= -->
 
-<div class="game-screen" id="carScreen">
+<div
+    class="game-screen"
+    id="carScreen">
 
 <div class="game-wrapper">
+
 
 <div class="game-top">
 
@@ -792,57 +1535,78 @@ height="500">
         🚗 HIGHWAY RUSH
     </strong>
 
+
     <button onclick="closeCar()">
         ✕ خروج
     </button>
 
 </div>
 
+
 <canvas
-id="carCanvas"
-width="700"
-height="500">
+    id="carCanvas"
+    width="700"
+    height="500">
 </canvas>
+
 
 <div class="game-info">
 
     <div>
+
         🏆 امتیاز:
         <strong id="carScore">0</strong>
+
     </div>
+
 
     <div>
+
         👑 رکورد:
         <strong id="carBest">0</strong>
+
     </div>
 
+
     <div id="carMessage">
+
         برای شروع ← → یا A / D بزن!
+
     </div>
 
 </div>
+
 
 <div class="mobile-controls">
 
+
     <button
-    class="control-btn"
-    onpointerdown="carLeft=true"
-    onpointerup="carLeft=false"
-    onpointerleave="carLeft=false">
+        class="control-btn"
+        onpointerdown="carLeft=true;startCar()"
+        onpointerup="carLeft=false"
+        onpointerleave="carLeft=false">
+
         ◀
+
     </button>
+
 
     <button
-    class="control-btn"
-    onpointerdown="carRight=true"
-    onpointerup="carRight=false"
-    onpointerleave="carRight=false">
+        class="control-btn"
+        onpointerdown="carRight=true;startCar()"
+        onpointerup="carRight=false"
+        onpointerleave="carRight=false">
+
         ▶
+
     </button>
 
-</div>
 
 </div>
+
+
+</div>
+
 </div>
 
 
@@ -850,9 +1614,12 @@ height="500">
      SPACE GAME
 ========================= -->
 
-<div class="game-screen" id="spaceScreen">
+<div
+    class="game-screen"
+    id="spaceScreen">
 
 <div class="game-wrapper">
+
 
 <div class="game-top">
 
@@ -860,57 +1627,78 @@ height="500">
         🚀 SPACE DODGE
     </strong>
 
+
     <button onclick="closeSpace()">
         ✕ خروج
     </button>
 
 </div>
 
+
 <canvas
-id="spaceCanvas"
-width="700"
-height="500">
+    id="spaceCanvas"
+    width="700"
+    height="500">
 </canvas>
+
 
 <div class="game-info">
 
     <div>
+
         🏆 امتیاز:
         <strong id="spaceScore">0</strong>
+
     </div>
+
 
     <div>
+
         👑 رکورد:
         <strong id="spaceBest">0</strong>
+
     </div>
 
+
     <div id="spaceMessage">
+
         برای شروع ← → یا A / D بزن!
+
     </div>
 
 </div>
+
 
 <div class="mobile-controls">
 
+
     <button
-    class="control-btn"
-    onpointerdown="spaceLeft=true"
-    onpointerup="spaceLeft=false"
-    onpointerleave="spaceLeft=false">
+        class="control-btn"
+        onpointerdown="spaceLeft=true;startSpace()"
+        onpointerup="spaceLeft=false"
+        onpointerleave="spaceLeft=false">
+
         ◀
+
     </button>
+
 
     <button
-    class="control-btn"
-    onpointerdown="spaceRight=true"
-    onpointerup="spaceRight=false"
-    onpointerleave="spaceRight=false">
+        class="control-btn"
+        onpointerdown="spaceRight=true;startSpace()"
+        onpointerup="spaceRight=false"
+        onpointerleave="spaceRight=false">
+
         ▶
+
     </button>
 
-</div>
 
 </div>
+
+
+</div>
+
 </div>
 
 
@@ -923,43 +1711,179 @@ height="500">
 <div class="section-title">
 
     <h2>
-        💬 پیام <span>به من</span>
+
+        💬 پیام
+        <span>به من</span>
+
     </h2>
 
+
     <p>
-        پیامت رو بنویس؛ بعداً به ربات روبیکا وصلش می‌کنیم.
+
+        پیامت رو بنویس.
+
     </p>
 
 </div>
 
+
 <div class="message-box">
 
-<textarea
-id="messageInput"
-maxlength="1000"
-placeholder="پیامت رو اینجا بنویس..."></textarea>
 
-<button class="send-btn" onclick="sendMessage()">
+<textarea
+    id="messageInput"
+    maxlength="1000"
+    placeholder="پیامت رو اینجا بنویس...">
+</textarea>
+
+
+<button
+    class="send-btn"
+    onclick="sendMessage()">
+
     🚀 ارسال پیام
+
 </button>
 
-<div class="status" id="status"></div>
+
+<div
+    class="status"
+    id="status">
+</div>
+
 
 </div>
+
 </section>
+
 
 </main>
 
 
+<!-- =========================
+     SIGNUP MODAL
+========================= -->
+
+<div
+    class="signup-modal"
+    id="signupModal">
+
+<div class="signup-box">
+
+
+<button
+    class="signup-close"
+    onclick="closeSignup()">
+
+    ✕
+
+</button>
+
+
+<div class="signup-title">
+
+
+    <div class="icon">
+        👤
+    </div>
+
+
+    <h2>
+
+        ثبت نام در
+
+        <span style="color:#00c8ff">
+            BEHRAD M PLAYER
+        </span>
+
+    </h2>
+
+
+    <p>
+        فقط اسم و شماره تلفنت رو وارد کن 🚀
+    </p>
+
+</div>
+
+
+<div class="signup-field">
+
+    <label>
+        👤 اسم
+    </label>
+
+
+    <input
+        id="visitorName"
+        type="text"
+        maxlength="50"
+        autocomplete="name"
+        placeholder="مثلاً بهراد">
+
+</div>
+
+
+<div class="signup-field">
+
+    <label>
+        📱 شماره تلفن
+    </label>
+
+
+    <input
+        id="visitorPhone"
+        type="tel"
+        maxlength="20"
+        autocomplete="tel"
+        inputmode="tel"
+        placeholder="مثلاً 09121234567"
+        dir="ltr">
+
+</div>
+
+
+<button
+    class="signup-submit"
+    id="signupSubmit"
+    onclick="visitorSignup()">
+
+    🚀 ثبت نام
+
+</button>
+
+
+<div
+    class="signup-status"
+    id="signupStatus">
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
 <footer>
 
 <p>
+
     ساخته شده با ❤️ برای
-    <strong>BEHRAD M PLAYER</strong>
+
+    <strong>
+        BEHRAD M PLAYER
+    </strong>
+
 </p>
 
+
 <p style="margin-top:10px">
+
     © 2026 BEHRAD M PLAYER
+
 </p>
 
 </footer>
@@ -967,18 +1891,32 @@ placeholder="پیامت رو اینجا بنویس..."></textarea>
 
 <script>
 
-/* =========================
+
+/* =========================================================
+   API
+========================================================= */
+
+const API_URL =
+    "https://behrad-m-player.behradb44.workers.dev";
+
+
+/* =========================================================
    GENERAL
-========================= */
+========================================================= */
 
 function go(id){
 
-    document.getElementById(id)
-    .scrollIntoView({
+    const element =
+        document.getElementById(id);
+
+    if(!element)return;
+
+    element.scrollIntoView({
         behavior:"smooth"
     });
 
 }
+
 
 function aparat(){
 
@@ -990,31 +1928,285 @@ function aparat(){
 }
 
 
-/* =========================
+/* =========================================================
+   ADMIN SIGN IN
+========================================================= */
+
+function adminSignin(){
+
+    alert(
+        "🔐 بخش SIGN IN مخصوص مدیر سایت است و به‌زودی فعال می‌شود."
+    );
+
+}
+
+
+/* =========================================================
+   VISITOR SIGNUP
+========================================================= */
+
+function openSignup(){
+
+    const modal =
+        document.getElementById(
+            "signupModal"
+        );
+
+    const status =
+        document.getElementById(
+            "signupStatus"
+        );
+
+    modal.classList.add("active");
+
+    status.textContent="";
+
+    status.className =
+        "signup-status";
+
+    document
+        .getElementById("visitorName")
+        .focus();
+
+}
+
+
+function closeSignup(){
+
+    document
+        .getElementById("signupModal")
+        .classList.remove("active");
+
+}
+
+
+async function visitorSignup(){
+
+    const nameInput =
+        document.getElementById(
+            "visitorName"
+        );
+
+    const phoneInput =
+        document.getElementById(
+            "visitorPhone"
+        );
+
+    const button =
+        document.getElementById(
+            "signupSubmit"
+        );
+
+    const status =
+        document.getElementById(
+            "signupStatus"
+        );
+
+
+    const name =
+        nameInput.value.trim();
+
+    const phone =
+        phoneInput.value.trim();
+
+
+    if(name.length < 2){
+
+        status.textContent =
+            "⚠️ لطفاً اسم خودت رو وارد کن.";
+
+        status.className =
+            "signup-status error";
+
+        nameInput.focus();
+
+        return;
+
+    }
+
+
+    if(name.length > 50){
+
+        status.textContent =
+            "⚠️ اسم خیلی طولانیه.";
+
+        status.className =
+            "signup-status error";
+
+        nameInput.focus();
+
+        return;
+
+    }
+
+
+    if(
+        !/^[0-9+\-\s()]{7,20}$/.test(phone)
+    ){
+
+        status.textContent =
+            "⚠️ شماره تلفن معتبر نیست.";
+
+        status.className =
+            "signup-status error";
+
+        phoneInput.focus();
+
+        return;
+
+    }
+
+
+    button.disabled=true;
+
+    button.textContent =
+        "⏳ در حال ثبت نام...";
+
+    status.textContent="";
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_URL +
+                "/api/visitor-signup",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        name:name,
+                        phone:phone
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(data.ok){
+
+            status.textContent =
+                "🎉 ثبت نام با موفقیت انجام شد!";
+
+            status.className =
+                "signup-status success";
+
+            button.textContent =
+                "✅ ثبت شد";
+
+
+            nameInput.value="";
+
+            phoneInput.value="";
+
+
+            setTimeout(
+                closeSignup,
+                1800
+            );
+
+
+        }else{
+
+            status.textContent =
+                "❌ " +
+                (
+                    data.message ||
+                    "ثبت نام انجام نشد."
+                );
+
+            status.className =
+                "signup-status error";
+
+
+            button.disabled=false;
+
+            button.textContent =
+                "🚀 ثبت نام";
+
+        }
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        status.textContent =
+            "❌ ارتباط با سرور برقرار نشد.";
+
+        status.className =
+            "signup-status error";
+
+
+        button.disabled=false;
+
+        button.textContent =
+            "🚀 ثبت نام";
+
+    }
+
+}
+
+
+/* Close modal with Escape */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(
+            e.key==="Escape"
+        ){
+
+            closeSignup();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
    MESSAGE
-========================= */
+========================================================= */
 
 function sendMessage(){
 
-    const input=
-        document.getElementById("messageInput");
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
 
-    const status=
-        document.getElementById("status");
+    const status =
+        document.getElementById(
+            "status"
+        );
 
-    const message=
+    const message =
         input.value.trim();
+
 
     if(!message){
 
-        status.textContent=
+        status.textContent =
             "⚠️ اول پیامت رو بنویس!";
 
         return;
+
     }
 
-    status.textContent=
-        "✅ پیام آماده شد! اتصال ربات روبیکا رو در مرحله بعد اضافه می‌کنیم.";
+
+    status.textContent =
+        "✅ پیام آماده شد! اتصال پیام‌ها در مرحله بعد اضافه می‌شود.";
 
     input.value="";
 
@@ -1025,43 +2217,64 @@ function sendMessage(){
    FLAPPY BIRD
 ========================================================= */
 
-const canvas=
-    document.getElementById("flappyCanvas");
-
-const ctx=
-    canvas.getContext("2d");
-
-let bird;
-let pipes;
-let score=0;
-
-let best=
-    Number(
-        localStorage.getItem("flappyBest") || 0
+const canvas =
+    document.getElementById(
+        "flappyCanvas"
     );
 
+const ctx =
+    canvas.getContext("2d");
+
+
+let bird;
+
+let pipes=[];
+
+let score=0;
+
+
+let best =
+    Number(
+        localStorage.getItem(
+            "flappyBest"
+        ) || 0
+    );
+
+
 let playing=false;
+
 let gameOver=false;
+
 let animation;
 
-document.getElementById("best")
-.textContent=best;
+
+document
+    .getElementById("best")
+    .textContent=best;
 
 
 function openFlappy(){
 
     closeCar();
+
     closeSpace();
 
-    document
-    .getElementById("flappyScreen")
-    .classList.add("active");
 
     document
-    .getElementById("flappyScreen")
-    .scrollIntoView({
-        behavior:"smooth"
-    });
+        .getElementById(
+            "flappyScreen"
+        )
+        .classList.add("active");
+
+
+    document
+        .getElementById(
+            "flappyScreen"
+        )
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
 
     resetFlappy();
 
@@ -1072,11 +2285,16 @@ function closeFlappy(){
 
     playing=false;
 
-    cancelAnimationFrame(animation);
+    cancelAnimationFrame(
+        animation
+    );
+
 
     document
-    .getElementById("flappyScreen")
-    .classList.remove("active");
+        .getElementById(
+            "flappyScreen"
+        )
+        .classList.remove("active");
 
 }
 
@@ -1090,21 +2308,28 @@ function resetFlappy(){
         velocity:0
     };
 
+
     pipes=[];
 
     score=0;
 
     gameOver=false;
+
     playing=false;
 
-    document
-    .getElementById("score")
-    .textContent="0";
 
     document
-    .getElementById("gameMessage")
-    .textContent=
+        .getElementById("score")
+        .textContent="0";
+
+
+    document
+        .getElementById(
+            "gameMessage"
+        )
+        .textContent =
         "برای شروع کلیک کن یا Space بزن!";
+
 
     drawFlappy();
 
@@ -1119,17 +2344,25 @@ function startFlappy(){
 
     }
 
+
     if(playing)return;
+
 
     playing=true;
 
+
     document
-    .getElementById("gameMessage")
-    .textContent=
+        .getElementById(
+            "gameMessage"
+        )
+        .textContent =
         "پرواز کن! 🐦";
 
-    animation=
-        requestAnimationFrame(gameLoop);
+
+    animation =
+        requestAnimationFrame(
+            gameLoop
+        );
 
 }
 
@@ -1142,6 +2375,7 @@ function flap(){
 
     }
 
+
     bird.velocity=-7.5;
 
 }
@@ -1153,15 +2387,17 @@ function createPipe(){
 
     const minTop=60;
 
-    const maxTop=
+    const maxTop =
         canvas.height-gap-70;
 
-    const top=
+
+    const top =
         Math.floor(
-            Math.random()*
-            (maxTop-minTop)+
+            Math.random() *
+            (maxTop-minTop) +
             minTop
         );
+
 
     pipes.push({
 
@@ -1192,19 +2428,24 @@ function collision(){
 
     }
 
-    for(const pipe of pipes){
 
-        const hitX=
+    for(
+        const pipe of pipes
+    ){
+
+        const hitX =
             bird.x+bird.size>pipe.x &&
             bird.x-bird.size<
             pipe.x+pipe.width;
 
-        const hitY=
+
+        const hitY =
             bird.y-bird.size<
             pipe.top ||
 
             bird.y+bird.size>
             pipe.top+pipe.gap;
+
 
         if(hitX && hitY){
 
@@ -1214,6 +2455,7 @@ function collision(){
 
     }
 
+
     return false;
 
 }
@@ -1222,28 +2464,38 @@ function collision(){
 function endFlappy(){
 
     playing=false;
+
     gameOver=true;
 
-    cancelAnimationFrame(animation);
+
+    cancelAnimationFrame(
+        animation
+    );
+
 
     if(score>best){
 
         best=score;
+
 
         localStorage.setItem(
             "flappyBest",
             best
         );
 
+
         document
-        .getElementById("best")
-        .textContent=best;
+            .getElementById("best")
+            .textContent=best;
 
     }
 
+
     document
-    .getElementById("gameMessage")
-    .textContent=
+        .getElementById(
+            "gameMessage"
+        )
+        .textContent =
         "💀 Game Over — برای شروع دوباره کلیک کن!";
 
 }
@@ -1252,6 +2504,7 @@ function endFlappy(){
 function gameLoop(){
 
     if(!playing)return;
+
 
     bird.velocity+=0.38;
 
@@ -1269,9 +2522,12 @@ function gameLoop(){
     }
 
 
-    for(const pipe of pipes){
+    for(
+        const pipe of pipes
+    ){
 
         pipe.x-=3.2;
+
 
         if(
             !pipe.passed &&
@@ -1283,18 +2539,21 @@ function gameLoop(){
 
             score++;
 
+
             document
-            .getElementById("score")
-            .textContent=score;
+                .getElementById("score")
+                .textContent=score;
 
         }
 
     }
 
 
-    pipes=pipes.filter(
-        pipe=>pipe.x+pipe.width>0
-    );
+    pipes =
+        pipes.filter(
+            pipe =>
+            pipe.x+pipe.width>0
+        );
 
 
     if(collision()){
@@ -1310,30 +2569,40 @@ function gameLoop(){
 
     drawFlappy();
 
-    animation=
-        requestAnimationFrame(gameLoop);
+
+    animation =
+        requestAnimationFrame(
+            gameLoop
+        );
 
 }
 
 
 function drawFlappy(){
 
-    const sky=
+    const sky =
         ctx.createLinearGradient(
-            0,0,0,canvas.height
+            0,
+            0,
+            0,
+            canvas.height
         );
+
 
     sky.addColorStop(
         0,
         "#42c8ff"
     );
 
+
     sky.addColorStop(
         1,
         "#b9efff"
     );
 
+
     ctx.fillStyle=sky;
+
 
     ctx.fillRect(
         0,
@@ -1345,31 +2614,52 @@ function drawFlappy(){
 
     /* Clouds */
 
-    ctx.fillStyle=
+    ctx.fillStyle =
         "rgba(255,255,255,.65)";
 
-    for(let i=0;i<4;i++){
 
-        const x=80+i*190;
+    for(
+        let i=0;
+        i<4;
+        i++
+    ){
 
-        const y=
+        const x =
+            80+i*190;
+
+        const y =
             70+(i%2)*80;
+
 
         ctx.beginPath();
 
-        ctx.arc(
-            x,y,25,0,Math.PI*2
-        );
 
         ctx.arc(
-            x+25,y-10,
-            32,0,Math.PI*2
+            x,
+            y,
+            25,
+            0,
+            Math.PI*2
         );
 
+
         ctx.arc(
-            x+55,y,
-            25,0,Math.PI*2
+            x+25,
+            y-10,
+            32,
+            0,
+            Math.PI*2
         );
+
+
+        ctx.arc(
+            x+55,
+            y,
+            25,
+            0,
+            Math.PI*2
+        );
+
 
         ctx.fill();
 
@@ -1378,9 +2668,12 @@ function drawFlappy(){
 
     /* Pipes */
 
-    for(const pipe of pipes){
+    for(
+        const pipe of pipes
+    ){
 
         ctx.fillStyle="#20a83a";
+
 
         ctx.fillRect(
             pipe.x,
@@ -1389,6 +2682,7 @@ function drawFlappy(){
             pipe.top
         );
 
+
         ctx.fillRect(
             pipe.x,
             pipe.top+pipe.gap,
@@ -1396,7 +2690,9 @@ function drawFlappy(){
             canvas.height
         );
 
+
         ctx.fillStyle="#16882d";
+
 
         ctx.fillRect(
             pipe.x-7,
@@ -1404,6 +2700,7 @@ function drawFlappy(){
             pipe.width+14,
             18
         );
+
 
         ctx.fillRect(
             pipe.x-7,
@@ -1419,6 +2716,7 @@ function drawFlappy(){
 
     ctx.fillStyle="#73c63b";
 
+
     ctx.fillRect(
         0,
         canvas.height-25,
@@ -1431,12 +2729,14 @@ function drawFlappy(){
 
     ctx.save();
 
+
     ctx.translate(
         bird.x,
         bird.y
     );
 
-    let angle=
+
+    let angle =
         Math.min(
             Math.max(
                 bird.velocity*.05,
@@ -1445,12 +2745,15 @@ function drawFlappy(){
             0.6
         );
 
+
     ctx.rotate(angle);
 
 
     ctx.fillStyle="#ffd21c";
 
+
     ctx.beginPath();
+
 
     ctx.arc(
         0,
@@ -1460,12 +2763,15 @@ function drawFlappy(){
         Math.PI*2
     );
 
+
     ctx.fill();
 
 
     ctx.fillStyle="#f2a900";
 
+
     ctx.beginPath();
+
 
     ctx.ellipse(
         -5,
@@ -1477,12 +2783,15 @@ function drawFlappy(){
         Math.PI*2
     );
 
+
     ctx.fill();
 
 
     ctx.fillStyle="white";
 
+
     ctx.beginPath();
+
 
     ctx.arc(
         8,
@@ -1492,12 +2801,15 @@ function drawFlappy(){
         Math.PI*2
     );
 
+
     ctx.fill();
 
 
     ctx.fillStyle="black";
 
+
     ctx.beginPath();
+
 
     ctx.arc(
         10,
@@ -1507,12 +2819,15 @@ function drawFlappy(){
         Math.PI*2
     );
 
+
     ctx.fill();
 
 
     ctx.fillStyle="#ff7b00";
 
+
     ctx.beginPath();
+
 
     ctx.moveTo(18,0);
 
@@ -1524,13 +2839,15 @@ function drawFlappy(){
 
     ctx.fill();
 
+
     ctx.restore();
 
 
     if(!playing){
 
-        ctx.fillStyle=
+        ctx.fillStyle =
             "rgba(0,0,0,.38)";
+
 
         ctx.fillRect(
             0,
@@ -1539,29 +2856,38 @@ function drawFlappy(){
             canvas.height
         );
 
+
         ctx.fillStyle="white";
 
         ctx.textAlign="center";
 
-        ctx.font=
+
+        ctx.font =
             "bold 32px Tahoma";
+
 
         ctx.fillText(
             gameOver ?
             "GAME OVER" :
             "FLAPPY BIRD",
+
             canvas.width/2,
+
             canvas.height/2-20
         );
 
-        ctx.font=
+
+        ctx.font =
             "18px Tahoma";
+
 
         ctx.fillText(
             gameOver ?
             "برای بازی دوباره کلیک کن" :
             "کلیک یا Space برای شروع",
+
             canvas.width/2,
+
             canvas.height/2+25
         );
 
@@ -1570,7 +2896,7 @@ function drawFlappy(){
 }
 
 
-/* Flappy controls */
+/* Flappy keyboard */
 
 document.addEventListener(
     "keydown",
@@ -1583,8 +2909,11 @@ document.addEventListener(
 
             if(
                 document
-                .getElementById("flappyScreen")
-                .classList.contains("active")
+                    .getElementById(
+                        "flappyScreen"
+                    )
+                    .classList
+                    .contains("active")
             ){
 
                 e.preventDefault();
@@ -1614,7 +2943,9 @@ canvas.addEventListener(
         flap();
 
     },
-    {passive:false}
+    {
+        passive:false
+    }
 );
 
 
@@ -1622,56 +2953,74 @@ canvas.addEventListener(
    CAR GAME
 ========================================================= */
 
-const carCanvas=
-    document.getElementById("carCanvas");
+const carCanvas =
+    document.getElementById(
+        "carCanvas"
+    );
 
-const carCtx=
+const carCtx =
     carCanvas.getContext("2d");
+
 
 let car={
     x:350,
-    y:420,
+    y:400,
     width:58,
     height:90,
     speed:7
 };
 
+
 let carEnemies=[];
+
 let carScore=0;
 
-let carBest=
+
+let carBest =
     Number(
-        localStorage.getItem("carBest") || 0
+        localStorage.getItem(
+            "carBest"
+        ) || 0
     );
 
+
 let carPlaying=false;
+
 let carOver=false;
+
 let carAnimation;
 
+
 let carLeft=false;
+
 let carRight=false;
 
 let carRoadOffset=0;
 
 
-document.getElementById("carBest")
-.textContent=carBest;
+document
+    .getElementById("carBest")
+    .textContent=carBest;
 
 
 function openCar(){
 
     closeFlappy();
+
     closeSpace();
 
-    document
-    .getElementById("carScreen")
-    .classList.add("active");
 
     document
-    .getElementById("carScreen")
-    .scrollIntoView({
-        behavior:"smooth"
-    });
+        .getElementById("carScreen")
+        .classList.add("active");
+
+
+    document
+        .getElementById("carScreen")
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
 
     resetCar();
 
@@ -1682,11 +3031,15 @@ function closeCar(){
 
     carPlaying=false;
 
-    cancelAnimationFrame(carAnimation);
+
+    cancelAnimationFrame(
+        carAnimation
+    );
+
 
     document
-    .getElementById("carScreen")
-    .classList.remove("active");
+        .getElementById("carScreen")
+        .classList.remove("active");
 
 }
 
@@ -1701,23 +3054,28 @@ function resetCar(){
         speed:7
     };
 
+
     carEnemies=[];
 
     carScore=0;
 
     carPlaying=false;
+
     carOver=false;
 
     carRoadOffset=0;
 
-    document
-    .getElementById("carScore")
-    .textContent="0";
 
     document
-    .getElementById("carMessage")
-    .textContent=
+        .getElementById("carScore")
+        .textContent="0";
+
+
+    document
+        .getElementById("carMessage")
+        .textContent =
         "برای شروع ← → یا A / D بزن!";
+
 
     drawCar();
 
@@ -1732,17 +3090,23 @@ function startCar(){
 
     }
 
+
     if(carPlaying)return;
+
 
     carPlaying=true;
 
+
     document
-    .getElementById("carMessage")
-    .textContent=
+        .getElementById("carMessage")
+        .textContent =
         "فرار کن! 🚗💨";
 
-    carAnimation=
-        requestAnimationFrame(carLoop);
+
+    carAnimation =
+        requestAnimationFrame(
+            carLoop
+        );
 
 }
 
@@ -1756,12 +3120,15 @@ function createEnemyCar(){
         490
     ];
 
-    const lane=
+
+    const lane =
         lanes[
             Math.floor(
-                Math.random()*lanes.length
+                Math.random() *
+                lanes.length
             )
         ];
+
 
     carEnemies.push({
 
@@ -1787,9 +3154,14 @@ function carCollision(a,b){
 
     return(
         a.x < b.x+b.width-8 &&
-        a.x+a.width > b.x+8 &&
+
+        a.x+a.width >
+        b.x+8 &&
+
         a.y < b.y+b.height-8 &&
-        a.y+a.height > b.y+8
+
+        a.y+a.height >
+        b.y+8
     );
 
 }
@@ -1798,28 +3170,36 @@ function carCollision(a,b){
 function endCar(){
 
     carPlaying=false;
+
     carOver=true;
 
-    cancelAnimationFrame(carAnimation);
+
+    cancelAnimationFrame(
+        carAnimation
+    );
+
 
     if(carScore>carBest){
 
         carBest=carScore;
+
 
         localStorage.setItem(
             "carBest",
             carBest
         );
 
+
         document
-        .getElementById("carBest")
-        .textContent=carBest;
+            .getElementById("carBest")
+            .textContent=carBest;
 
     }
 
+
     document
-    .getElementById("carMessage")
-    .textContent=
+        .getElementById("carMessage")
+        .textContent =
         "💥 تصادف کردی! برای دوباره بازی کردن کلیک کن.";
 
 }
@@ -1830,13 +3210,12 @@ function carLoop(){
     if(!carPlaying)return;
 
 
-    /* Movement */
-
     if(carLeft){
 
         car.x-=car.speed;
 
     }
+
 
     if(carRight){
 
@@ -1851,10 +3230,15 @@ function carLoop(){
 
     }
 
-    if(car.x>
-        carCanvas.width-160-car.width){
 
-        car.x=
+    if(
+        car.x>
+        carCanvas.width-
+        160-
+        car.width
+    ){
+
+        car.x =
             carCanvas.width-
             160-
             car.width;
@@ -1862,12 +3246,8 @@ function carLoop(){
     }
 
 
-    /* Road */
-
     carRoadOffset+=7;
 
-
-    /* Spawn */
 
     if(
         carEnemies.length===0 ||
@@ -1881,14 +3261,18 @@ function carLoop(){
     }
 
 
-    /* Enemies */
-
-    for(const enemy of carEnemies){
+    for(
+        const enemy of carEnemies
+    ){
 
         enemy.y+=enemy.speed;
 
+
         if(
-            carCollision(car,enemy)
+            carCollision(
+                car,
+                enemy
+            )
         ){
 
             endCar();
@@ -1902,42 +3286,48 @@ function carLoop(){
 
         if(
             !enemy.passed &&
-            enemy.y>car.y+car.height
+            enemy.y>
+            car.y+car.height
         ){
 
             enemy.passed=true;
 
             carScore++;
 
+
             document
-            .getElementById("carScore")
-            .textContent=carScore;
+                .getElementById(
+                    "carScore"
+                )
+                .textContent=carScore;
 
         }
 
     }
 
 
-    carEnemies=
+    carEnemies =
         carEnemies.filter(
-            enemy=>enemy.y<carCanvas.height+120
+            enemy =>
+            enemy.y<
+            carCanvas.height+120
         );
 
 
     drawCar();
 
 
-    carAnimation=
-        requestAnimationFrame(carLoop);
+    carAnimation =
+        requestAnimationFrame(
+            carLoop
+        );
 
 }
 
 
 function drawCar(){
 
-    /* Sky */
-
-    const bg=
+    const bg =
         carCtx.createLinearGradient(
             0,
             0,
@@ -1945,17 +3335,21 @@ function drawCar(){
             carCanvas.height
         );
 
+
     bg.addColorStop(
         0,
         "#111a2e"
     );
+
 
     bg.addColorStop(
         1,
         "#03050a"
     );
 
+
     carCtx.fillStyle=bg;
+
 
     carCtx.fillRect(
         0,
@@ -1965,9 +3359,10 @@ function drawCar(){
     );
 
 
-    /* Side grass */
+    /* Grass */
 
     carCtx.fillStyle="#132b1b";
+
 
     carCtx.fillRect(
         0,
@@ -1975,6 +3370,7 @@ function drawCar(){
         155,
         carCanvas.height
     );
+
 
     carCtx.fillRect(
         545,
@@ -1988,6 +3384,7 @@ function drawCar(){
 
     carCtx.fillStyle="#252a32";
 
+
     carCtx.fillRect(
         155,
         0,
@@ -1996,9 +3393,10 @@ function drawCar(){
     );
 
 
-    /* Road borders */
+    /* Borders */
 
     carCtx.fillStyle="#e8e8e8";
+
 
     carCtx.fillRect(
         155,
@@ -2006,6 +3404,7 @@ function drawCar(){
         6,
         carCanvas.height
     );
+
 
     carCtx.fillRect(
         539,
@@ -2019,9 +3418,14 @@ function drawCar(){
 
     carCtx.fillStyle="#ffffffaa";
 
+
     for(
-        let y=-80+(carRoadOffset%100);
+        let y=
+            -80+
+            (carRoadOffset%100);
+
         y<carCanvas.height;
+
         y+=100
     ){
 
@@ -2032,12 +3436,14 @@ function drawCar(){
             55
         );
 
+
         carCtx.fillRect(
             337,
             y,
             7,
             55
         );
+
 
         carCtx.fillRect(
             427,
@@ -2051,7 +3457,9 @@ function drawCar(){
 
     /* Enemy cars */
 
-    for(const enemy of carEnemies){
+    for(
+        const enemy of carEnemies
+    ){
 
         drawCarObject(
             carCtx,
@@ -2077,12 +3485,11 @@ function drawCar(){
     );
 
 
-    /* Overlay */
-
     if(!carPlaying){
 
-        carCtx.fillStyle=
+        carCtx.fillStyle =
             "rgba(0,0,0,.45)";
+
 
         carCtx.fillRect(
             0,
@@ -2091,28 +3498,35 @@ function drawCar(){
             carCanvas.height
         );
 
+
         carCtx.fillStyle="white";
 
         carCtx.textAlign="center";
 
-        carCtx.font=
+
+        carCtx.font =
             "bold 32px Tahoma";
+
 
         carCtx.fillText(
             carOver ?
             "GAME OVER" :
             "HIGHWAY RUSH",
+
             carCanvas.width/2,
             220
         );
 
-        carCtx.font=
+
+        carCtx.font =
             "18px Tahoma";
+
 
         carCtx.fillText(
             carOver ?
             "برای شروع دوباره ← → بزن" :
             "← → یا A / D برای حرکت",
+
             carCanvas.width/2,
             260
         );
@@ -2131,9 +3545,9 @@ function drawCarObject(
     color
 ){
 
-    /* Shadow */
+    c.fillStyle =
+        "rgba(0,0,0,.4)";
 
-    c.fillStyle="rgba(0,0,0,.4)";
 
     c.fillRect(
         x+5,
@@ -2143,11 +3557,11 @@ function drawCarObject(
     );
 
 
-    /* Body */
-
     c.fillStyle=color;
 
+
     c.beginPath();
+
 
     c.roundRect(
         x,
@@ -2157,6 +3571,7 @@ function drawCarObject(
         12
     );
 
+
     c.fill();
 
 
@@ -2164,7 +3579,9 @@ function drawCarObject(
 
     c.fillStyle="#07121d";
 
+
     c.beginPath();
+
 
     c.roundRect(
         x+10,
@@ -2174,12 +3591,15 @@ function drawCarObject(
         7
     );
 
+
     c.fill();
 
 
     c.fillStyle="#183b55";
 
+
     c.beginPath();
+
 
     c.roundRect(
         x+11,
@@ -2189,6 +3609,7 @@ function drawCarObject(
         5
     );
 
+
     c.fill();
 
 
@@ -2196,12 +3617,14 @@ function drawCarObject(
 
     c.fillStyle="#fff";
 
+
     c.fillRect(
         x+7,
         y+5,
         12,
         7
     );
+
 
     c.fillRect(
         x+w-19,
@@ -2213,12 +3636,14 @@ function drawCarObject(
 
     c.fillStyle="#ff3333";
 
+
     c.fillRect(
         x+7,
         y+h-12,
         12,
         7
     );
+
 
     c.fillRect(
         x+w-19,
@@ -2232,12 +3657,14 @@ function drawCarObject(
 
     c.fillStyle="#050505";
 
+
     c.fillRect(
         x-6,
         y+17,
         8,
         22
     );
+
 
     c.fillRect(
         x+w-2,
@@ -2246,12 +3673,14 @@ function drawCarObject(
         22
     );
 
+
     c.fillRect(
         x-6,
         y+h-39,
         8,
         22
     );
+
 
     c.fillRect(
         x+w-2,
@@ -2271,8 +3700,9 @@ document.addEventListener(
 
         if(
             document
-            .getElementById("carScreen")
-            .classList.contains("active")
+                .getElementById("carScreen")
+                .classList
+                .contains("active")
         ){
 
             if(
@@ -2287,6 +3717,7 @@ document.addEventListener(
                 startCar();
 
             }
+
 
             if(
                 e.code==="ArrowRight" ||
@@ -2320,6 +3751,7 @@ document.addEventListener(
 
         }
 
+
         if(
             e.code==="ArrowRight" ||
             e.code==="KeyD"
@@ -2333,14 +3765,68 @@ document.addEventListener(
 );
 
 
+/* Car pointer */
+
+document
+    .getElementById("carCanvas")
+    .addEventListener(
+        "pointerdown",
+        function(e){
+
+            startCar();
+
+
+            const rect =
+                carCanvas
+                    .getBoundingClientRect();
+
+
+            const x =
+                e.clientX-
+                rect.left;
+
+
+            if(
+                x<
+                rect.width/2
+            ){
+
+                carLeft=true;
+
+            }else{
+
+                carRight=true;
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById("carCanvas")
+    .addEventListener(
+        "pointerup",
+        function(){
+
+            carLeft=false;
+
+            carRight=false;
+
+        }
+    );
+
+
 /* =========================================================
    SPACE DODGE
 ========================================================= */
 
-const spaceCanvas=
-    document.getElementById("spaceCanvas");
+const spaceCanvas =
+    document.getElementById(
+        "spaceCanvas"
+    );
 
-const spaceCtx=
+const spaceCtx =
     spaceCanvas.getContext("2d");
 
 
@@ -2352,31 +3838,46 @@ let spaceship={
     speed:7
 };
 
+
 let meteors=[];
+
 let stars=[];
 
 let spaceScore=0;
 
-let spaceBest=
+
+let spaceBest =
     Number(
-        localStorage.getItem("spaceBest") || 0
+        localStorage.getItem(
+            "spaceBest"
+        ) || 0
     );
 
+
 let spacePlaying=false;
+
 let spaceOver=false;
+
 let spaceAnimation;
 
+
 let spaceLeft=false;
+
 let spaceRight=false;
 
 
-document.getElementById("spaceBest")
-.textContent=spaceBest;
+document
+    .getElementById("spaceBest")
+    .textContent=spaceBest;
 
 
 /* Stars */
 
-for(let i=0;i<90;i++){
+for(
+    let i=0;
+    i<90;
+    i++
+){
 
     stars.push({
 
@@ -2402,17 +3903,25 @@ for(let i=0;i<90;i++){
 function openSpace(){
 
     closeFlappy();
+
     closeCar();
 
-    document
-    .getElementById("spaceScreen")
-    .classList.add("active");
 
     document
-    .getElementById("spaceScreen")
-    .scrollIntoView({
-        behavior:"smooth"
-    });
+        .getElementById(
+            "spaceScreen"
+        )
+        .classList.add("active");
+
+
+    document
+        .getElementById(
+            "spaceScreen"
+        )
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
 
     resetSpace();
 
@@ -2423,13 +3932,17 @@ function closeSpace(){
 
     spacePlaying=false;
 
+
     cancelAnimationFrame(
         spaceAnimation
     );
 
+
     document
-    .getElementById("spaceScreen")
-    .classList.remove("active");
+        .getElementById(
+            "spaceScreen"
+        )
+        .classList.remove("active");
 
 }
 
@@ -2444,21 +3957,30 @@ function resetSpace(){
         speed:7
     };
 
+
     meteors=[];
 
     spaceScore=0;
 
     spacePlaying=false;
+
     spaceOver=false;
 
-    document
-    .getElementById("spaceScore")
-    .textContent="0";
 
     document
-    .getElementById("spaceMessage")
-    .textContent=
+        .getElementById(
+            "spaceScore"
+        )
+        .textContent="0";
+
+
+    document
+        .getElementById(
+            "spaceMessage"
+        )
+        .textContent =
         "برای شروع ← → یا A / D بزن!";
+
 
     drawSpace();
 
@@ -2473,16 +3995,22 @@ function startSpace(){
 
     }
 
+
     if(spacePlaying)return;
+
 
     spacePlaying=true;
 
+
     document
-    .getElementById("spaceMessage")
-    .textContent=
+        .getElementById(
+            "spaceMessage"
+        )
+        .textContent =
         "زنده بمون! 🚀";
 
-    spaceAnimation=
+
+    spaceAnimation =
         requestAnimationFrame(
             spaceLoop
         );
@@ -2497,7 +4025,9 @@ function createMeteor(){
         x:
             30+
             Math.random()*
-            (spaceCanvas.width-60),
+            (
+                spaceCanvas.width-60
+            ),
 
         y:-50,
 
@@ -2511,7 +4041,8 @@ function createMeteor(){
             spaceScore*.015,
 
         rotation:
-            Math.random()*Math.PI,
+            Math.random()*
+            Math.PI,
 
         rotationSpeed:
             (Math.random()-.5)*.08
@@ -2523,27 +4054,32 @@ function createMeteor(){
 
 function meteorCollision(){
 
-    for(const meteor of meteors){
+    for(
+        const meteor of meteors
+    ){
 
-        const dx=
+        const dx =
             spaceship.x+
             spaceship.width/2-
             meteor.x;
 
-        const dy=
+
+        const dy =
             spaceship.y+
             spaceship.height/2-
             meteor.y;
 
-        const distance=
+
+        const distance =
             Math.sqrt(
-                dx*dx+dy*dy
+                dx*dx+
+                dy*dy
             );
+
 
         if(
             distance<
-            meteor.size+
-            25
+            meteor.size+25
         ){
 
             return true;
@@ -2551,6 +4087,7 @@ function meteorCollision(){
         }
 
     }
+
 
     return false;
 
@@ -2560,30 +4097,40 @@ function meteorCollision(){
 function endSpace(){
 
     spacePlaying=false;
+
     spaceOver=true;
+
 
     cancelAnimationFrame(
         spaceAnimation
     );
 
+
     if(spaceScore>spaceBest){
 
         spaceBest=spaceScore;
+
 
         localStorage.setItem(
             "spaceBest",
             spaceBest
         );
 
+
         document
-        .getElementById("spaceBest")
-        .textContent=spaceBest;
+            .getElementById(
+                "spaceBest"
+            )
+            .textContent=spaceBest;
 
     }
 
+
     document
-    .getElementById("spaceMessage")
-    .textContent=
+        .getElementById(
+            "spaceMessage"
+        )
+        .textContent =
         "💥 سفینه نابود شد! دوباره تلاش کن!";
 
 }
@@ -2602,6 +4149,7 @@ function spaceLoop(){
             spaceship.speed;
 
     }
+
 
     if(spaceRight){
 
@@ -2636,9 +4184,12 @@ function spaceLoop(){
 
     /* Stars */
 
-    for(const star of stars){
+    for(
+        const star of stars
+    ){
 
         star.y+=star.speed;
+
 
         if(
             star.y>
@@ -2647,7 +4198,8 @@ function spaceLoop(){
 
             star.y=-5;
 
-            star.x=
+
+            star.x =
                 Math.random()*
                 spaceCanvas.width;
 
@@ -2659,11 +4211,16 @@ function spaceLoop(){
     /* Spawn */
 
     if(
-        meteors.length<4+
-        Math.floor(spaceScore/8)
+        meteors.length<
+        4+
+        Math.floor(
+            spaceScore/8
+        )
     ){
 
-        if(Math.random()<.035){
+        if(
+            Math.random()<.035
+        ){
 
             createMeteor();
 
@@ -2674,12 +4231,17 @@ function spaceLoop(){
 
     /* Meteors */
 
-    for(const meteor of meteors){
+    for(
+        const meteor of meteors
+    ){
 
-        meteor.y+=meteor.speed;
+        meteor.y+=
+            meteor.speed;
+
 
         meteor.rotation+=
             meteor.rotationSpeed;
+
 
         if(
             meteor.y>
@@ -2690,24 +4252,30 @@ function spaceLoop(){
 
             spaceScore++;
 
+
             document
-            .getElementById("spaceScore")
-            .textContent=spaceScore;
+                .getElementById(
+                    "spaceScore"
+                )
+                .textContent=
+                spaceScore;
 
         }
 
     }
 
 
-    meteors=
+    meteors =
         meteors.filter(
-            meteor=>
+            meteor =>
             meteor.y<
             spaceCanvas.height+80
         );
 
 
-    if(meteorCollision()){
+    if(
+        meteorCollision()
+    ){
 
         endSpace();
 
@@ -2721,7 +4289,7 @@ function spaceLoop(){
     drawSpace();
 
 
-    spaceAnimation=
+    spaceAnimation =
         requestAnimationFrame(
             spaceLoop
         );
@@ -2731,9 +4299,7 @@ function spaceLoop(){
 
 function drawSpace(){
 
-    /* Background */
-
-    const bg=
+    const bg =
         spaceCtx.createLinearGradient(
             0,
             0,
@@ -2741,17 +4307,21 @@ function drawSpace(){
             spaceCanvas.height
         );
 
+
     bg.addColorStop(
         0,
         "#02030a"
     );
+
 
     bg.addColorStop(
         1,
         "#0b1230"
     );
 
+
     spaceCtx.fillStyle=bg;
+
 
     spaceCtx.fillRect(
         0,
@@ -2763,12 +4333,16 @@ function drawSpace(){
 
     /* Stars */
 
-    for(const star of stars){
+    for(
+        const star of stars
+    ){
 
-        spaceCtx.fillStyle=
+        spaceCtx.fillStyle =
             "rgba(255,255,255,.8)";
 
+
         spaceCtx.beginPath();
+
 
         spaceCtx.arc(
             star.x,
@@ -2778,6 +4352,7 @@ function drawSpace(){
             Math.PI*2
         );
 
+
         spaceCtx.fill();
 
     }
@@ -2785,7 +4360,7 @@ function drawSpace(){
 
     /* Planet glow */
 
-    const glow=
+    const glow =
         spaceCtx.createRadialGradient(
             570,
             100,
@@ -2795,17 +4370,21 @@ function drawSpace(){
             100
         );
 
+
     glow.addColorStop(
         0,
         "rgba(0,200,255,.35)"
     );
+
 
     glow.addColorStop(
         1,
         "rgba(0,0,0,0)"
     );
 
+
     spaceCtx.fillStyle=glow;
+
 
     spaceCtx.fillRect(
         450,
@@ -2817,7 +4396,9 @@ function drawSpace(){
 
     /* Meteors */
 
-    for(const meteor of meteors){
+    for(
+        const meteor of meteors
+    ){
 
         drawMeteor(
             spaceCtx,
@@ -2836,8 +4417,9 @@ function drawSpace(){
 
     if(!spacePlaying){
 
-        spaceCtx.fillStyle=
+        spaceCtx.fillStyle =
             "rgba(0,0,0,.45)";
+
 
         spaceCtx.fillRect(
             0,
@@ -2846,28 +4428,35 @@ function drawSpace(){
             spaceCanvas.height
         );
 
+
         spaceCtx.fillStyle="white";
 
         spaceCtx.textAlign="center";
 
-        spaceCtx.font=
+
+        spaceCtx.font =
             "bold 32px Tahoma";
+
 
         spaceCtx.fillText(
             spaceOver ?
             "GAME OVER" :
             "SPACE DODGE",
+
             spaceCanvas.width/2,
             220
         );
 
-        spaceCtx.font=
+
+        spaceCtx.font =
             "18px Tahoma";
+
 
         spaceCtx.fillText(
             spaceOver ?
             "برای شروع دوباره ← → بزن" :
             "← → یا A / D برای حرکت",
+
             spaceCanvas.width/2,
             260
         );
@@ -2881,10 +4470,12 @@ function drawMeteor(c,m){
 
     c.save();
 
+
     c.translate(
         m.x,
         m.y
     );
+
 
     c.rotate(
         m.rotation
@@ -2893,53 +4484,71 @@ function drawMeteor(c,m){
 
     c.fillStyle="#777";
 
+
     c.beginPath();
+
 
     const points=9;
 
-    for(let i=0;i<points;i++){
 
-        const angle=
+    for(
+        let i=0;
+        i<points;
+        i++
+    ){
+
+        const angle =
             i/points*
             Math.PI*2;
 
-        const radius=
+
+        const radius =
             m.size*
             (
                 .75+
                 Math.random()*.35
             );
 
-        const x=
+
+        const x =
             Math.cos(angle)*
             radius;
 
-        const y=
+
+        const y =
             Math.sin(angle)*
             radius;
 
+
         if(i===0){
 
-            c.moveTo(x,y);
+            c.moveTo(
+                x,
+                y
+            );
 
         }else{
 
-            c.lineTo(x,y);
+            c.lineTo(
+                x,
+                y
+            );
 
         }
 
     }
+
 
     c.closePath();
 
     c.fill();
 
 
-    /* Meteor holes */
-
     c.fillStyle="#444";
 
+
     c.beginPath();
+
 
     c.arc(
         -5,
@@ -2949,9 +4558,12 @@ function drawMeteor(c,m){
         Math.PI*2
     );
 
+
     c.fill();
 
+
     c.beginPath();
+
 
     c.arc(
         7,
@@ -2960,6 +4572,7 @@ function drawMeteor(c,m){
         0,
         Math.PI*2
     );
+
 
     c.fill();
 
@@ -2971,24 +4584,28 @@ function drawMeteor(c,m){
 
 function drawSpaceship(){
 
-    const x=
+    const x =
         spaceship.x+
         spaceship.width/2;
 
-    const y=
+
+    const y =
         spaceship.y;
 
 
-    /* Engine flame */
+    /* Engine */
 
     spaceCtx.fillStyle="#ff8c00";
 
+
     spaceCtx.beginPath();
+
 
     spaceCtx.moveTo(
         x-12,
         y+57
     );
+
 
     spaceCtx.lineTo(
         x,
@@ -2996,52 +4613,62 @@ function drawSpaceship(){
         Math.random()*12
     );
 
+
     spaceCtx.lineTo(
         x+12,
         y+57
     );
+
 
     spaceCtx.closePath();
 
     spaceCtx.fill();
 
 
-    /* Ship body */
+    /* Body */
 
     spaceCtx.fillStyle="#d9e8ff";
 
+
     spaceCtx.beginPath();
+
 
     spaceCtx.moveTo(
         x,
         y
     );
 
+
     spaceCtx.lineTo(
         x-30,
         y+60
     );
+
 
     spaceCtx.lineTo(
         x,
         y+50
     );
 
+
     spaceCtx.lineTo(
         x+30,
         y+60
     );
+
 
     spaceCtx.closePath();
 
     spaceCtx.fill();
 
 
-    /* Blue glass */
+    /* Glass */
 
     spaceCtx.fillStyle="#00bfff";
 
+
     spaceCtx.beginPath();
+
 
     spaceCtx.arc(
         x,
@@ -3051,6 +4678,7 @@ function drawSpaceship(){
         Math.PI*2
     );
 
+
     spaceCtx.fill();
 
 
@@ -3058,22 +4686,27 @@ function drawSpaceship(){
 
     spaceCtx.fillStyle="#57708f";
 
+
     spaceCtx.beginPath();
+
 
     spaceCtx.moveTo(
         x-15,
         y+42
     );
 
+
     spaceCtx.lineTo(
         x-35,
         y+62
     );
 
+
     spaceCtx.lineTo(
         x-8,
         y+57
     );
+
 
     spaceCtx.closePath();
 
@@ -3082,20 +4715,24 @@ function drawSpaceship(){
 
     spaceCtx.beginPath();
 
+
     spaceCtx.moveTo(
         x+15,
         y+42
     );
+
 
     spaceCtx.lineTo(
         x+35,
         y+62
     );
 
+
     spaceCtx.lineTo(
         x+8,
         y+57
     );
+
 
     spaceCtx.closePath();
 
@@ -3112,8 +4749,11 @@ document.addEventListener(
 
         if(
             document
-            .getElementById("spaceScreen")
-            .classList.contains("active")
+                .getElementById(
+                    "spaceScreen"
+                )
+                .classList
+                .contains("active")
         ){
 
             if(
@@ -3128,6 +4768,7 @@ document.addEventListener(
                 startSpace();
 
             }
+
 
             if(
                 e.code==="ArrowRight" ||
@@ -3161,6 +4802,7 @@ document.addEventListener(
 
         }
 
+
         if(
             e.code==="ArrowRight" ||
             e.code==="KeyD"
@@ -3174,107 +4816,71 @@ document.addEventListener(
 );
 
 
-/* Mouse / touch start for car */
+/* Space pointer */
 
 document
-.getElementById("carCanvas")
-.addEventListener(
-    "pointerdown",
-    function(e){
+    .getElementById("spaceCanvas")
+    .addEventListener(
+        "pointerdown",
+        function(e){
 
-        startCar();
+            startSpace();
 
-        const rect=
-            carCanvas.getBoundingClientRect();
 
-        const x=
-            e.clientX-
-            rect.left;
+            const rect =
+                spaceCanvas
+                    .getBoundingClientRect();
 
-        if(
-            x<
-            rect.width/2
-        ){
 
-            carLeft=true;
+            const x =
+                e.clientX-
+                rect.left;
 
-        }else{
 
-            carRight=true;
+            if(
+                x<
+                rect.width/2
+            ){
+
+                spaceLeft=true;
+
+            }else{
+
+                spaceRight=true;
+
+            }
 
         }
-
-    }
-);
+    );
 
 
 document
-.getElementById("carCanvas")
-.addEventListener(
-    "pointerup",
-    function(){
+    .getElementById("spaceCanvas")
+    .addEventListener(
+        "pointerup",
+        function(){
 
-        carLeft=false;
-        carRight=false;
+            spaceLeft=false;
 
-    }
-);
-
-
-/* Mouse / touch start for space */
-
-document
-.getElementById("spaceCanvas")
-.addEventListener(
-    "pointerdown",
-    function(e){
-
-        startSpace();
-
-        const rect=
-            spaceCanvas.getBoundingClientRect();
-
-        const x=
-            e.clientX-
-            rect.left;
-
-        if(
-            x<
-            rect.width/2
-        ){
-
-            spaceLeft=true;
-
-        }else{
-
-            spaceRight=true;
+            spaceRight=false;
 
         }
-
-    }
-);
+    );
 
 
-document
-.getElementById("spaceCanvas")
-.addEventListener(
-    "pointerup",
-    function(){
-
-        spaceLeft=false;
-        spaceRight=false;
-
-    }
-);
-
-
-/* Initial drawings */
+/* =========================================================
+   INITIALIZE GAMES
+========================================================= */
 
 resetFlappy();
+
 resetCar();
+
 resetSpace();
 
 </script>
 
+
 </body>
+
 </html>
