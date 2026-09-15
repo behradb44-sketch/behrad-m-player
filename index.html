@@ -7316,6 +7316,297 @@ document
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
-</body>
 
+<!-- BMP V12 — PUBLIC 10-DIGIT ROOM DIRECTORY + ROBUST P2P CHAT -->
+<style id="bmp-v12-public-code-ui">
+  .bmp-public-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px;padding:14px 16px;border:1px solid rgba(0,200,255,.18);border-radius:16px;background:linear-gradient(135deg,rgba(0,200,255,.075),rgba(255,255,255,.025));box-shadow:0 10px 35px rgba(0,0,0,.18)}
+  .bmp-public-banner strong{display:block;color:#e9fbff;font-size:14px;margin-bottom:4px}.bmp-public-banner span{color:#8fa0b4;font-size:12px;line-height:1.8}
+  .bmp-public-dot{width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#00e676;box-shadow:0 0 14px #00e676}
+  .bmp-room-card-v12{position:relative}.bmp-room-card-v12:before{content:"";position:absolute;inset:0 auto 0 0;width:2px;background:linear-gradient(#00c8ff,#006cff);opacity:.65}
+  .bmp-public-codes{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.bmp-public-code{min-width:0;padding:12px;border-radius:13px;background:rgba(0,0,0,.25);border:1px solid rgba(0,200,255,.14)}
+  .bmp-public-code small{display:block;color:#83dfff;font-size:11px;margin-bottom:6px}.bmp-public-code b{display:block;direction:ltr;text-align:center;font:900 18px/1.25 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2px;color:#f0fcff;word-break:break-all}
+  .bmp-code-actions{display:flex;gap:7px;margin-top:10px}.bmp-code-actions button{flex:1;min-height:40px;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.055);color:#fff;cursor:pointer;font-weight:700}.bmp-code-actions button:hover{border-color:rgba(0,200,255,.35);background:rgba(0,200,255,.08)}
+  .bmp-public-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.bmp-public-meta span{padding:5px 8px;border-radius:999px;background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.12);color:#8fdfff;font-size:10px}
+  .bmp-chat-code-strip{margin-top:10px;padding:11px 12px;border-radius:12px;background:rgba(0,200,255,.045);border:1px solid rgba(0,200,255,.12);font-size:11px;color:#9bb0c4;line-height:1.9}.bmp-chat-code-strip b{color:#e7fbff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;direction:ltr;unicode-bidi:plaintext;letter-spacing:1px}
+  @media(max-width:700px){.bmp-public-banner{align-items:flex-start}.bmp-public-codes{grid-template-columns:1fr}.bmp-code-actions{flex-direction:column}.bmp-public-code b{font-size:17px}}
+</style>
+<script>
+(function(){
+  'use strict';
+  const ROOT='bmp/behrad-m-player/code10/v2';
+  const OFFER_ROOT=ROOT+'/offer/';
+  const ANSWER_ROOT=ROOT+'/answer/';
+  const ROOM_ROOT=ROOT+'/rooms/';
+  const ROOM_WILDCARD=ROOM_ROOT+'+';
+  const TTL=30*60;
+  const CODE_RE=/^\d{10}$/;
+  const handlers=new Map();
+  const subscribed=new Set();
+  const publicRooms=new Map();
+  let mqttHooked=false;
+  let heartbeatTimer=0;
+  let activePublicConnectionCode='';
+  let activePublicRoomPacket=null;
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const valid=c=>CODE_RE.test(String(c||''));
+  const make10=()=>{const a=new Uint32Array(2);crypto.getRandomValues(a);return ((BigInt(a[0])<<32n|BigInt(a[1]))%10000000000n).toString().padStart(10,'0');};
+  const offerTopic=c=>OFFER_ROOT+c, answerTopic=c=>ANSWER_ROOT+c, roomTopic=c=>ROOM_ROOT+c;
+  const now=()=>Date.now();
+
+  function status(id,text){const e=$(id);if(e)e.textContent=text;}
+  function copyText(v){try{navigator.clipboard?.writeText(String(v));status('chatStatus','📋 کد کپی شد.');}catch(e){}}
+  window.bmpV12CopyCode=copyText;
+
+  function savePublicRoom(r){
+    if(!r||!valid(r.connectionCode)||!valid(r.responseCode)||!r.roomId)return;
+    const age=now()-Number(r.createdAt||0);
+    if(age>TTL*1000){publicRooms.delete(String(r.connectionCode));return;}
+    publicRooms.set(String(r.connectionCode),{...r,lastSeen:now()});
+  }
+  function removePublicRoom(code){if(code)publicRooms.delete(String(code));}
+
+  function renderPublicRooms(){
+    const list=$('roomList'); if(!list)return;
+    const rooms=[...publicRooms.values()].filter(r=>now()-Number(r.createdAt||0)<=TTL*1000).sort((a,b)=>Number(b.updatedAt||b.createdAt||0)-Number(a.updatedAt||a.createdAt||0));
+    if(!rooms.length){
+      list.innerHTML='<div class="room-card" style="grid-column:1/-1;text-align:center"><h3>🌐 هنوز روم عمومی فعالی نیست</h3><p>اولین روم را بساز؛ کد اتصال و کد پاسخ آن برای همه کاربران سایت نمایش داده می‌شود. 🚀</p></div>';
+      return;
+    }
+    list.innerHTML=rooms.slice(0,50).map(r=>{
+      const cc=esc(r.connectionCode), rc=esc(r.responseCode), rid=esc(r.roomId), name=esc(r.name||'اتاق جدید'), host=esc(r.host||'Host');
+      return `<div class="room-card bmp-room-card-v12" data-room-code="${cc}">
+        <h3>🌐 💬 ${name}</h3>
+        <p>میزبان: ${host} · روم عمومی آنلاین</p>
+        <div class="bmp-public-meta"><span>🟢 آنلاین</span><span>WebRTC · P2P</span><span>🔢 دو کد ۱۰ رقمی</span></div>
+        <div class="bmp-public-codes">
+          <div class="bmp-public-code"><small>کد اتصال</small><b>${cc}</b><div class="bmp-code-actions"><button onclick="bmpV12CopyCode('${cc}')">کپی</button></div></div>
+          <div class="bmp-public-code"><small>کد پاسخ</small><b>${rc}</b><div class="bmp-code-actions"><button onclick="bmpV12CopyCode('${rc}')">کپی</button></div></div>
+        </div>
+        <div class="room-card-actions"><button class="room-small-btn" onclick="bmpV12JoinPublic('${cc}')">🔗 اتصال به این روم</button></div>
+      </div>`;
+    }).join('');
+  }
+  window.bmpV12RenderPublicRooms=renderPublicRooms;
+
+  function publish(topic,payload,expiry=TTL){
+    if(!window.bmpMqttReady||!window.bmpMqtt)return false;
+    try{window.bmpMqtt.publish(topic,JSON.stringify(payload),{qos:0,retain:true,properties:{messageExpiryInterval:expiry}});return true;}catch(e){console.warn('MQTT publish failed',e);return false;}
+  }
+  function clearRetained(topic){
+    if(!window.bmpMqttReady||!window.bmpMqtt)return false;
+    try{window.bmpMqtt.publish(topic,'',{qos:0,retain:true});return true;}catch(e){return false;}
+  }
+  function subscribeTopic(topic,fn){
+    if(!window.bmpMqtt||!window.bmpMqttReady)return false;
+    handlers.set(topic,fn);subscribed.add(topic);
+    try{window.bmpMqtt.subscribe(topic,{qos:0});return true;}catch(e){return false;}
+  }
+  function unsubscribeTopic(topic){handlers.delete(topic);subscribed.delete(topic);try{window.bmpMqtt?.unsubscribe(topic);}catch(e){}}
+
+  function hookMqtt(){
+    if(mqttHooked||!window.bmpMqtt||!window.bmpMqtt.on)return;
+    mqttHooked=true;
+    window.bmpMqtt.on('message',(topic,raw)=>{
+      if(!topic.startsWith(ROOT+'/'))return;
+      const fn=handlers.get(topic);
+      let packet=null;try{packet=JSON.parse(raw.toString());}catch(e){return;}
+      if(topic.startsWith(ROOM_ROOT)){
+        if(!packet||packet.type!=='room'||!valid(packet.connectionCode)||!valid(packet.responseCode)){return;}
+        if(!packet.createdAt||now()-Number(packet.createdAt)>TTL*1000){removePublicRoom(packet.connectionCode);renderPublicRooms();return;}
+        savePublicRoom(packet);renderPublicRooms();return;
+      }
+      if(!fn)return;
+      try{fn(packet);}catch(e){console.error(e);}
+    });
+    const oldConnect=window.bmpMqtt.listeners?.('connect');
+  }
+
+  function resubscribeAll(){
+    if(!window.bmpMqttReady||!window.bmpMqtt)return;
+    hookMqtt();
+    for(const t of subscribed){try{window.bmpMqtt.subscribe(t,{qos:0});}catch(e){}}
+  }
+
+  async function waitMqtt(){
+    if(window.bmpMqttReady&&window.bmpMqtt){hookMqtt();return true;}
+    try{window.bmpLoadMqtt?.();}catch(e){}
+    const end=now()+10000;
+    while(now()<end){if(window.bmpMqttReady&&window.bmpMqtt){hookMqtt();resubscribeAll();return true;}await new Promise(r=>setTimeout(r,100));}
+    return false;
+  }
+
+  function ensurePublicDirectorySubscription(){
+    if(!window.bmpMqttReady||!window.bmpMqtt)return false;
+    hookMqtt();
+    handlers.set(ROOM_WILDCARD,()=>{});
+    subscribed.add(ROOM_WILDCARD);
+    try{window.bmpMqtt.subscribe(ROOM_WILDCARD,{qos:0});return true;}catch(e){return false;}
+  }
+
+  async function initDirectory(){
+    if(!(await waitMqtt()))return false;
+    ensurePublicDirectorySubscription();
+    renderPublicRooms();
+    return true;
+  }
+
+  function patchMqttReconnect(){
+    const m=window.bmpMqtt;if(!m||m.__bmpV12Patched)return;
+    m.__bmpV12Patched=true;
+    m.on('connect',()=>{setTimeout(()=>{resubscribeAll();ensurePublicDirectorySubscription();renderPublicRooms();},100);});
+    m.on('close',()=>{if($('chatStatus'))$('chatStatus').textContent='🟠 شبکهٔ انتقال موقتاً قطع شد؛ تلاش برای اتصال مجدد…';});
+  }
+
+  function showCodesInChat(name,cc,rc){
+    const side=document.querySelector('#activeChat .chat-sidebar');if(!side)return;
+    let box=$('bmpV12ChatCodes');
+    if(!box){box=document.createElement('div');box.id='bmpV12ChatCodes';box.className='bmp-chat-code-strip';side.appendChild(box);}
+    box.innerHTML=`🔐 کدهای عمومی این روم<br>کد اتصال: <b>${esc(cc)}</b><br>کد پاسخ: <b>${esc(rc)}</b>`;
+  }
+
+  function startHostHeartbeat(){
+    clearInterval(heartbeatTimer);
+    heartbeatTimer=setInterval(()=>{
+      if(activePublicRoomPacket&&activePublicConnectionCode){publish(roomTopic(activePublicConnectionCode),{...activePublicRoomPacket,updatedAt:now()},TTL);}
+    },60000);
+  }
+
+  async function createRoomV12(){
+    const name=($('createRoomName')?.value||'اتاق جدید').trim()||'اتاق جدید';
+    const user=($('createUserName')?.value||window.BMPV3?.profile?.username||'Host').trim()||'Host';
+    status('createRoomStatus','⏳ در حال آماده‌سازی روم عمومی و کدهای ۱۰ رقمی…');
+    if(!(await waitMqtt())){status('createRoomStatus','❌ سرویس شبکه در دسترس نیست؛ اتصال اینترنت را بررسی کن.');return false;}
+    try{
+      const pc=makePeer();
+      const ch=pc.createDataChannel('bmp-chat');
+      setupDataChannel(ch,user,true);
+      const offer=await pc.createOffer();await pc.setLocalDescription(offer);await waitForIce(pc);
+      const connectionCode=make10(),responseCode=make10(),roomId=(typeof bmpRoomId==='function'?bmpRoomId():'room_'+make10()),createdAt=now();
+      const offerPacket={v:4,type:'offer',room:name,host:user,roomId,responseCode,sdp:pc.localDescription,createdAt};
+      if(!publish(offerTopic(connectionCode),offerPacket,TTL))throw new Error('offer publish failed');
+      const publicPacket={v:4,type:'room',room:name,name,host:user,roomId,connectionCode,responseCode,createdAt,updatedAt:createdAt};
+      if(!publish(roomTopic(connectionCode),publicPacket,TTL))throw new Error('public room publish failed');
+      subscribeTopic(answerTopic(responseCode),ans=>{
+        if(ans?.type!=='answer'||ans.roomId!==roomId||!ans.sdp)return;
+        unsubscribeTopic(answerTopic(responseCode));
+        pc.setRemoteDescription(ans.sdp).then(()=>{status('chatStatus','🟢 اتصال WebRTC برقرار شد؛ مهمان وارد روم شد.');}).catch(e=>console.warn(e));
+      });
+      activePublicConnectionCode=connectionCode;activePublicRoomPacket=publicPacket;
+      window.pendingHost={pc,roomName:name,userName:user,connectionCode,responseCode,channel:ch,roomId};
+      window.activeRoom={name,role:'host',userName:user,roomId,connectionCode,responseCode};
+      try{const rooms=loadRooms().filter(r=>r.connectionCode!==connectionCode);rooms.unshift({id:safeId(),roomId,name,role:'host',public:true,connectionCode,responseCode,createdAt,status:'آنلاین · عمومی'});saveRooms(rooms);}catch(e){}
+      renderPublicRooms();
+      closeRoomModals();
+      $('activeRoomTitle').textContent=name;$('activeChat').style.display='block';$('chatStatus').textContent='🟡 روم عمومی ساخته شد؛ کدها همین حالا برای همه کاربران سایت قابل مشاهده‌اند.';
+      showCodesInChat(name,connectionCode,responseCode);
+      addSystemMessage('🌐 روم عمومی شد. هر کاربری کد اتصال را از لیست روم‌ها بردارد و وارد شود؛ کد پاسخ هم در همان لیست نمایش داده شده است.');
+      startHostHeartbeat();
+      return true;
+    }catch(e){console.error(e);status('createRoomStatus','❌ ساخت روم ناموفق بود: '+(e.message||'خطای ناشناخته'));return false;}
+  }
+
+  async function joinByConnectionCode(code,user){
+    if(!valid(code)){status('joinRoomStatus','⚠️ کد اتصال باید دقیقاً ۱۰ رقم باشد.');return false;}
+    if(!(await waitMqtt())){status('joinRoomStatus','❌ سرویس شبکه در دسترس نیست.');return false;}
+    const topic=offerTopic(code);
+    const handler=async offer=>{
+      unsubscribeTopic(topic);
+      if(!offer||offer.type!=='offer'||!offer.sdp||!valid(offer.responseCode)){status('joinRoomStatus','❌ اطلاعات روم نامعتبر یا منقضی است.');return;}
+      try{
+        const pc=makePeer();pc.ondatachannel=e=>setupDataChannel(e.channel,user,false);
+        await pc.setRemoteDescription(offer.sdp);const answer=await pc.createAnswer();await pc.setLocalDescription(answer);await waitForIce(pc);
+        if(!publish(answerTopic(offer.responseCode),{v:4,type:'answer',roomId:offer.roomId,sdp:pc.localDescription,createdAt:now()},TTL))throw new Error('answer publish failed');
+        activePeer=pc;window.activeRoom={name:offer.room||'اتاق',role:'guest',userName:user,roomId:offer.roomId,connectionCode:code,responseCode:offer.responseCode,accepted:true};
+        const a=$('answerCode');if(a){a.value=offer.responseCode;$('answerBox').style.display='block';}
+        $('activeRoomTitle').textContent=window.activeRoom.name;$('activeChat').style.display='block';$('chatStatus').textContent='🟡 پاسخ خودکار ارسال شد؛ منتظر برقراری WebRTC…';
+        try{const rooms=loadRooms().filter(r=>r.connectionCode!==code);rooms.unshift({id:safeId(),roomId:offer.roomId,name:offer.room||'اتاق',role:'guest',public:true,connectionCode:code,responseCode:offer.responseCode,createdAt:now(),status:'متصل / مهمان'});saveRooms(rooms);}catch(e){}
+        closeRoomModals();
+      }catch(e){console.error(e);status('joinRoomStatus','❌ اتصال انجام نشد: '+(e.message||'خطای ناشناخته'));}
+    };
+    subscribeTopic(topic,handler);
+    status('joinRoomStatus','⏳ در حال دریافت روم از کد اتصال…');
+    setTimeout(()=>{if(handlers.has(topic)){unsubscribeTopic(topic);status('joinRoomStatus','❌ چنین رومی پیدا نشد یا کد آن منقضی شده است.');}},10000);
+    return true;
+  }
+
+  window.bmpV12JoinPublic=async function(code){
+    const u=window.BMPV3?.profile?.username||'Guest';
+    closeRoomModals();
+    const m=$('joinRoomModal');if(m)m.classList.add('active');
+    const input=$('hostOfferCode');if(input){input.value=String(code);input.focus();}
+    return joinByConnectionCode(String(code),u);
+  };
+
+  window.createRoom=createRoomV12;
+  window.joinRoom=async function(){
+    const code=($('hostOfferCode')?.value||'').trim();
+    const user=window.BMPV3?.profile?.username||'Guest';
+    return joinByConnectionCode(code,user);
+  };
+  window.findP2PRooms=()=>{initDirectory();return true;};
+  window.connectToDiscoveredRoom=()=>false;
+  window.copyActiveCode=()=>{if(activePublicConnectionCode)copyText(activePublicConnectionCode);};
+  window.copyRoomCode=window.copyActiveCode;
+  window.showHostAnswer=()=>{};
+  window.completeHostConnection=()=>{};
+
+  window.sendChatMessage=function(){
+    const input=$('chatInput');const text=(input?.value||'').trim();if(!text)return;
+    const ch=(typeof activePeer!=='undefined'?activePeer:null);
+    if(!ch||ch.readyState!=='open'){addSystemMessage('⚠️ هنوز اتصال مستقیم برقرار نشده.');return;}
+    try{ch.send(JSON.stringify({type:'chat',name:window.BMPV3?.profile?.username||window.activeRoom?.userName||'Player',text,ts:now()}));addChatMessage(window.BMPV3?.profile?.username||window.activeRoom?.userName||'Player',text,true);input.value='';input.focus();}catch(e){addSystemMessage('❌ ارسال پیام انجام نشد.');}
+  };
+
+  // Preserve the existing visual chat renderer but make the P2P data channel authoritative.
+  const originalSetup=window.setupDataChannel;
+  window.setupDataChannel=originalSetup;
+  // Patch the lexical/global setupDataChannel through a lightweight message listener on the active channel.
+  function installChatListener(channel){
+    if(!channel||channel.__bmpV12ChatBound)return;channel.__bmpV12ChatBound=true;
+    const old=channel.onmessage;
+    channel.onmessage=function(e){
+      try{const d=JSON.parse(e.data);if(d?.type==='chat'&&d.text){addChatMessage(d.name||'Player',d.text,false);return;}}catch(_){ }
+      if(typeof old==='function')try{old.call(channel,e);}catch(_){ }
+    };
+  }
+  const originalMakePeer=window.makePeer;
+  // makePeer is a top-level function, so wrap the public symbol if available; setupDataChannel calls still work through the original function.
+  if(typeof originalMakePeer==='function')window.makePeer=function(){const pc=originalMakePeer();pc.addEventListener('datachannel',e=>installChatListener(e.channel));return pc;};
+
+  function patchToolbar(){
+    document.querySelectorAll('.rooms-toolbar button').forEach(b=>{if((b.textContent||'').includes('پیدا کردن روم'))b.style.display='none';});
+    const search=$('publicRoomSearch');if(search)search.style.display='none';
+    const c=$('createRoomModal');if(c){const p=c.querySelector('p');if(p)p.textContent='یک روم بساز؛ کد اتصال و کد پاسخ ۱۰ رقمی آن برای همه کاربران سایت نمایش داده می‌شود.';const pub=$('createPublicRoom');if(pub?.parentElement)pub.parentElement.style.display='none';}
+    const j=$('joinRoomModal');if(j){const p=j.querySelector('p');if(p)p.textContent='کد اتصال ۱۰ رقمی را وارد کن؛ کد پاسخ به‌صورت خودکار برای میزبان ارسال می‌شود.';const f=$('hostOfferCode');if(f){f.type='text';f.inputMode='numeric';f.maxLength=10;f.placeholder='کد اتصال ۱۰ رقمی';f.style.display='block';}}
+    const toolbar=document.querySelector('.rooms-toolbar');if(toolbar&&!$('bmpPublicBanner')){const b=document.createElement('div');b.id='bmpPublicBanner';b.className='bmp-public-banner';b.innerHTML='<div><strong>🌐 فهرست عمومی روم‌های آنلاین</strong><span>هر روم ساخته‌شده با دو کد ۱۰ رقمی اینجا برای همه کاربران نمایش داده می‌شود. دادهٔ چت همچنان مستقیم با WebRTC منتقل می‌شود.</span></div><i class="bmp-public-dot"></i>';toolbar.parentElement?.insertBefore(b,toolbar);}
+  }
+
+  // Make room cards public and independent from the old local-only renderer.
+  window.renderRooms=renderPublicRooms;
+  window.openActiveHostRoomById=function(id){const r=loadRooms().find(x=>String(x.roomId)===String(id));if(!r)return;window.activeRoom={...r};$('activeRoomTitle').textContent=r.name;$('activeChat').style.display='block';showCodesInChat(r.name,r.connectionCode,r.responseCode);status('chatStatus','🟡 روم ذخیره‌شده؛ اگر صفحهٔ میزبان قبلی بسته شده باشد باید روم را دوباره بسازی.');};
+
+  window.leaveRoom=function(){
+    clearInterval(heartbeatTimer);heartbeatTimer=0;
+    if(activePublicConnectionCode)clearRetained(roomTopic(activePublicConnectionCode));
+    if(window.pendingHost?.responseCode)unsubscribeTopic(answerTopic(window.pendingHost.responseCode));
+    try{if(typeof activePeer!=='undefined'&&activePeer?.close)activePeer.close();}catch(e){}
+    try{if(window.pendingHost?.pc)window.pendingHost.pc.close();}catch(e){}
+    activePublicConnectionCode='';activePublicRoomPacket=null;window.pendingHost=null;window.activeRoom=null;
+    $('activeChat').style.display='none';$('chatMessages').innerHTML='';renderPublicRooms();
+  };
+
+  window.addEventListener('pagehide',()=>{try{if(activePublicConnectionCode)clearRetained(roomTopic(activePublicConnectionCode));}catch(e){}});
+
+  function boot(){
+    patchToolbar();
+    initDirectory();
+    setInterval(()=>{patchToolbar();renderPublicRooms();},3000);
+    const wait=setInterval(()=>{if(window.bmpMqttReady&&window.bmpMqtt){patchMqttReconnect();ensurePublicDirectorySubscription();renderPublicRooms();clearInterval(wait);}},250);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+</body>
 </html>
