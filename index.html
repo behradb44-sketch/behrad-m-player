@@ -1,171 +1,426 @@
 ```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>BEHRAD M PLAYER — UPDATE</title>
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>به‌روزرسانی سایت | BEHRAD M PLAYER</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* =========================================================
+   FONT
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+
+/* =========================================================
+   RESET
+========================================================= */
 
 *{
-    box-sizing:border-box;
     margin:0;
     padding:0;
+    box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
     width:100%;
     height:100%;
-    overflow:hidden;
 }
 
 body{
+
+    overflow:hidden;
+
     background:#02040a;
-    color:#fff;
-    font-family:Inter,Arial,sans-serif;
+
+    color:white;
+
+    font-family:
+        Vazirmatn,
+        Tahoma,
+        Arial,
+        sans-serif;
+
     cursor:none;
+
 }
+
 
 /* =========================================================
-   BACKGROUND
+   MAIN BACKGROUND
 ========================================================= */
 
-.bg{
+.scene{
+
     position:fixed;
+
     inset:0;
+
     overflow:hidden;
+
     background:
-        radial-gradient(circle at 50% 48%,rgba(0,180,255,.12),transparent 23%),
-        radial-gradient(circle at 20% 20%,rgba(0,80,255,.08),transparent 28%),
-        radial-gradient(circle at 80% 80%,rgba(120,0,255,.08),transparent 30%),
+
+        radial-gradient(
+            circle at 50% 48%,
+            rgba(0,200,255,.13),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(0,90,255,.08),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(120,0,255,.09),
+            transparent 30%
+        ),
+
         #02040a;
+
 }
 
-.bg::before{
-    content:"";
+
+/* =========================================================
+   AMBIENT LIGHT
+========================================================= */
+
+.ambient{
+
     position:absolute;
-    inset:-30%;
+
+    width:700px;
+    height:700px;
+
+    left:50%;
+    top:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    border-radius:50%;
+
     background:
-        conic-gradient(
-            from 0deg,
-            transparent,
-            rgba(0,210,255,.05),
-            transparent 25%,
-            rgba(130,0,255,.04),
-            transparent 50%
+
+        radial-gradient(
+            circle,
+            rgba(0,210,255,.12),
+            rgba(0,100,255,.04) 35%,
+            transparent 70%
         );
-    animation:backgroundSpin 30s linear infinite;
+
+    filter:blur(35px);
+
+    animation:
+
+        ambientPulse
+        6s
+        ease-in-out
+        infinite;
+
 }
 
-@keyframes backgroundSpin{
-    to{transform:rotate(360deg)}
+
+@keyframes ambientPulse{
+
+    0%,100%{
+        opacity:.65;
+        transform:
+            translate(-50%,-50%)
+            scale(.9);
+    }
+
+    50%{
+        opacity:1;
+        transform:
+            translate(-50%,-50%)
+            scale(1.15);
+    }
+
 }
+
+
+/* =========================================================
+   MOVING LIGHT CLOUDS
+========================================================= */
+
+.cloud{
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    border-radius:50%;
+
+    filter:blur(90px);
+
+    opacity:.08;
+
+    pointer-events:none;
+
+}
+
+
+.cloud.one{
+
+    background:#008cff;
+
+    left:-180px;
+    top:-150px;
+
+    animation:
+        cloudOne
+        18s
+        ease-in-out
+        infinite;
+
+}
+
+
+.cloud.two{
+
+    background:#7d35ff;
+
+    right:-180px;
+    bottom:-180px;
+
+    animation:
+        cloudTwo
+        23s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes cloudOne{
+
+    50%{
+        transform:
+            translate(
+                300px,
+                180px
+            )
+            scale(1.3);
+    }
+
+}
+
+
+@keyframes cloudTwo{
+
+    50%{
+        transform:
+            translate(
+                -250px,
+                -160px
+            )
+            scale(1.2);
+    }
+
+}
+
 
 /* =========================================================
    STARFIELD
 ========================================================= */
 
 #stars{
-    position:fixed;
+
+    position:absolute;
+
     inset:0;
-    perspective:900px;
-    overflow:hidden;
-    z-index:1;
+
+    perspective:1000px;
+
 }
+
 
 .star{
+
     position:absolute;
+
     width:2px;
     height:2px;
+
     border-radius:50%;
-    background:#bcefff;
-    box-shadow:0 0 8px #00d9ff;
-    animation:starMove linear infinite;
+
+    background:#d9fbff;
+
+    box-shadow:
+        0 0 8px #00ddff;
+
+    animation:
+        starFly
+        linear
+        infinite;
+
 }
 
-@keyframes starMove{
-    0%{
-        transform:translate3d(
-            var(--x),
-            var(--y),
-            -900px
-        ) scale(.1);
+
+@keyframes starFly{
+
+    from{
+
+        transform:
+            translate3d(
+                var(--sx),
+                var(--sy),
+                -900px
+            )
+            scale(.1);
+
         opacity:0;
+
     }
 
     15%{
-        opacity:.7;
+        opacity:.8;
     }
 
-    100%{
-        transform:translate3d(
-            calc(var(--x) * 1.8),
-            calc(var(--y) * 1.8),
-            500px
-        ) scale(2.5);
+    to{
+
+        transform:
+            translate3d(
+                calc(var(--sx) * 1.8),
+                calc(var(--sy) * 1.8),
+                600px
+            )
+            scale(3);
+
         opacity:0;
+
     }
+
 }
+
 
 /* =========================================================
    3D GRID
 ========================================================= */
 
 .grid{
+
     position:absolute;
+
     width:180%;
-    height:80%;
+
+    height:85%;
+
     left:-40%;
-    bottom:-25%;
+
+    bottom:-35%;
+
     transform:
+
         perspective(500px)
+
         rotateX(62deg);
 
     background-image:
+
         linear-gradient(
-            rgba(0,205,255,.09) 1px,
+            rgba(0,215,255,.09) 1px,
             transparent 1px
         ),
+
         linear-gradient(
             90deg,
-            rgba(0,205,255,.09) 1px,
+            rgba(0,215,255,.09) 1px,
             transparent 1px
         );
 
-    background-size:55px 55px;
+    background-size:
+        55px 55px;
 
     mask-image:
+
         linear-gradient(
             to top,
             black,
             transparent
         );
 
-    animation:gridScroll 5s linear infinite;
+    animation:
+        gridMove
+        5s
+        linear
+        infinite;
+
 }
 
-@keyframes gridScroll{
-    from{
-        background-position:0 0;
-    }
+
+@keyframes gridMove{
+
     to{
-        background-position:0 275px;
+
+        background-position:
+            0 275px;
+
     }
+
 }
+
+
+/* =========================================================
+   FINE GRID
+========================================================= */
+
+.fineGrid{
+
+    position:absolute;
+
+    inset:0;
+
+    opacity:.12;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.035) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.035) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        90px 90px;
+
+}
+
 
 /* =========================================================
    SCANLINES
 ========================================================= */
 
 .scanlines{
+
     position:fixed;
+
     inset:0;
-    z-index:40;
+
     pointer-events:none;
 
+    z-index:80;
+
     background:
+
         repeating-linear-gradient(
             to bottom,
             transparent 0,
@@ -173,18 +428,29 @@ body{
             rgba(255,255,255,.018) 4px
         );
 
-    mix-blend-mode:screen;
 }
 
+
+/* =========================================================
+   SCANNER
+========================================================= */
+
 .scanner{
+
     position:fixed;
-    z-index:41;
+
     left:0;
+
     top:-10%;
+
     width:100%;
-    height:3px;
+
+    height:2px;
+
+    z-index:81;
 
     background:
+
         linear-gradient(
             90deg,
             transparent,
@@ -195,110 +461,167 @@ body{
         );
 
     box-shadow:
-        0 0 10px #00eaff,
-        0 0 30px #00eaff;
+
+        0 0 12px #00eaff,
+        0 0 35px #00eaff;
 
     opacity:.35;
 
-    animation:scannerMove 6s linear infinite;
+    animation:
+
+        scanner
+        6s
+        linear
+        infinite;
+
 }
 
-@keyframes scannerMove{
-    to{top:110%}
+
+@keyframes scanner{
+
+    to{
+        top:110%;
+    }
+
 }
+
 
 /* =========================================================
    MOUSE LIGHT
 ========================================================= */
 
 #mouseLight{
+
     position:fixed;
-    width:500px;
-    height:500px;
-    border-radius:50%;
+
+    width:550px;
+    height:550px;
+
     pointer-events:none;
-    z-index:2;
+
+    z-index:5;
+
+    transform:
+        translate(-50%,-50%);
+
+    border-radius:50%;
 
     background:
+
         radial-gradient(
             circle,
-            rgba(0,220,255,.09),
-            rgba(0,100,255,.035) 30%,
+            rgba(0,220,255,.10),
+            rgba(0,120,255,.035) 35%,
             transparent 70%
         );
 
-    transform:translate(-50%,-50%);
-    filter:blur(10px);
+    filter:blur(8px);
+
 }
+
 
 /* =========================================================
    MAIN
 ========================================================= */
 
 .main{
+
     position:relative;
-    z-index:10;
+
+    z-index:20;
+
     width:100%;
     height:100%;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
-    padding:20px;
+    padding:25px;
+
 }
 
+
 /* =========================================================
-   3D PANEL
+   PANEL
 ========================================================= */
 
 .panel{
+
     position:relative;
-    width:min(1000px,95vw);
-    min-height:610px;
 
-    padding:50px;
+    width:min(
+        1000px,
+        94vw
+    );
 
-    border-radius:30px;
+    min-height:650px;
+
+    padding:
+        38px
+        50px
+        42px;
+
+    border-radius:32px;
 
     background:
+
         linear-gradient(
             135deg,
             rgba(255,255,255,.075),
-            rgba(255,255,255,.018)
+            rgba(255,255,255,.015)
         );
 
     border:
-        1px solid rgba(0,220,255,.22);
+        1px solid
+        rgba(0,220,255,.20);
 
     backdrop-filter:
-        blur(24px)
+        blur(25px)
         saturate(140%);
 
     -webkit-backdrop-filter:
-        blur(24px)
+        blur(25px)
         saturate(140%);
 
     box-shadow:
-        0 30px 120px rgba(0,0,0,.65),
-        0 0 80px rgba(0,170,255,.07),
-        inset 0 0 80px rgba(0,200,255,.025);
+
+        0 40px 120px
+        rgba(0,0,0,.65),
+
+        0 0 90px
+        rgba(0,180,255,.07),
+
+        inset 0 0 90px
+        rgba(0,220,255,.025);
 
     transform-style:preserve-3d;
 
     transition:
-        transform .15s ease-out;
+        transform .16s
+        ease-out;
+
 }
+
 
 /* animated border */
 
 .panel::before{
+
     content:"";
+
     position:absolute;
+
     inset:-1px;
-    border-radius:31px;
+
+    border-radius:33px;
+
+    padding:1px;
 
     background:
+
         conic-gradient(
             from 0deg,
             transparent,
@@ -310,317 +633,460 @@ body{
         );
 
     mask:
-        linear-gradient(#000 0 0) content-box,
+
+        linear-gradient(#000 0 0)
+        content-box,
+
         linear-gradient(#000 0 0);
 
     mask-composite:exclude;
 
-    padding:1px;
+    animation:
 
-    animation:borderRotate 7s linear infinite;
+        borderSpin
+        8s
+        linear
+        infinite;
 
-    opacity:.8;
+    opacity:.7;
+
 }
 
-@keyframes borderRotate{
+
+@keyframes borderSpin{
+
     to{
-        transform:rotate(360deg);
+        transform:
+            rotate(360deg);
     }
+
 }
+
 
 /* =========================================================
    CORNERS
 ========================================================= */
 
 .corner{
+
     position:absolute;
+
     width:55px;
     height:55px;
+
     opacity:.8;
+
 }
+
 
 .corner::before,
 .corner::after{
+
     content:"";
+
     position:absolute;
+
     background:#00ddff;
-    box-shadow:0 0 12px #00ddff;
+
+    box-shadow:
+        0 0 12px #00ddff;
+
 }
+
 
 .corner::before{
+
     width:100%;
     height:1px;
+
 }
+
 
 .corner::after{
+
     width:1px;
     height:100%;
+
 }
 
-.c1{top:18px;left:18px}
+
+.c1{
+    top:17px;
+    left:17px;
+}
+
+
 .c2{
-    top:18px;
-    right:18px;
-    transform:rotate(90deg)
+    top:17px;
+    right:17px;
+    transform:rotate(90deg);
 }
+
+
 .c3{
-    bottom:18px;
-    left:18px;
-    transform:rotate(-90deg)
+    bottom:17px;
+    left:17px;
+    transform:rotate(-90deg);
 }
+
+
 .c4{
-    bottom:18px;
-    right:18px;
-    transform:rotate(180deg)
+    bottom:17px;
+    right:17px;
+    transform:rotate(180deg);
 }
+
 
 /* =========================================================
-   HUD TOP
+   TOP HUD
 ========================================================= */
 
-.hud{
+.topHud{
+
     display:flex;
-    justify-content:space-between;
+
     align-items:center;
 
-    font-family:Orbitron,sans-serif;
-    font-size:9px;
-    letter-spacing:3px;
-    color:rgba(170,225,240,.55);
+    justify-content:space-between;
 
-    margin-bottom:30px;
+    direction:rtl;
+
+    font-size:9px;
+
+    letter-spacing:2px;
+
+    color:
+        rgba(180,225,240,.48);
+
+    margin-bottom:10px;
+
 }
+
 
 .live{
+
     display:flex;
+
     align-items:center;
+
     gap:8px;
+
 }
+
 
 .liveDot{
+
     width:7px;
     height:7px;
+
     border-radius:50%;
+
     background:#00eaff;
+
     box-shadow:
-        0 0 7px #00eaff,
+        0 0 8px #00eaff,
         0 0 20px #00eaff;
 
-    animation:livePulse 1s infinite;
+    animation:
+        livePulse
+        1.2s
+        infinite;
+
 }
+
 
 @keyframes livePulse{
+
     50%{
-        transform:scale(1.6);
-        opacity:.5;
+
+        transform:scale(1.5);
+
+        opacity:.45;
+
     }
+
 }
 
-/* =========================================================
-   CONTENT
-========================================================= */
-
-.content{
-    position:relative;
-    z-index:5;
-    text-align:center;
-}
 
 /* =========================================================
    3D CORE
 ========================================================= */
 
-.coreWrap{
+.coreArea{
+
     position:relative;
-    width:260px;
-    height:260px;
-    margin:-20px auto 20px;
+
+    width:300px;
+    height:270px;
+
+    margin:
+        -10px
+        auto
+        -5px;
 
     perspective:1000px;
+
 }
 
+
 .core{
+
     position:absolute;
+
     left:50%;
     top:50%;
 
-    width:110px;
-    height:110px;
-
-    transform:
-        translate(-50%,-50%)
-        translateZ(80px);
-
-    transform-style:preserve-3d;
+    width:105px;
+    height:105px;
 
     border-radius:50%;
 
+    transform:
+
+        translate(-50%,-50%)
+        translateZ(100px);
+
     background:
+
         radial-gradient(
-            circle at 35% 30%,
-            white 0,
-            #8df5ff 5%,
-            #00dfff 18%,
-            #006eff 42%,
-            #080b25 70%,
+            circle at 30% 25%,
+            white 0%,
+            #b5fbff 5%,
+            #00eaff 18%,
+            #0068ff 42%,
+            #07102d 70%,
             #02040a 100%
         );
 
     box-shadow:
-        0 0 15px #00eaff,
-        0 0 45px #007bff,
-        0 0 90px rgba(0,180,255,.7),
-        inset 0 0 35px #00dfff;
+
+        0 0 18px #00eaff,
+        0 0 50px #007cff,
+        0 0 100px
+        rgba(0,190,255,.7),
+
+        inset 0 0 35px
+        #00dfff;
 
     animation:
-        coreFloat 4s ease-in-out infinite,
-        coreSpin 12s linear infinite;
+
+        coreFloat
+        4s
+        ease-in-out
+        infinite;
+
 }
 
+
 @keyframes coreFloat{
+
     0%,100%{
+
         transform:
             translate(-50%,-50%)
             translateZ(70px)
             scale(1);
+
     }
 
     50%{
+
         transform:
             translate(-50%,-50%)
-            translateZ(110px)
+            translateZ(120px)
             scale(1.08);
+
     }
+
 }
 
-@keyframes coreSpin{
-    to{
-        filter:
-            hue-rotate(360deg);
-    }
-}
 
-/* orbit rings */
+/* =========================================================
+   ORBITS
+========================================================= */
 
 .orbit{
+
     position:absolute;
+
     left:50%;
     top:50%;
 
     border:
-        1px solid rgba(0,220,255,.5);
+
+        1px solid
+        rgba(0,220,255,.5);
 
     border-radius:50%;
-
-    transform-style:preserve-3d;
 
     box-shadow:
-        0 0 15px rgba(0,220,255,.15);
+        0 0 15px
+        rgba(0,220,255,.18);
+
 }
 
+
 .orbit::after{
+
     content:"";
+
     position:absolute;
+
     width:7px;
     height:7px;
-    border-radius:50%;
 
     top:-4px;
     left:50%;
 
-    background:#fff;
+    border-radius:50%;
+
+    background:white;
 
     box-shadow:
-        0 0 10px #fff,
+
+        0 0 10px white,
         0 0 25px #00eaff;
+
 }
 
-.o1{
-    width:190px;
-    height:75px;
+
+.orbit1{
+
+    width:200px;
+    height:80px;
+
     transform:
+
         translate(-50%,-50%)
         rotateX(70deg)
         rotateZ(20deg);
 
-    animation:orbit1 6s linear infinite;
+    animation:
+        orbitOne
+        6s
+        linear
+        infinite;
+
 }
 
-.o2{
-    width:220px;
-    height:90px;
+
+.orbit2{
+
+    width:225px;
+    height:95px;
+
     transform:
+
         translate(-50%,-50%)
         rotateY(65deg)
         rotateZ(-20deg);
 
-    animation:orbit2 8s linear infinite reverse;
+    animation:
+        orbitTwo
+        8s
+        linear
+        infinite reverse;
+
 }
 
-.o3{
-    width:245px;
-    height:105px;
+
+.orbit3{
+
+    width:250px;
+    height:110px;
+
     transform:
+
         translate(-50%,-50%)
         rotateX(65deg)
         rotateY(35deg);
 
-    animation:orbit3 11s linear infinite;
+    animation:
+        orbitThree
+        11s
+        linear
+        infinite;
+
 }
 
-@keyframes orbit1{
+
+@keyframes orbitOne{
+
     to{
+
         transform:
+
             translate(-50%,-50%)
             rotateX(70deg)
             rotateZ(380deg);
+
     }
+
 }
 
-@keyframes orbit2{
+
+@keyframes orbitTwo{
+
     to{
+
         transform:
+
             translate(-50%,-50%)
             rotateY(425deg)
             rotateZ(-20deg);
+
     }
+
 }
 
-@keyframes orbit3{
+
+@keyframes orbitThree{
+
     to{
+
         transform:
+
             translate(-50%,-50%)
             rotateX(425deg)
             rotateY(35deg);
+
     }
+
 }
 
-/* energy rings */
 
-.energy{
+/* =========================================================
+   ENERGY RING
+========================================================= */
+
+.energyRing{
+
     position:absolute;
+
     left:50%;
     top:50%;
 
     width:280px;
     height:280px;
 
-    border-radius:50%;
-
     transform:
         translate(-50%,-50%);
 
+    border-radius:50%;
+
     background:
+
         conic-gradient(
             transparent,
-            rgba(0,220,255,.7),
-            transparent 15%,
+            rgba(0,220,255,.8),
+            transparent 13%,
             transparent 55%,
-            rgba(130,0,255,.7),
-            transparent 70%
+            rgba(130,0,255,.8),
+            transparent 72%
         );
 
     mask:
+
         radial-gradient(
             transparent 63%,
             #000 64%,
@@ -628,190 +1094,284 @@ body{
             transparent 66%
         );
 
-    animation:energySpin 5s linear infinite;
+    animation:
+        energySpin
+        5s
+        linear
+        infinite;
+
 }
 
+
 @keyframes energySpin{
+
     to{
+
         transform:
             translate(-50%,-50%)
             rotate(360deg);
+
     }
+
 }
+
 
 /* =========================================================
    TITLE
 ========================================================= */
 
 .title{
+
     position:relative;
 
-    font-family:Orbitron,sans-serif;
+    font-size:
+        clamp(
+            34px,
+            6vw,
+            67px
+        );
+
     font-weight:900;
 
-    font-size:
-        clamp(35px,6vw,72px);
+    letter-spacing:1px;
 
-    letter-spacing:5px;
+    line-height:1.2;
 
-    line-height:1;
-
-    margin-bottom:20px;
+    margin-bottom:13px;
 
     color:#f5fdff;
 
     text-shadow:
-        0 0 8px rgba(255,255,255,.3),
-        0 0 35px rgba(0,200,255,.3);
+
+        0 0 8px
+        rgba(255,255,255,.25),
+
+        0 0 35px
+        rgba(0,210,255,.3);
+
 }
 
-/* glitch layers */
 
 .glitch{
+
     position:relative;
+
     display:inline-block;
+
 }
+
 
 .glitch::before,
 .glitch::after{
+
     content:attr(data-text);
+
     position:absolute;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
+
+    inset:0;
 
     pointer-events:none;
+
 }
 
+
 .glitch::before{
+
     color:#00eaff;
 
     clip-path:
         polygon(
-            0 10%,
-            100% 10%,
-            100% 35%,
-            0 35%
+            0 12%,
+            100% 12%,
+            100% 34%,
+            0 34%
         );
 
-    transform:translate(-3px);
+    transform:
+        translate(-3px);
 
     animation:
-        glitchA 2.7s infinite steps(2);
+        glitchA
+        2.7s
+        infinite
+        steps(2);
+
 }
 
+
 .glitch::after{
-    color:#a05cff;
+
+    color:#a45cff;
 
     clip-path:
         polygon(
-            0 65%,
-            100% 65%,
+            0 66%,
+            100% 66%,
             100% 90%,
             0 90%
         );
 
-    transform:translate(3px);
+    transform:
+        translate(3px);
 
     animation:
-        glitchB 2.2s infinite steps(2);
+        glitchB
+        2.2s
+        infinite
+        steps(2);
+
 }
+
 
 @keyframes glitchA{
-    0%,80%,100%{transform:translate(-2px)}
-    82%{transform:translate(8px,-2px)}
-    84%{transform:translate(-6px,2px)}
-    86%{transform:translate(1px)}
+
+    0%,80%,100%{
+        transform:translate(-2px);
+    }
+
+    82%{
+        transform:
+            translate(8px,-2px);
+    }
+
+    84%{
+        transform:
+            translate(-6px,2px);
+    }
+
 }
 
+
 @keyframes glitchB{
-    0%,76%,100%{transform:translate(2px)}
-    78%{transform:translate(-7px,1px)}
-    80%{transform:translate(6px,-2px)}
-    82%{transform:translate(0)}
+
+    0%,76%,100%{
+        transform:translate(2px);
+    }
+
+    78%{
+        transform:
+            translate(-7px,1px);
+    }
+
+    80%{
+        transform:
+            translate(6px,-2px);
+    }
+
 }
+
 
 /* =========================================================
    SUBTITLE
 ========================================================= */
 
 .subtitle{
-    color:rgba(200,235,245,.55);
-    font-size:11px;
-    letter-spacing:6px;
-    text-transform:uppercase;
-    margin-bottom:35px;
+
+    color:
+        rgba(205,235,245,.52);
+
+    font-size:12px;
+
+    letter-spacing:1px;
+
+    margin-bottom:28px;
+
 }
+
 
 /* =========================================================
    PROGRESS
 ========================================================= */
 
-.progressBox{
-    width:min(700px,90%);
+.progress{
+
+    width:min(
+        720px,
+        90%
+    );
+
     margin:auto;
+
 }
 
-.progressTop{
+
+.progressHeader{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:end;
 
-    margin-bottom:12px;
+    margin-bottom:10px;
+
 }
 
-.progressName{
-    font-family:Orbitron,sans-serif;
+
+.progressTitle{
+
     font-size:10px;
-    letter-spacing:3px;
-    color:#91c9d8;
+
+    color:
+        rgba(175,220,235,.48);
+
 }
+
 
 .percent{
-    font-family:Orbitron,sans-serif;
-    font-size:26px;
+
+    font-size:25px;
+
     font-weight:800;
-    color:#a5f5ff;
+
+    color:#a9f6ff;
 
     text-shadow:
+
         0 0 10px #00dfff,
-        0 0 25px rgba(0,210,255,.6);
+        0 0 25px #00dfff;
+
 }
 
-/* bar */
 
 .track{
-    position:relative;
 
-    height:20px;
+    height:18px;
 
     padding:3px;
 
     border-radius:30px;
 
     border:
-        1px solid rgba(0,220,255,.22);
+        1px solid
+        rgba(0,220,255,.23);
 
     background:
-        rgba(0,0,0,.4);
+        rgba(0,0,0,.42);
 
     box-shadow:
-        inset 0 0 20px rgba(0,0,0,.7),
-        0 0 30px rgba(0,180,255,.05);
+
+        inset 0 0 18px
+        rgba(0,0,0,.8),
+
+        0 0 25px
+        rgba(0,190,255,.05);
+
 }
 
+
 .bar{
+
     position:relative;
 
     width:0%;
+
     height:100%;
 
     border-radius:30px;
 
-    overflow:visible;
-
     background:
+
         repeating-linear-gradient(
             115deg,
             rgba(255,255,255,.2) 0,
@@ -819,37 +1379,34 @@ body{
             transparent 8px,
             transparent 20px
         ),
+
         linear-gradient(
             90deg,
-            #006dff,
-            #00dfff,
-            #8b5cff
+            #006cff,
+            #00eaff,
+            #945cff
         );
 
     box-shadow:
+
         0 0 12px #00dfff,
-        0 0 30px rgba(0,190,255,.7),
-        0 0 60px rgba(0,120,255,.35);
+        0 0 35px
+        rgba(0,190,255,.6);
 
-    transition:width 1s linear;
+    transition:
+        width 1s linear;
 
-    animation:barMove 1.2s linear infinite;
 }
 
-@keyframes barMove{
-    to{
-        background-position:
-            20px 0,
-            0 0;
-    }
-}
 
 .bar::after{
+
     content:"";
 
     position:absolute;
 
     right:-5px;
+
     top:50%;
 
     width:10px;
@@ -857,42 +1414,54 @@ body{
 
     border-radius:50%;
 
-    transform:translateY(-50%);
+    transform:
+        translateY(-50%);
 
-    background:#fff;
+    background:white;
 
     box-shadow:
+
         0 0 10px white,
         0 0 25px #00eaff,
         0 0 50px #00eaff;
+
 }
 
+
 /* =========================================================
-   SYSTEM HUD
+   MINI SYSTEMS
 ========================================================= */
 
 .systems{
+
     display:flex;
+
     justify-content:center;
-    gap:45px;
 
-    margin-top:28px;
+    gap:35px;
 
-    color:rgba(180,220,235,.4);
+    margin-top:24px;
 
-    font-family:Orbitron,sans-serif;
     font-size:8px;
-    letter-spacing:2px;
+
+    color:
+        rgba(180,220,235,.4);
+
 }
+
 
 .system{
+
     display:flex;
+
     align-items:center;
+
     gap:7px;
+
 }
 
+
 .system i{
-    display:block;
 
     width:6px;
     height:6px;
@@ -901,55 +1470,73 @@ body{
 
     background:#00eaff;
 
-    box-shadow:0 0 10px #00eaff;
+    box-shadow:
+        0 0 10px #00eaff;
+
 }
+
 
 /* =========================================================
    TIME
 ========================================================= */
 
 .time{
-    margin-top:27px;
 
     display:flex;
+
     justify-content:center;
-    gap:40px;
 
-    font-family:Orbitron,sans-serif;
-    font-size:8px;
+    gap:45px;
 
-    letter-spacing:2px;
+    margin-top:24px;
 
-    color:rgba(170,210,225,.4);
+    font-size:9px;
+
+    color:
+        rgba(170,215,230,.38);
+
 }
+
 
 .time span{
-    color:#b8f4ff;
+
+    color:#baf5ff;
+
 }
+
 
 /* =========================================================
    FOOTER
 ========================================================= */
 
 .footer{
-    margin-top:32px;
 
-    font-family:Orbitron,sans-serif;
+    margin-top:28px;
+
     font-size:8px;
-    letter-spacing:4px;
 
-    color:rgba(160,210,225,.25);
+    letter-spacing:2px;
+
+    color:
+        rgba(160,210,225,.24);
+
 }
+
 
 .footer strong{
-    color:rgba(0,220,255,.7);
+
+    color:
+        rgba(0,220,255,.7);
+
 }
 
+
 /* =========================================================
-   MOUSE CURSOR
+   CURSOR
 ========================================================= */
 
 #cursor{
+
     position:fixed;
 
     width:7px;
@@ -963,40 +1550,47 @@ body{
 
     z-index:9999;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
     box-shadow:
+
         0 0 8px white,
         0 0 20px #00eaff,
         0 0 40px #00eaff;
+
 }
 
+
 #cursorRing{
+
     position:fixed;
 
     width:34px;
     height:34px;
 
-    border-radius:50%;
+    border:
+        1px solid
+        rgba(0,225,255,.6);
 
-    border:1px solid rgba(0,225,255,.65);
+    border-radius:50%;
 
     pointer-events:none;
 
     z-index:9998;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
-    transition:
-        width .2s,
-        height .2s;
 }
+
 
 /* =========================================================
    CLICK PARTICLES
 ========================================================= */
 
 .clickParticle{
+
     position:fixed;
 
     width:4px;
@@ -1007,13 +1601,16 @@ body{
     background:#00eaff;
 
     box-shadow:
+
         0 0 10px #00eaff,
-        0 0 20px #00eaff;
+        0 0 25px #00eaff;
 
     pointer-events:none;
 
     z-index:9999;
+
 }
+
 
 /* =========================================================
    RESPONSIVE
@@ -1022,62 +1619,91 @@ body{
 @media(max-width:700px){
 
     .panel{
+
         min-height:auto;
-        padding:30px 20px 35px;
+
+        padding:
+            25px
+            18px
+            30px;
+
     }
 
-    .coreWrap{
+    .coreArea{
+
         transform:scale(.78);
-        margin-top:-35px;
-        margin-bottom:-25px;
+
+        margin-top:-30px;
+        margin-bottom:-30px;
+
     }
 
     .title{
-        font-size:34px;
-        letter-spacing:2px;
+
+        font-size:33px;
+
     }
 
     .subtitle{
-        font-size:8px;
-        letter-spacing:3px;
+
+        font-size:9px;
+
     }
 
     .systems{
+
         gap:15px;
+
         flex-wrap:wrap;
+
     }
 
     .time{
-        gap:15px;
+
+        gap:12px;
+
         flex-direction:column;
+
     }
 
-    .hud{
-        font-size:7px;
-    }
 }
 
 </style>
+
 </head>
 
+
 <body>
+
 
 <!-- =====================================================
      BACKGROUND
 ===================================================== -->
 
-<div class="bg">
+<div class="scene">
+
+    <div class="ambient"></div>
+
+    <div class="cloud one"></div>
+
+    <div class="cloud two"></div>
 
     <div id="stars"></div>
+
+    <div class="fineGrid"></div>
 
     <div class="grid"></div>
 
 </div>
 
+
 <div id="mouseLight"></div>
 
+
 <div class="scanlines"></div>
+
 <div class="scanner"></div>
+
 
 <!-- =====================================================
      MAIN
@@ -1085,231 +1711,314 @@ body{
 
 <main class="main">
 
-    <section class="panel" id="panel">
 
-        <div class="corner c1"></div>
-        <div class="corner c2"></div>
-        <div class="corner c3"></div>
-        <div class="corner c4"></div>
+<section
+class="panel"
+id="panel">
 
-        <div class="hud">
 
-            <div>
-                BEHRAD M PLAYER // SYSTEM
-            </div>
+<div class="corner c1"></div>
+<div class="corner c2"></div>
+<div class="corner c3"></div>
+<div class="corner c4"></div>
 
-            <div class="live">
 
-                <span class="liveDot"></span>
+<!-- =================================================
+     HUD
+================================================== -->
 
-                SYSTEM ONLINE
+<div class="topHud">
 
-            </div>
+    <div>
 
-        </div>
+        BEHRAD M PLAYER
+        •
+        سیستم اصلی
 
+    </div>
 
-        <div class="content">
 
-            <!-- =================================================
-                 3D CORE
-            ================================================== -->
+    <div class="live">
 
-            <div class="coreWrap">
+        <span class="liveDot"></span>
 
-                <div class="energy"></div>
+        سیستم فعال است
 
-                <div class="orbit o1"></div>
-                <div class="orbit o2"></div>
-                <div class="orbit o3"></div>
+    </div>
 
-                <div class="core"></div>
+</div>
 
-            </div>
 
+<!-- =================================================
+     3D CORE
+================================================== -->
 
-            <!-- =================================================
-                 TITLE
-            ================================================== -->
+<div class="coreArea">
 
-            <h1 class="title">
 
-                <span
-                    class="glitch"
-                    data-text="WE ARE UPDATING">
+    <div class="energyRing"></div>
 
-                    WE ARE UPDATING
 
-                </span>
+    <div
+    class="orbit orbit1"></div>
 
-            </h1>
 
+    <div
+    class="orbit orbit2"></div>
 
-            <div class="subtitle">
 
-                A new experience is being assembled
+    <div
+    class="orbit orbit3"></div>
 
-            </div>
 
+    <div class="core"></div>
 
-            <!-- =================================================
-                 PROGRESS
-            ================================================== -->
 
-            <div class="progressBox">
+</div>
 
-                <div class="progressTop">
 
-                    <div class="progressName">
+<!-- =================================================
+     TITLE
+================================================== -->
 
-                        WEBSITE UPDATE
+<h1 class="title">
 
-                    </div>
 
-                    <div
-                        class="percent"
-                        id="percent">
+<span
+class="glitch"
+data-text="ما در حال به‌روزرسانی سایت هستیم">
 
-                        0%
+ما در حال به‌روزرسانی سایت هستیم
 
-                    </div>
+</span>
 
-                </div>
 
+</h1>
 
-                <div class="track">
 
-                    <div
-                        class="bar"
-                        id="bar">
+<div class="subtitle">
 
-                    </div>
+یک تجربه‌ی جدید در حال آماده‌سازی است...
 
-                </div>
+</div>
 
-            </div>
 
+<!-- =================================================
+     PROGRESS
+================================================== -->
 
-            <!-- =================================================
-                 SYSTEMS
-            ================================================== -->
+<div class="progress">
 
-            <div class="systems">
 
-                <div class="system">
-                    <i></i>
-                    CORE
-                </div>
+<div class="progressHeader">
 
-                <div class="system">
-                    <i></i>
-                    DATABASE
-                </div>
 
-                <div class="system">
-                    <i></i>
-                    NETWORK
-                </div>
+<div class="progressTitle">
 
-                <div class="system">
-                    <i></i>
-                    UI
-                </div>
+درصد تکمیل به‌روزرسانی
 
-            </div>
+</div>
 
 
-            <!-- =================================================
-                 TIME
-            ================================================== -->
+<div
+class="percent"
+id="percent">
 
-            <div class="time">
+۰٪
 
-                <div>
-                    START:
-                    <span id="start"></span>
-                </div>
+</div>
 
-                <div>
-                    ETA:
-                    <span>TOMORROW 12:00</span>
-                </div>
 
-            </div>
+</div>
 
 
-            <div class="footer">
+<div class="track">
 
-                POWERED BY
-                <strong>BEHRAD M PLAYER</strong>
 
-            </div>
+<div
+class="bar"
+id="bar">
 
-        </div>
+</div>
 
-    </section>
+
+</div>
+
+
+</div>
+
+
+<!-- =================================================
+     SYSTEM STATUS
+================================================== -->
+
+<div class="systems">
+
+
+<div class="system">
+
+<i></i>
+
+هسته
+
+</div>
+
+
+<div class="system">
+
+<i></i>
+
+پایگاه داده
+
+</div>
+
+
+<div class="system">
+
+<i></i>
+
+شبکه
+
+</div>
+
+
+<div class="system">
+
+<i></i>
+
+رابط کاربری
+
+</div>
+
+
+</div>
+
+
+<!-- =================================================
+     TIME
+================================================== -->
+
+<div class="time">
+
+
+<div>
+
+شروع:
+<span id="start"></span>
+
+</div>
+
+
+<div>
+
+زمان پایان:
+<span>فردا ساعت ۱۲ ظهر</span>
+
+</div>
+
+
+</div>
+
+
+<div class="footer">
+
+ساخته شده برای
+
+<strong>
+BEHRAD M PLAYER
+</strong>
+
+</div>
+
+
+</section>
+
 
 </main>
 
 
+<!-- =====================================================
+     CURSOR
+===================================================== -->
+
 <div id="cursor"></div>
+
 <div id="cursorRing"></div>
 
 
 <script>
 
+
 /* =========================================================
-   STARFIELD
+   STAR GENERATOR
 ========================================================= */
 
 const stars =
-    document.getElementById("stars");
+document.getElementById("stars");
 
-for(let i=0;i<160;i++){
+
+for(
+let i=0;
+i<180;
+i++
+){
 
     const star =
-        document.createElement("div");
+    document.createElement("div");
 
-    star.className="star";
 
-    const x =
-        (Math.random()*200-100);
+    star.className =
+    "star";
 
-    const y =
-        (Math.random()*200-100);
 
     star.style.setProperty(
-        "--x",
-        x+"vw"
+        "--sx",
+        (Math.random()*200-100)+"vw"
     );
 
+
     star.style.setProperty(
-        "--y",
-        y+"vh"
+        "--sy",
+        (Math.random()*200-100)+"vh"
     );
+
 
     star.style.left =
-        (50+Math.random()*2-1)+"%";
+        "50%";
+
 
     star.style.top =
-        (50+Math.random()*2-1)+"%";
+        "50%";
+
 
     star.style.animationDuration =
-        (4+Math.random()*10)+"s";
+        (
+            4+
+            Math.random()*12
+        )+"s";
+
 
     star.style.animationDelay =
-        (-Math.random()*12)+"s";
+        (
+            -Math.random()*15
+        )+"s";
+
 
     const size =
-        Math.random()*2.5+.5;
+        .5+
+        Math.random()*2;
+
 
     star.style.width =
         size+"px";
 
+
     star.style.height =
         size+"px";
 
+
     stars.appendChild(star);
+
 }
 
 
@@ -1318,213 +2027,297 @@ for(let i=0;i<160;i++){
 ========================================================= */
 
 const cursor =
-    document.getElementById("cursor");
+document.getElementById(
+    "cursor"
+);
+
 
 const cursorRing =
-    document.getElementById("cursorRing");
+document.getElementById(
+    "cursorRing"
+);
+
 
 const mouseLight =
-    document.getElementById("mouseLight");
+document.getElementById(
+    "mouseLight"
+);
+
 
 let mx =
-    window.innerWidth/2;
+window.innerWidth/2;
+
 
 let my =
-    window.innerHeight/2;
+window.innerHeight/2;
+
 
 let rx=mx;
 let ry=my;
 
+
 document.addEventListener(
-    "mousemove",
-    e=>{
-
-        mx=e.clientX;
-        my=e.clientY;
-
-        cursor.style.left=mx+"px";
-        cursor.style.top=my+"px";
-
-        mouseLight.style.left=mx+"px";
-        mouseLight.style.top=my+"px";
-
-    }
-);
+"mousemove",
+e=>{
 
 
-function cursorAnimation(){
+    mx=e.clientX;
+
+    my=e.clientY;
+
+
+    cursor.style.left =
+        mx+"px";
+
+
+    cursor.style.top =
+        my+"px";
+
+
+    mouseLight.style.left =
+        mx+"px";
+
+
+    mouseLight.style.top =
+        my+"px";
+
+
+});
+
+
+function animateCursor(){
+
 
     rx +=
         (mx-rx)*.13;
 
+
     ry +=
         (my-ry)*.13;
+
 
     cursorRing.style.left =
         rx+"px";
 
+
     cursorRing.style.top =
         ry+"px";
 
+
     requestAnimationFrame(
-        cursorAnimation
+        animateCursor
     );
+
 }
 
-cursorAnimation();
+
+animateCursor();
 
 
 /* =========================================================
-   PANEL 3D TILT
+   PANEL PARALLAX
 ========================================================= */
 
 const panel =
-    document.getElementById("panel");
-
-document.addEventListener(
-    "mousemove",
-    e=>{
-
-        const x =
-            e.clientX /
-            window.innerWidth -
-            .5;
-
-        const y =
-            e.clientY /
-            window.innerHeight -
-            .5;
-
-        panel.style.transform =
-            `
-            perspective(1400px)
-            rotateX(${y*-4}deg)
-            rotateY(${x*5}deg)
-            translateZ(0)
-            `;
-
-    }
+document.getElementById(
+    "panel"
 );
 
 
+document.addEventListener(
+"mousemove",
+e=>{
+
+
+    const x =
+        e.clientX /
+        window.innerWidth -
+        .5;
+
+
+    const y =
+        e.clientY /
+        window.innerHeight -
+        .5;
+
+
+    panel.style.transform =
+
+    `
+    perspective(1400px)
+
+    rotateX(
+        ${y*-4}deg
+    )
+
+    rotateY(
+        ${x*5}deg
+    )
+    `;
+
+});
+
+
 /* =========================================================
-   CLICK PARTICLE EXPLOSION
+   CLICK ENERGY
 ========================================================= */
 
 document.addEventListener(
-    "click",
-    e=>{
+"click",
+e=>{
 
-        for(let i=0;i<25;i++){
 
-            const p =
-                document.createElement("div");
+    for(
+    let i=0;
+    i<30;
+    i++
+    ){
 
-            p.className =
-                "clickParticle";
 
-            p.style.left =
-                e.clientX+"px";
+        const p =
+        document.createElement(
+            "div"
+        );
 
-            p.style.top =
-                e.clientY+"px";
 
-            document.body.appendChild(p);
+        p.className =
+        "clickParticle";
 
-            const angle =
-                Math.random() *
-                Math.PI*2;
 
-            const distance =
-                40+
-                Math.random()*140;
+        p.style.left =
+        e.clientX+"px";
 
-            const x =
-                Math.cos(angle)*
-                distance;
 
-            const y =
-                Math.sin(angle)*
-                distance;
+        p.style.top =
+        e.clientY+"px";
 
-            p.animate(
-                [
-                    {
-                        transform:
-                            "translate(-50%,-50%) scale(1)",
-                        opacity:1
-                    },
-                    {
-                        transform:
-                            `
-                            translate(
-                                calc(-50% + ${x}px),
-                                calc(-50% + ${y}px)
-                            )
-                            scale(0)
-                            `,
-                        opacity:0
-                    }
-                ],
-                {
-                    duration:
-                        450+
-                        Math.random()*500,
 
-                    easing:
-                        "cubic-bezier(.15,.8,.3,1)"
-                }
-            ).onfinish=()=>{
-                p.remove();
-            };
+        document.body.appendChild(
+            p
+        );
+
+
+        const angle =
+            Math.random() *
+            Math.PI*2;
+
+
+        const distance =
+            40+
+            Math.random()*160;
+
+
+        const x =
+            Math.cos(angle)*
+            distance;
+
+
+        const y =
+            Math.sin(angle)*
+            distance;
+
+
+        p.animate(
+
+        [
+
+            {
+
+                transform:
+                "translate(-50%,-50%) scale(1)",
+
+                opacity:1
+
+            },
+
+            {
+
+                transform:
+
+                `
+                translate(
+                    calc(-50% + ${x}px),
+                    calc(-50% + ${y}px)
+                )
+
+                scale(0)
+                `,
+
+                opacity:0
+
+            }
+
+        ],
+
+        {
+
+            duration:
+                450+
+                Math.random()*500,
+
+            easing:
+                "cubic-bezier(.15,.8,.3,1)"
 
         }
 
+        ).onfinish=()=>{
+
+            p.remove();
+
+        };
+
+
     }
-);
+
+
+});
 
 
 /* =========================================================
-   PROGRESS SYSTEM
+   REAL PROGRESS
 ========================================================= */
 
-/*
-    شروع:
-    لحظه‌ای که صفحه برای اولین بار باز می‌شود.
+const bar =
+document.getElementById(
+    "bar"
+);
 
-    پایان:
-    فردا ساعت 12 ظهر.
-
-    درصد واقعی از زمان محاسبه می‌شود.
-*/
-
-const progressBar =
-    document.getElementById("bar");
 
 const percent =
-    document.getElementById("percent");
+document.getElementById(
+    "percent"
+);
+
 
 const startLabel =
-    document.getElementById("start");
+document.getElementById(
+    "start"
+);
 
 
 const startTime =
-    Date.now();
+Date.now();
+
 
 const now =
-    new Date();
+new Date();
+
 
 const finish =
-    new Date(now);
+new Date(now);
 
 
 /*
-    مقصد = فردا ساعت 12
+
+    پایان:
+    فردا ساعت ۱۲ ظهر
+
 */
 
 finish.setDate(
     finish.getDate()+1
 );
+
 
 finish.setHours(
     12,
@@ -1535,53 +2328,50 @@ finish.setHours(
 
 
 /*
-    اگر به هر دلیلی مقصد گذشته بود،
-    یک روز دیگر اضافه می‌کنیم.
+
+    زمان شروع
+
 */
 
-if(
-    finish.getTime() <=
-    startTime
-){
-
-    finish.setDate(
-        finish.getDate()+1
-    );
-
-}
-
-
-/* نمایش زمان شروع */
-
 startLabel.textContent =
-    new Date(
-        startTime
-    ).toLocaleTimeString(
-        [],
-        {
-            hour:"2-digit",
-            minute:"2-digit"
-        }
-    );
 
+new Date(
+    startTime
+).toLocaleTimeString(
+    "fa-IR",
+    {
+        hour:"2-digit",
+        minute:"2-digit"
+    }
+);
+
+
+/* =========================================================
+   UPDATE
+========================================================= */
 
 function updateProgress(){
 
+
     const current =
         Date.now();
+
 
     const total =
         finish.getTime() -
         startTime;
 
+
     const elapsed =
         current -
         startTime;
+
 
     let value =
         elapsed /
         total *
         100;
+
 
     value =
         Math.max(
@@ -1592,16 +2382,24 @@ function updateProgress(){
             )
         );
 
-    progressBar.style.width =
+
+    bar.style.width =
         value+"%";
 
+
     percent.textContent =
-        value.toFixed(2)+"%";
+
+        value
+        .toFixed(2)
+        .replace(".", "٫")
+        +"٪";
+
 
 }
 
 
 updateProgress();
+
 
 setInterval(
     updateProgress,
@@ -1614,87 +2412,123 @@ setInterval(
 ========================================================= */
 
 setInterval(
+
+()=>{
+
+
+    const glitch =
+    document.querySelector(
+        ".glitch"
+    );
+
+
+    glitch.style.transform =
+
+    `
+    translate(
+        ${(Math.random()*8-4)}px,
+        ${(Math.random()*4-2)}px
+    )
+    `;
+
+
+    setTimeout(
     ()=>{
 
-        const glitch =
-            document.querySelector(
-                ".glitch"
-            );
-
-        glitch.style.transform =
-            `
-            translate(
-                ${(Math.random()*8-4)}px,
-                ${(Math.random()*4-2)}px
-            )
-            `;
-
-        setTimeout(
-            ()=>{
-                glitch.style.transform="";
-            },
-            90
-        );
+        glitch.style.transform="";
 
     },
-    2800
+    90
+    );
+
+
+},
+
+2800
+
 );
 
 
 /* =========================================================
-   CURSOR RING REACTION
+   CLICK CURSOR EFFECT
 ========================================================= */
 
 document.addEventListener(
-    "mousedown",
-    ()=>{
-        cursorRing.style.width="52px";
-        cursorRing.style.height="52px";
-    }
-);
+"mousedown",
+()=>{
+
+    cursorRing.style.width =
+        "55px";
+
+    cursorRing.style.height =
+        "55px";
+
+});
+
 
 document.addEventListener(
-    "mouseup",
-    ()=>{
-        cursorRing.style.width="34px";
-        cursorRing.style.height="34px";
-    }
-);
+"mouseup",
+()=>{
+
+    cursorRing.style.width =
+        "34px";
+
+    cursorRing.style.height =
+        "34px";
+
+});
 
 
 /* =========================================================
-   RANDOM CORE PULSE
+   CORE PULSE
 ========================================================= */
 
 setInterval(
+
+()=>{
+
+
+    const core =
+    document.querySelector(
+        ".core"
+    );
+
+
+    core.style.boxShadow =
+
+    `
+    0 0 25px #00eaff,
+
+    0 0 70px #007cff,
+
+    0 0 140px
+    rgba(0,220,255,.9),
+
+    inset 0 0 50px #00eaff
+    `;
+
+
+    setTimeout(
     ()=>{
 
-        const core =
-            document.querySelector(
-                ".core"
-            );
-
-        core.style.boxShadow =
-            `
-            0 0 20px #00eaff,
-            0 0 60px #007bff,
-            0 0 130px rgba(0,220,255,.8),
-            inset 0 0 45px #00eaff
-            `;
-
-        setTimeout(
-            ()=>{
-                core.style.boxShadow="";
-            },
-            300
-        );
+        core.style.boxShadow="";
 
     },
-    2400
+    350
+    );
+
+
+},
+
+2300
+
 );
+
 
 </script>
 
+
 </body>
+
 </html>
 ```
