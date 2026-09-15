@@ -2283,6 +2283,21 @@ position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-g
 .bmpRT-room-note{margin:16px 0 0;padding:11px 14px;border-radius:14px;text-align:center;color:#8995b1;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);font-size:11px}
 @media(max-width:600px){.bmpRT-serverbar{border-radius:16px;line-height:1.7}.bmpRT-serverhint{display:none}}
 </style>
+<style id="bmp-chat-bubbles-v31">
+/* V31 — Telegram/Rubika inspired message bubbles. Connection logic untouched. */
+#chat .bmpRT-messages{padding:20px 18px 24px;gap:10px;background:radial-gradient(circle at 50% 0%,rgba(0,200,255,.045),transparent 42%)}
+#chat .msg{position:relative;max-width:min(78%,650px);padding:10px 14px 11px;border-radius:18px 18px 5px 18px;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.075);box-shadow:0 6px 20px rgba(0,0,0,.16);align-self:flex-start;animation:bmpMsgIn .18s ease-out both}
+#chat .msg.me{align-self:flex-end;border-radius:18px 18px 18px 5px;background:linear-gradient(145deg,rgba(0,190,255,.20),rgba(0,105,255,.13));border-color:rgba(45,211,255,.22);box-shadow:0 7px 24px rgba(0,140,255,.10)}
+#chat .msg::after{content:"";position:absolute;bottom:-1px;width:10px;height:10px;background:inherit;border-bottom:1px solid rgba(255,255,255,.075)}
+#chat .msg:not(.me)::after{left:-5px;clip-path:polygon(100% 0,100% 100%,0 100%)}
+#chat .msg.me::after{right:-5px;clip-path:polygon(0 0,100% 100%,0 100%);border-bottom-color:rgba(45,211,255,.22)}
+#chat .msg b{display:block;font-size:10px;color:#62ddff;margin-bottom:4px;font-weight:800;letter-spacing:.1px}
+#chat .msg.me b{color:#b9f5ff}
+#chat .msg p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-size:14px;color:#edf7ff}
+@keyframes bmpMsgIn{from{opacity:0;transform:translateY(5px) scale(.985)}to{opacity:1;transform:none}}
+@media(max-width:760px){#chat .bmpRT-messages{padding:14px 11px 20px}#chat .msg{max-width:88%;padding:9px 12px 10px;border-radius:16px 16px 5px 16px}#chat .msg.me{border-radius:16px 16px 16px 5px}#chat .msg p{font-size:13.5px}}
+@media(prefers-reduced-motion:reduce){#chat .msg{animation:none}}
+</style>
 </head>
 
 
@@ -2964,7 +2979,7 @@ position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-g
     <article class="bmpRT-room" id="room-community"><div class="bmpRT-roomHead"><div class="bmpRT-roomTitle"><div class="bmpRT-roomIcon">🔒</div><div><h3>B.M.P COMMUNITY</h3><p class="bmpRT-desc">اتاق خصوصی اعضای B.M.P</p></div></div><span class="bmpRT-badge">PRIVATE</span></div><div class="bmpRT-codes"><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد اتصال</div><div class="bmpRT-code zero" id="community-connection">0</div></div><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد پاسخ</div><div class="bmpRT-code zero" id="community-response">0</div></div></div><div class="bmpRT-roomFoot"><span class="bmpRT-members">👥 <span id="community-members">0 نفر</span></span><span id="community-sync">آماده</span></div><div class="bmpRT-actions"><button class="bmpRT-btn" onclick="joinRoom('community')">ورود به روم</button></div></article>
     <article class="bmpRT-room" id="room-public"><div class="bmpRT-roomHead"><div class="bmpRT-roomTitle"><div class="bmpRT-roomIcon">🌐</div><div><h3>چت عمومی</h3><p class="bmpRT-desc">گفت‌وگوی عمومی کاربران</p></div></div><span class="bmpRT-badge">PUBLIC</span></div><div class="bmpRT-codes"><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد اتصال</div><div class="bmpRT-code zero" id="public-connection">0</div></div><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد پاسخ</div><div class="bmpRT-code zero" id="public-response">0</div></div></div><div class="bmpRT-roomFoot"><span class="bmpRT-members">👥 <span id="public-members">0 نفر</span></span><span id="public-sync">آماده</span></div><div class="bmpRT-actions"><button class="bmpRT-btn" onclick="joinRoom('public')">ورود به روم</button></div></article>
   </section>
-  <section class="bmpRT-chat" id="chat"><div class="bmpRT-chatHead"><div><h3 id="chatTitle">چت</h3><div class="bmpRT-chatState" id="chatState">در حال آماده‌سازی...</div></div><button class="bmpRT-btn danger" onclick="leaveRoom()">خروج</button></div><div class="bmpRT-messages" id="messages"></div><form class="bmpRT-composer" onsubmit="sendChat(event)"><input id="chatInput" autocomplete="off" maxlength="2000" placeholder="پیامت رو بنویس..."><button class="bmpRT-btn">ارسال</button></form></section>
+  <section class="bmpRT-chat" id="chat"><div class="bmpRT-chatHead"><div><h3 id="chatTitle">چت</h3><div class="bmpRT-chatState" id="chatState">در حال آماده‌سازی...</div></div><button class="bmpRT-btn danger" onclick="leaveRoom()">خروج</button></div><div class="bmpRT-messages" id="messages"></div><div class="bmpRT-replyBar" id="replyBar"><div class="bmpRT-replyLine"></div><div class="bmpRT-replyInfo"><div class="bmpRT-replyName" id="replyName"></div><div class="bmpRT-replyText" id="replyText"></div></div><button type="button" class="bmpRT-replyCancel" onclick="cancelReply()" aria-label="لغو پاسخ">×</button></div><form class="bmpRT-composer" onsubmit="sendChat(event)"><input id="chatInput" autocomplete="off" maxlength="2000" placeholder="پیامت رو بنویس..."><button class="bmpRT-btn">ارسال</button></form></section>
 <div class="bmpRT-room-note">🔐 B.M.P COMMUNITY خصوصی است؛ 🌐 چت عمومی برای همه کاربران در دسترس است.</div>
 </div>
 </section>
@@ -2979,6 +2994,7 @@ let myPeerId='peer-'+crypto.randomUUID();
 let myName='کاربر '+myPeerId.slice(-4);
 let activeRoom=null, socket=null, password='', pendingRoom=null, reconnectTimer=null, heartbeatTimer=null;
 const peers=new Map();
+const seenChatIds=new Set();
 
 function $(id){return document.getElementById(id)}
 function toast(t){const x=$('toast');x.textContent=t;x.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove('show'),2600)}
@@ -2996,15 +3012,57 @@ async function enterRoom(id,pw){if(activeRoom)await leaveRoom();password=pw;setS
 
 function openChat(id){$('chat').classList.add('open');$('chatTitle').textContent=rooms[id].name;$('chatState').textContent='در حال اتصال مستقیم کاربران...';$('messages').innerHTML=''}
 function connectWS(){clearTimeout(reconnectTimer);if(socket){try{socket.close()}catch{}}socket=new WebSocket(WS_URL);socket.onopen=()=>{setStatus('اتصال زنده برقرار است',true);socket.send(JSON.stringify({type:'hello',roomId:activeRoom,peerId:myPeerId,name:myName,password}));clearInterval(heartbeatTimer);heartbeatTimer=setInterval(()=>{if(socket?.readyState===1)socket.send(JSON.stringify({type:'presence'}))},20000)};socket.onmessage=onWSMessage;socket.onerror=()=>setStatus('مشکل در اتصال زنده',false);socket.onclose=()=>{clearInterval(heartbeatTimer);if(activeRoom){setStatus('در حال تلاش برای اتصال مجدد...',false);clearTimeout(reconnectTimer);reconnectTimer=setTimeout(connectWS,2500)}}}
-async function onWSMessage(ev){let m;try{m=JSON.parse(ev.data)}catch{return}if(m.event==='connected')return;if(m.event==='error'){toast(m.error==='invalid_password'?'رمز عبور اشتباه است':'خطای سرور: '+m.error);return}if(m.event==='ready'||m.event==='room-state'||m.event==='presence'){const st=m.state||m.room;if(st)setRoomUI(activeRoom,st,m.members);if(Array.isArray(m.members))updatePeers(m.members);return}if(m.event==='signal'){if(m.to===myPeerId)handleSignal(m.from,m.data);return}if(m.event==='chat'){if(m.from!==myPeerId)addMessage(m.name||'کاربر',m.text,false);}}
+async function onWSMessage(ev){let m;try{m=JSON.parse(ev.data)}catch{return}if(m.event==='connected')return;if(m.event==='error'){toast(m.error==='invalid_password'?'رمز عبور اشتباه است':'خطای سرور: '+m.error);return}if(m.event==='ready'||m.event==='room-state'||m.event==='presence'){const st=m.state||m.room;if(st)setRoomUI(activeRoom,st,m.members);if(Array.isArray(m.members))updatePeers(m.members);return}if(m.event==='signal'){if(m.to===myPeerId)handleSignal(m.from,m.data);return}if(m.event==='chat'){if(m.from!==myPeerId)addMessage(m.name||'کاربر',m.text,false,m.msgId,m.replyTo,m.replyName,m.replyText);}}
 
 function updatePeers(members){if(!activeRoom)return;const ids=members.map(x=>x.peerId).filter(x=>x!==myPeerId);for(const [id,pc] of peers){if(!ids.includes(id)){try{pc.pc.close()}catch{};peers.delete(id)}}for(const id of ids)ensurePeer(id, id<myPeerId);$('chatState').textContent=ids.length?'اتصال مستقیم فعال · '+(ids.length+1)+' کاربر':'منتظر کاربر دیگر...'}
 function ensurePeer(id,initiator){if(peers.has(id))return peers.get(id);const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]});const item={pc,dc:null,queue:[]};peers.set(id,item);pc.onicecandidate=e=>{if(e.candidate)signal(id,{kind:'ice',candidate:e.candidate})};pc.onconnectionstatechange=()=>{if(['failed','closed','disconnected'].includes(pc.connectionState)){$('chatState').textContent='اتصال مستقیم ناپایدار؛ در حال بازیابی...'}};pc.ondatachannel=e=>setupDC(item,e.channel);if(initiator){setupDC(item,pc.createDataChannel('bmp-chat'));pc.createOffer().then(o=>pc.setLocalDescription(o)).then(()=>signal(id,{kind:'offer',description:pc.localDescription}))}return item}
-function setupDC(item,dc){item.dc=dc;dc.onopen=()=>{$('chatState').textContent='اتصال مستقیم فعال ✓'};dc.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.kind==='chat')addMessage(m.name||'کاربر',m.text,false)}catch{}}}
+function setupDC(item,dc){item.dc=dc;dc.onopen=()=>{$('chatState').textContent='اتصال مستقیم فعال ✓'};dc.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.kind==='chat')addMessage(m.name||'کاربر',m.text,false,m.msgId,m.replyTo,m.replyName,m.replyText)}catch{}}}
 async function handleSignal(from,data){const item=ensurePeer(from,from<myPeerId);const pc=item.pc;if(data.kind==='offer'){await pc.setRemoteDescription(data.description);const ans=await pc.createAnswer();await pc.setLocalDescription(ans);signal(from,{kind:'answer',description:pc.localDescription})}else if(data.kind==='answer'){await pc.setRemoteDescription(data.description)}else if(data.kind==='ice'){try{await pc.addIceCandidate(data.candidate)}catch{}}}
 function signal(to,data){if(socket?.readyState===1)socket.send(JSON.stringify({type:'signal',roomId:activeRoom,to,data}))}
-function addMessage(name,text,me){const box=document.createElement('div');box.className='msg'+(me?' me':'');const b=document.createElement('b');b.textContent=me?'شما':name;const p=document.createElement('p');p.textContent=text;box.append(b,p);$('messages').appendChild(box);$('messages').scrollTop=$('messages').scrollHeight}
-function sendChat(e){e.preventDefault();const input=$('chatInput');const text=input.value.trim();if(!text||!activeRoom)return;addMessage('شما',text,true);let delivered=false;for(const item of peers.values()){if(item.dc?.readyState==='open'){item.dc.send(JSON.stringify({kind:'chat',name:myName,text}));delivered=true}}if(socket?.readyState===1)socket.send(JSON.stringify({type:'chat',text}));input.value='';if(!delivered&&socket?.readyState!==1)toast('هنوز ارتباط برقرار نشده')}
+let replyTarget=null;
+function escapeMsg(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function beginReply(msg){if(!msg||!msg.msgId)return;replyTarget={msgId:msg.msgId,name:msg.name||'کاربر',text:msg.text||''};$('replyName').textContent='پاسخ به '+replyTarget.name;$('replyText').textContent=replyTarget.text;$('replyBar').classList.add('show');$('chatInput').focus()}
+function cancelReply(){replyTarget=null;$('replyBar').classList.remove('show');$('replyName').textContent='';$('replyText').textContent=''}
+function addMessage(name,text,me,msgId,replyTo,replyName,replyText){
+  if(msgId&&seenChatIds.has(msgId))return;
+  if(msgId)seenChatIds.add(msgId);
+  const box=document.createElement('div');
+  box.className='bmpRT-msg'+(me?' me':'');
+  box.dataset.msgId=msgId||'';
+  const b=document.createElement('b');b.textContent=me?'شما':name;
+  if(replyTo){
+    const q=document.createElement('div');q.className='bmpRT-quoted';
+    q.innerHTML='<div class="bmpRT-quotedLine"></div><div class="bmpRT-quotedBody"><div class="bmpRT-quotedName">'+escapeMsg(replyName||'کاربر')+'</div><div class="bmpRT-quotedText">'+escapeMsg(replyText||'')+'</div></div>';
+    box.appendChild(q);
+  }
+  const p=document.createElement('p');p.textContent=text;
+  const tools=document.createElement('div');tools.className='bmpRT-msgTools';
+  const rb=document.createElement('button');rb.type='button';rb.className='bmpRT-replyBtn';rb.textContent='↩ پاسخ';
+  rb.addEventListener('click',()=>beginReply({msgId:msgId,name:name,text:text}));
+  tools.appendChild(rb);
+  box.append(b,p,tools);
+  $('messages').appendChild(box);
+  $('messages').scrollTop=$('messages').scrollHeight;
+}
+function sendChat(e){
+  e.preventDefault();
+  const input=$('chatInput');const text=input.value.trim();
+  if(!text||!activeRoom)return;
+  const msgId=myPeerId+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);
+  const rt=replyTarget?{replyTo:replyTarget.msgId,replyName:replyTarget.name,replyText:replyTarget.text}:{replyTo:'',replyName:'',replyText:''};
+  addMessage('شما',text,true,msgId,rt.replyTo,rt.replyName,rt.replyText);
+  let delivered=false;
+  const packet=JSON.stringify({kind:'chat',name:myName,text,msgId,replyTo:rt.replyTo,replyName:rt.replyName,replyText:rt.replyText});
+  for(const item of peers.values()){
+    if(item.dc?.readyState==='open'){try{item.dc.send(packet);delivered=true}catch{}}
+  }
+  if(socket?.readyState===1){
+    socket.send(JSON.stringify({type:'chat',text,msgId,replyTo:rt.replyTo,replyName:rt.replyName,replyText:rt.replyText}));
+    delivered=true;
+  }
+  input.value='';cancelReply();
+  if(!delivered)toast('هنوز ارتباط برقرار نشده');
+}
 async function leaveRoom(){const old=activeRoom;if(!old)return;activeRoom=null;clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);if(socket){try{socket.close()}catch{}socket=null}for(const item of peers.values()){try{item.pc.close()}catch{}}peers.clear();try{await fetch(API+'/api/room/leave',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:old,peerId:myPeerId,password})})}catch{}$('chat').classList.remove('open');password='';setStatus('سرور آنلاین',true);await loadRooms();toast('از روم خارج شدی')}
 
 setInterval(()=>{if(!activeRoom)loadRooms();else loadRoom(activeRoom)},4000);loadRooms();
@@ -6043,6 +6101,31 @@ document
 #bmpLoadingTitle{font-size:20px;font-weight:900;color:#fff;margin-bottom:7px}#bmpLoadingText{font-size:13px;color:#aebbd0;line-height:1.9}#bmpLoadingPhase{font-size:12px;color:#55dfff;margin-top:13px;min-height:20px}.bmp-loading-progress{height:4px;margin-top:20px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}.bmp-loading-progress i{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#00c8ff,#7c5cff);animation:bmpProgress 1.2s ease-in-out infinite}@keyframes bmpProgress{0%{transform:translateX(-130%)}100%{transform:translateX(310%)}}
 @media (max-width:700px),(pointer:coarse){#bmpLoadingOverlay{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(2,5,12,.94)}#bmpLoadingOverlay .bmp-loading-box{width:min(350px,calc(100vw - 28px));padding:27px 20px;border-radius:22px;box-shadow:0 20px 55px rgba(0,0,0,.5)}.bmp-v7-spinner{width:56px;height:56px}.bmp-loading-progress{margin-top:15px}}
 @media (prefers-reduced-motion:reduce){#bmpLoadingOverlay .bmp-loading-box:before,.bmp-v7-spinner,#bmpLoadingOverlay .bmp-loading-progress i{animation:none!important}}
+
+/* V32 REPLY SYSTEM — UI only; connection/signaling unchanged */
+.bmpRT-replyBar{display:none;align-items:center;gap:10px;padding:9px 12px;margin:0 14px 0;border:1px solid rgba(67,232,255,.16);border-radius:13px;background:linear-gradient(90deg,rgba(67,232,255,.07),rgba(255,255,255,.025));}
+.bmpRT-replyBar.show{display:flex}
+.bmpRT-replyLine{width:3px;height:34px;border-radius:5px;background:#43e8ff;box-shadow:0 0 12px rgba(67,232,255,.35)}
+.bmpRT-replyInfo{min-width:0;flex:1}
+.bmpRT-replyName{font-size:11px;font-weight:800;color:#43e8ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bmpRT-replyText{font-size:11px;color:#9da8ba;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bmpRT-replyCancel{border:0;background:transparent;color:#8d99aa;font-size:20px;cursor:pointer;padding:4px 7px}
+.bmpRT-msg{position:relative}
+.bmpRT-msgTools{display:flex;justify-content:flex-start;margin-top:5px;opacity:0;transition:opacity .16s ease}
+.bmpRT-msg:hover .bmpRT-msgTools,.bmpRT-msg:focus-within .bmpRT-msgTools{opacity:1}
+.bmpRT-replyBtn{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.045);color:#aeb9ca;border-radius:9px;padding:4px 8px;font-size:10px;cursor:pointer}
+.bmpRT-replyBtn:hover{border-color:rgba(67,232,255,.25);color:#43e8ff}
+.bmpRT-quoted{display:flex;gap:8px;align-items:stretch;margin:0 0 8px;padding:7px 9px;border-radius:10px;background:rgba(0,0,0,.16);border:1px solid rgba(255,255,255,.055);max-width:100%}
+.bmpRT-quotedLine{width:3px;border-radius:4px;background:#43e8ff;flex:0 0 3px}
+.bmpRT-quotedBody{min-width:0}
+.bmpRT-quotedName{font-size:10px;color:#43e8ff;font-weight:800;margin-bottom:2px}
+.bmpRT-quotedText{font-size:10px;color:#9da8ba;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:420px}
+@media(max-width:600px){
+ .bmpRT-msgTools{opacity:1}
+ .bmpRT-replyBtn{padding:5px 9px}
+ .bmpRT-replyBar{margin:0 10px}
+}
+@media(prefers-reduced-motion:reduce){.bmpRT-msgTools{transition:none}}
 </style>
 <script>
 (function(){
