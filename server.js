@@ -16,6 +16,7 @@ id: 'public',
 name: 'چت عمومی',
 password: null
 },
+
 community: {
 id: 'community',
 name: 'B.M.P COMMUNITY',
@@ -25,36 +26,40 @@ password: COMMUNITY_PASSWORD
 
 const rooms = new Map();
 
-for (const room of Object.values(ROOMS)) {
-rooms.set(room.id, {
-id: room.id,
-name: room.name,
-password: room.password,
+for (const definition of Object.values(ROOMS)) {
+rooms.set(definition.id, {
+id: definition.id,
+name: definition.name,
+password: definition.password,
+
 connectionCode: '0',
 responseCode: '0',
+
 revision: 0,
 updatedAt: Date.now(),
+
 members: new Map(),
 sockets: new Set(),
+
 hostPeerId: null
 });
 }
 
 function generateCode() {
-let code = '';
+let result = '';
 
-while (code.length < 10) {
-code += crypto.randomInt(0, 10).toString();
+for (let i = 0; i < 10; i++) {
+result += crypto.randomInt(0, 10).toString();
 }
 
-return code;
+return result;
 }
 
 function getRoom(roomId) {
-return rooms.get(roomId) || null;
+return rooms.get(String(roomId)) || null;
 }
 
-function ensureRoomCodes(room) {
+function ensureCodes(room) {
 if (room.connectionCode === '0') {
 room.connectionCode = generateCode();
 }
@@ -65,20 +70,13 @@ room.responseCode = generateCode();
 
 room.revision += 1;
 room.updatedAt = Date.now();
-
-if (!room.hostPeerId) {
-const firstMember = room.members.values().next().value;
-
-if (firstMember) {
-room.hostPeerId = firstMember.peerId;
-}
-}
 }
 
 function resetRoom(room) {
 room.connectionCode = '0';
 room.responseCode = '0';
 room.hostPeerId = null;
+
 room.revision += 1;
 room.updatedAt = Date.now();
 }
@@ -87,50 +85,54 @@ function roomState(room) {
 return {
 id: room.id,
 name: room.name,
+
 connectionCode: room.connectionCode,
 responseCode: room.responseCode,
+
 revision: room.revision,
 updatedAt: room.updatedAt,
+
 online: room.members.size,
 hostPeerId: room.hostPeerId
 };
 }
 
-function membersState(room) {
-return Array.from(room.members.values()).map(member => ({
+function memberState(room) {
+return Array.from(room.members.values()).map(function (member) {
+return {
 peerId: member.peerId,
 name: member.name
-}));
+};
+});
 }
 
-function sendJson(res, statusCode, data) {
-const body = JSON.stringify(data);
-
-res.writeHead(statusCode, {
+function sendJson(res, status, data) {
+res.writeHead(status, {
 'Content-Type': 'application/json; charset=utf-8',
 'Cache-Control': 'no-store',
+
 'Access-Control-Allow-Origin': '*',
 'Access-Control-Allow-Headers': 'Content-Type',
 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
 });
 
-res.end(body);
+res.end(JSON.stringify(data));
 }
 
 function readJson(req) {
-return new Promise((resolve, reject) => {
+return new Promise(function (resolve, reject) {
 let body = '';
 
-req.on('data', chunk => {
+req.on('data', function (chunk) {
 body += chunk;
 
-if (body.length > 1024 * 1024) {
+if (body.length > 1048576) {
 reject(new Error('Request too large'));
 req.destroy();
 }
 });
 
-req.on('end', () => {
+req.on('end', function () {
 if (!body) {
 resolve({});
 return;
@@ -138,7 +140,7 @@ return;
 
 try {
 resolve(JSON.parse(body));
-} catch {
+} catch (error) {
 reject(new Error('Invalid JSON'));
 }
 });
@@ -147,48 +149,56 @@ req.on('error', reject);
 });
 }
 
-function broadcast(room, message, exceptSocket = null) {
+function isPasswordValid(room, password) {
+if (room.password === null) {
+return true;
+}
+
+return String(password || '') === room.password;
+}
+
+function broadcast(room, message, excludedSocket) {
 const payload = JSON.stringify(message);
 
-for (const socket of room.sockets) {
-if (socket === exceptSocket) {
-continue;
+room.sockets.forEach(function (socket) {
+if (socket === excludedSocket) {
+return;
 }
 
 if (socket.readyState === WebSocket.OPEN) {
 socket.send(payload);
 }
-}
-}
-
-function broadcastRoomState(room) {
-broadcast(room, {
-type: 'room-state',
-room: roomState(room),
-members: membersState(room)
 });
 }
 
-function removeMember(room, socket) {
-const peerId = socket.peerId;
-
-if (!peerId) {
-room.sockets.delete(socket);
-return;
+function broadcastRoom(room) {
+broadcast(room, {
+type: 'room-state',
+room: roomState(room),
+members: memberState(room)
+});
 }
 
+function removeSocketFromRoom(room, socket) {
+const peerId = socket.peerId;
+
+if (peerId) {
 const member = room.members.get(peerId);
 
 if (member && member.socket === socket) {
 room.members.delete(peerId);
 }
 
-room.sockets.delete(socket);
-
 if (room.hostPeerId === peerId) {
 const nextMember = room.members.values().next().value;
-room.hostPeerId = nextMember ? nextMember.peerId : null;
+
+room.hostPeerId = nextMember
+? nextMember.peerId
+: null;
 }
+}
+
+room.sockets.delete(socket);
 
 if (room.members.size === 0) {
 resetRoom(room);
@@ -197,15 +207,7 @@ room.revision += 1;
 room.updatedAt = Date.now();
 }
 
-broadcastRoomState(room);
-}
-
-function validateRoomPassword(room, password) {
-if (!room.password) {
-return true;
-}
-
-return String(password || '') === room.password;
+broadcastRoom(room);
 }
 
 async function handleHttp(req, res) {
@@ -220,12 +222,18 @@ res.end();
 return;
 }
 
-const url = new URL(
+const requestUrl = new URL(
 req.url,
-http://${req.headers.host || 'localhost'}`
+'http://' + (req.headers.host || 'localhost')
 );
 
-if (req.method === 'GET' && url.pathname === '/health') {
+const pathname = requestUrl.pathname;
+
+/*
+• HEALTH
+*/
+
+if (req.method === 'GET' && pathname === '/health') {
 sendJson(res, 200, {
 ok: true,
 service: 'BEHRAD M PLAYER realtime backend',
@@ -235,7 +243,11 @@ time: new Date().toISOString()
 return;
 }
 
-if (req.method === 'GET' && url.pathname === '/api/rooms') {
+/*
+• ALL ROOMS
+*/
+
+if (req.method === 'GET' && pathname === '/api/rooms') {
 sendJson(res, 200, {
 ok: true,
 rooms: Array.from(rooms.values()).map(roomState)
@@ -244,7 +256,13 @@ rooms: Array.from(rooms.values()).map(roomState)
 return;
 }
 
-const roomMatch = url.pathname.match(/^/api/rooms/([^/]+)`$/);
+/*
+• SINGLE ROOM
+*/
+
+const roomMatch = pathname.match(
+/^/api/rooms/([^/]+)$/
+);
 
 if (req.method === 'GET' && roomMatch) {
 const room = getRoom(roomMatch[1]);
@@ -261,13 +279,20 @@ return;
 sendJson(res, 200, {
 ok: true,
 room: roomState(room),
-members: membersState(room)
+members: memberState(room)
 });
 
 return;
 }
 
-if (req.method === 'POST' && url.pathname === '/api/room/join') {
+/*
+• JOIN ROOM
+*/
+
+if (
+req.method === 'POST' &&
+pathname === '/api/room/join'
+) {
 try {
 const body = await readJson(req);
 
@@ -282,7 +307,7 @@ error: 'ROOM_NOT_FOUND'
 return;
 }
 
-if (!validateRoomPassword(room, body.password)) {
+if (!isPasswordValid(room, body.password)) {
 sendJson(res, 403, {
 ok: false,
 error: 'INVALID_PASSWORD'
@@ -291,13 +316,14 @@ error: 'INVALID_PASSWORD'
 return;
 }
 
-ensureRoomCodes(room);
+ensureCodes(room);
 
 sendJson(res, 200, {
 ok: true,
 room: roomState(room),
-members: membersState(room)
+members: memberState(room)
 });
+
 } catch (error) {
 sendJson(res, 400, {
 ok: false,
@@ -308,9 +334,17 @@ error: error.message
 return;
 }
 
-if (req.method === 'POST' && url.pathname === '/api/room/leave') {
+/*
+• LEAVE ROOM
+*/
+
+if (
+req.method === 'POST' &&
+pathname === '/api/room/leave'
+) {
 try {
 const body = await readJson(req);
+
 const room = getRoom(body.roomId);
 
 if (!room) {
@@ -322,10 +356,12 @@ error: 'ROOM_NOT_FOUND'
 return;
 }
 
-const member = room.members.get(body.peerId);
+const peerId = String(body.peerId || '');
+
+const member = room.members.get(peerId);
 
 if (member) {
-room.members.delete(body.peerId);
+room.members.delete(peerId);
 
 if (member.socket) {
 room.sockets.delete(member.socket);
@@ -339,12 +375,13 @@ room.revision += 1;
 room.updatedAt = Date.now();
 }
 
-broadcastRoomState(room);
+broadcastRoom(room);
 
 sendJson(res, 200, {
 ok: true,
 room: roomState(room)
 });
+
 } catch (error) {
 sendJson(res, 400, {
 ok: false,
@@ -355,9 +392,17 @@ error: error.message
 return;
 }
 
-if (req.method === 'POST' && url.pathname === '/api/room/state') {
+/*
+• ROOM STATE
+*/
+
+if (
+req.method === 'POST' &&
+pathname === '/api/room/state'
+) {
 try {
 const body = await readJson(req);
+
 const room = getRoom(body.roomId);
 
 if (!room) {
@@ -369,23 +414,28 @@ error: 'ROOM_NOT_FOUND'
 return;
 }
 
-if (body.connectionCode) {
-room.connectionCode = String(body.connectionCode);
+if (body.connectionCode !== undefined) {
+room.connectionCode = String(
+body.connectionCode
+);
 }
 
-if (body.responseCode) {
-room.responseCode = String(body.responseCode);
+if (body.responseCode !== undefined) {
+room.responseCode = String(
+body.responseCode
+);
 }
 
 room.revision += 1;
 room.updatedAt = Date.now();
 
-broadcastRoomState(room);
+broadcastRoom(room);
 
 sendJson(res, 200, {
 ok: true,
 room: roomState(room)
 });
+
 } catch (error) {
 sendJson(res, 400, {
 ok: false,
@@ -396,7 +446,14 @@ error: error.message
 return;
 }
 
-if (req.method === 'POST' && url.pathname === '/api/signal') {
+/*
+• WEBRTC SIGNAL
+*/
+
+if (
+req.method === 'POST' &&
+pathname === '/api/signal'
+) {
 try {
 const body = await readJson(req);
 
@@ -411,7 +468,9 @@ error: 'ROOM_NOT_FOUND'
 return;
 }
 
-const target = room.members.get(body.to);
+const target = room.members.get(
+String(body.to || '')
+);
 
 if (!target || !target.socket) {
 sendJson(res, 404, {
@@ -422,18 +481,23 @@ error: 'PEER_NOT_FOUND'
 return;
 }
 
-if (target.socket.readyState === WebSocket.OPEN) {
-target.socket.send(JSON.stringify({
+if (
+target.socket.readyState === WebSocket.OPEN
+) {
+target.socket.send(
+JSON.stringify({
 type: 'signal',
-from: body.from,
-to: body.to,
+from: String(body.from || ''),
+to: String(body.to || ''),
 signal: body.signal
-}));
+})
+);
 }
 
 sendJson(res, 200, {
 ok: true
 });
+
 } catch (error) {
 sendJson(res, 400, {
 ok: false,
@@ -444,87 +508,168 @@ error: error.message
 return;
 }
 
+/*
+• NOT FOUND
+*/
+
 sendJson(res, 404, {
 ok: false,
 error: 'NOT_FOUND'
 });
 }
 
-const server = http.createServer((req, res) => {
-handleHttp(req, res).catch(error => {
+/*
+• HTTP SERVER
+*/
+
+const server = http.createServer(
+function (req, res) {
+handleHttp(req, res).catch(
+function (error) {
 console.error(error);
 
 sendJson(res, 500, {
 ok: false,
 error: 'INTERNAL_SERVER_ERROR'
 });
-});
-});
+}
+);
+}
+);
+
+/*
+• WEBSOCKET SERVER
+*/
 
 const wss = new WebSocket.Server({
-server,
+server: server,
 path: '/ws'
 });
 
-wss.on('connection', socket => {
+wss.on(
+'connection',
+function (socket) {
+
 socket.isAlive = true;
 socket.roomId = null;
 socket.peerId = null;
 
-socket.on('pong', () => {
+socket.on(
+'pong',
+function () {
 socket.isAlive = true;
-});
+}
+);
 
-socket.on('message', raw => {
+socket.on(
+'message',
+function (raw) {
+
+let message;
+
 try {
-const message = JSON.parse(raw.toString());
+message = JSON.parse(
+raw.toString()
+);
+} catch (error) {
+
+socket.send(
+JSON.stringify({
+type: 'error',
+error: 'INVALID_MESSAGE'
+})
+);
+
+return;
+}
+
+/*
+* HELLO / JOIN
+*/
 
 if (message.type === 'hello') {
-const room = getRoom(message.roomId);
+
+const room = getRoom(
+message.roomId
+);
 
 if (!room) {
-socket.send(JSON.stringify({
+
+socket.send(
+JSON.stringify({
 type: 'error',
 error: 'ROOM_NOT_FOUND'
-}));
+})
+);
 
 return;
 }
 
-if (!validateRoomPassword(room, message.password)) {
-socket.send(JSON.stringify({
+if (
+!isPasswordValid(
+room,
+message.password
+)
+) {
+
+socket.send(
+JSON.stringify({
 type: 'error',
 error: 'INVALID_PASSWORD'
-}));
+})
+);
 
-socket.close(1008, 'Invalid password');
+socket.close(
+1008,
+'Invalid password'
+);
+
 return;
 }
 
-if (socket.roomId && socket.roomId !== room.id) {
-const oldRoom = getRoom(socket.roomId);
+if (socket.roomId) {
 
-if (oldRoom) {
-removeMember(oldRoom, socket);
+const oldRoom = getRoom(
+socket.roomId
+);
+
+if (
+oldRoom &&
+oldRoom !== room
+) {
+removeSocketFromRoom(
+oldRoom,
+socket
+);
 }
 }
 
-const peerId = String(message.peerId || crypto.randomUUID());
-const name = String(message.name || 'کاربر');
+const peerId = String(
+message.peerId ||
+crypto.randomUUID()
+);
 
-ensureRoomCodes(room);
+const name = String(
+message.name ||
+'کاربر'
+);
+
+ensureCodes(room);
 
 socket.roomId = room.id;
 socket.peerId = peerId;
 
 room.sockets.add(socket);
 
-room.members.set(peerId, {
+room.members.set(
 peerId,
-name,
-socket,
+{
+peerId: peerId,
+name: name,
+socket: socket,
 joinedAt: Date.now()
-});
+}
+);
 
 if (!room.hostPeerId) {
 room.hostPeerId = peerId;
@@ -533,149 +678,289 @@ room.hostPeerId = peerId;
 room.revision += 1;
 room.updatedAt = Date.now();
 
-socket.send(JSON.stringify({
+socket.send(
+JSON.stringify({
 type: 'welcome',
-peerId,
+peerId: peerId,
 room: roomState(room),
-members: membersState(room)
-}));
+members: memberState(room)
+})
+);
 
 broadcast(
 room,
 {
 type: 'peer-joined',
+
 peer: {
-peerId,
-name
+peerId: peerId,
+name: name
 }
 },
+
 socket
 );
 
-broadcastRoomState(room);
+broadcastRoom(room);
 
 return;
 }
 
-if (!socket.roomId || !socket.peerId) {
-socket.send(JSON.stringify({
+/*
+* USER MUST BE IN A ROOM
+*/
+
+if (
+!socket.roomId ||
+!socket.peerId
+) {
+
+socket.send(
+JSON.stringify({
 type: 'error',
 error: 'NOT_JOINED'
-}));
+})
+);
 
 return;
 }
 
-const room = getRoom(socket.roomId);
+const room = getRoom(
+socket.roomId
+);
 
 if (!room) {
 return;
 }
 
-if (message.type === 'room-state') {
-if (message.connectionCode) {
-room.connectionCode = String(message.connectionCode);
+/*
+* ROOM STATE UPDATE
+*/
+
+if (
+message.type === 'room-state'
+) {
+
+if (
+message.connectionCode !==
+undefined
+) {
+room.connectionCode =
+String(
+message.connectionCode
+);
 }
 
-if (message.responseCode) {
-room.responseCode = String(message.responseCode);
+if (
+message.responseCode !==
+undefined
+) {
+room.responseCode =
+String(
+message.responseCode
+);
 }
 
 room.revision += 1;
 room.updatedAt = Date.now();
 
-broadcastRoomState(room);
+broadcastRoom(room);
+
 return;
 }
 
-if (message.type === 'signal') {
-const target = room.members.get(String(message.to));
+/*
+* WEBRTC SIGNALING
+*/
+
+if (
+message.type === 'signal'
+) {
+
+const target =
+room.members.get(
+String(message.to || '')
+);
 
 if (
 target &&
 target.socket &&
-target.socket.readyState === WebSocket.OPEN
+target.socket.readyState ===
+WebSocket.OPEN
 ) {
-target.socket.send(JSON.stringify({
+
+target.socket.send(
+JSON.stringify({
 type: 'signal',
+
 from: socket.peerId,
-to: target.peerId,
+
+to: String(
+message.to || ''
+),
+
 signal: message.signal
-}));
+})
+);
 }
 
 return;
 }
 
-if (message.type === 'chat') {
-const sender = room.members.get(socket.peerId);
+/*
+* CHAT
+*/
 
-broadcast(room, {
+if (
+message.type === 'chat'
+) {
+
+const sender =
+room.members.get(
+socket.peerId
+);
+
+broadcast(
+room,
+{
 type: 'chat',
+
 message: {
 id: crypto.randomUUID(),
-peerId: socket.peerId,
-name: sender ? sender.name : 'کاربر',
-text: String(message.text || ''),
+
+peerId:
+socket.peerId,
+
+name:
+sender
+? sender.name
+: 'کاربر',
+
+text:
+String(
+message.text || ''
+),
+
 time: Date.now()
 }
-});
+}
+);
 
 return;
 }
 
-if (message.type === 'presence') {
-broadcast(room, {
+/*
+* PRESENCE
+*/
+
+if (
+message.type === 'presence'
+) {
+
+broadcast(
+room,
+{
 type: 'presence',
-peerId: socket.peerId,
-status: message.status || 'online'
-});
+
+peerId:
+socket.peerId,
+
+status:
+String(
+message.status ||
+'online'
+)
+}
+);
 
 return;
 }
-} catch (error) {
-socket.send(JSON.stringify({
-type: 'error',
-error: 'INVALID_MESSAGE'
-}));
 }
-});
+);
 
-socket.on('close', () => {
+/*
+* SOCKET CLOSED
+*/
+
+socket.on(
+'close',
+function () {
+
 if (!socket.roomId) {
 return;
 }
 
-const room = getRoom(socket.roomId);
+const room = getRoom(
+socket.roomId
+);
 
 if (room) {
-removeMember(room, socket);
+removeSocketFromRoom(
+room,
+socket
+);
 }
-});
+}
+);
 
-socket.on('error', error => {
-console.error('WebSocket error:', error.message);
-});
-});
+socket.on(
+'error',
+function (error) {
+console.error(
+'WebSocket error:',
+error.message
+);
+}
+);
+}
+);
 
-const heartbeat = setInterval(() => {
-for (const socket of wss.clients) {
+/*
+• HEARTBEAT
+*/
+
+const heartbeat = setInterval(
+function () {
+
+wss.clients.forEach(
+function (socket) {
+
 if (socket.isAlive === false) {
 socket.terminate();
-continue;
+return;
 }
 
 socket.isAlive = false;
 socket.ping();
 }
-}, 30000);
-
-wss.on('close', () => {
-clearInterval(heartbeat);
-});
-
-server.listen(PORT, HOST, () => {
-console.log(
-BEHRAD M PLAYER realtime server listening on ${HOST}:${PORT}
 );
-});
+
+},
+30000
+);
+
+wss.on(
+'close',
+function () {
+clearInterval(heartbeat);
+}
+);
+
+/*
+• START SERVER
+*/
+
+server.listen(
+PORT,
+HOST,
+function () {
+
+console.log(
+'BEHRAD M PLAYER realtime server listening on ' +
+HOST +
+':' +
+PORT
+);
+
+}
+);
