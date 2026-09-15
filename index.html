@@ -485,6 +485,20 @@ nav button:hover::before{
     flex-wrap:wrap;
     margin-bottom:25px;
 }
+.room-search-field{
+    flex:1 1 280px;
+    max-width:420px;
+    min-height:46px;
+    padding:11px 14px;
+    border-radius:13px;
+    border:1px solid rgba(0,200,255,.16);
+    outline:none;
+    color:white;
+    background:rgba(8,12,20,.78);
+    direction:rtl;
+    text-align:right;
+}
+.room-search-field:focus{border-color:rgba(0,200,255,.48);box-shadow:0 0 0 3px rgba(0,200,255,.07);}
 
 .room-action-btn{
     padding:13px 20px;
@@ -2921,7 +2935,8 @@ window.bmpHideLoading = function(){
     <div class="rooms-toolbar">
         <button class="room-action-btn" onclick="openCreateRoom()">➕ ساخت اتاق جدید</button>
         <button class="room-action-btn alt" onclick="openJoinRoom()">🔑 ورود به اتاق</button>
-        <button class="room-action-btn alt" onclick="findP2PRooms()">🔎 پیدا کردن روم‌ها</button>
+        <button class="room-action-btn alt" onclick="findP2PRooms(document.getElementById('publicRoomSearch')?.value||'')">🔎 پیدا کردن روم‌ها</button>
+        <input id="publicRoomSearch" class="room-search-field" type="search" maxlength="40" placeholder="جست‌وجوی نام روم یا نام کاربری…" autocomplete="off" onkeydown="if(event.key==='Enter'){findP2PRooms(this.value)}">
     </div>
     <div id="roomList" class="room-list"></div>
     <div id="activeChat" style="display:none">
@@ -6777,8 +6792,12 @@ document
     roomPrefix:'bmpv3_',
     dbName:'bmp_chat_v3_db',
     dbVersion:1,
+    /* Public-room directory: redundant Nostr relays. These relays are used only
+       for discovery/signaling metadata; chat messages remain WebRTC P2P. */
     relayUrls:['wss://relay.damus.io','wss://nos.lol','wss://relay.primal.net','wss://relay.nostr.band'],
     directoryKind:30078,
+    directoryTag:'BEHRAD_M_PLAYER_V2',
+    directoryTTL:75000,
     rooms:new Map(),
     active:null,
     profile:null,
@@ -6786,7 +6805,8 @@ document
     nostr:null,
     pool:null,
     heartbeat:null,
-    ready:null
+    ready:null,
+    directoryReady:null
   };
   window.BMPV3=V3;
 
@@ -6888,9 +6908,9 @@ document
 
     /* Optional public-room directory starts in the background.
        It can never block create/join room operations. */
-    if(profileOK){
-      void (async()=>{
-        try{
+    V3.directoryReady=(async()=>{
+      if(!profileOK)return false;
+      try{
           const n=await importFirstWorking([
             'https://esm.run/@nostr/tools/pure',
             'https://cdn.jsdelivr.net/npm/nostr-tools/+esm'
@@ -6902,14 +6922,17 @@ document
           ]);}catch(e){console.warn('Optional Nostr pool module unavailable',e);}
           V3.nostr={...n,...poolMod};
           if(typeof V3.nostr.SimplePool==='function')V3.pool=new V3.nostr.SimplePool();
-          if(V3.pool) setRoomStatus('chatStatus','🟢 P2P آماده است؛ فهرست عمومی هم فعال شد.');
-        }catch(e){
-          console.warn('Optional public-room directory unavailable',e);
-          V3.nostr=null;V3.pool=null;
-          setRoomStatus('chatStatus','🟢 P2P آماده است؛ فهرست عمومی موقتاً در دسترس نیست.');
-        }
-      })();
+      if(V3.pool){
+        setRoomStatus('chatStatus','🟢 P2P آماده است؛ روم‌های عمومی از چند Relay کشف می‌شوند.');
+        return true;
+      }
+    }catch(e){
+      console.warn('Optional public-room directory unavailable',e);
+      V3.nostr=null;V3.pool=null;
+      setRoomStatus('chatStatus','🟢 P2P آماده است؛ فهرست عمومی موقتاً در دسترس نیست.');
     }
+    return false;
+    })();
     return true;
   })();
 
@@ -6919,28 +6942,110 @@ document
   }
 
   function nostrSk(){
-    const h=V3.profile.secretKeyHex;return V3.nostr.hexToBytes?V3.nostr.hexToBytes(h):Uint8Array.from(h.match(/../g).map(x=>parseInt(x,16)));
+    const h=V3.profile.secretKeyHex;
+    return V3.nostr.hexToBytes?V3.nostr.hexToBytes(h):Uint8Array.from(h.match(/../g).map(x=>parseInt(x,16)));
   }
-  function roomRecord(r){return {app:'BEHRAD_M_PLAYER',roomId:r.roomId,name:r.name,host:V3.profile.username,public:true,createdAt:r.createdAt,updatedAt:Date.now(),onlineUntil:Date.now()+90000};}
-  async function publishRoom(r){
-    if(!r?.public||!V3.pool||!V3.nostr)return false;
+
+  /* A signed, replaceable directory record. The record is deliberately tiny:
+     enough for discovery, never chat content. */
+  function roomRecord(r,onlineUntil){
+    const name=String(r?.name||'اتاق').slice(0,60);
+    const host=String(V3.profile?.username||r?.host||'Host').slice(0,40);
+    return {
+      v:2,
+      app:'BEHRAD_M_PLAYER',
+      directory:V3.directoryTag,
+      roomId:String(r.roomId),
+      name,
+      host,
+      public:true,
+      createdAt:Number(r.createdAt||Date.now()),
+      updatedAt:Date.now(),
+      onlineUntil:Number(onlineUntil||Date.now()+V3.directoryTTL)
+    };
+  }
+
+  async function publishDirectoryEvent(event){
+    if(!V3.pool) return 0;
+    const jobs=V3.relayUrls.map(url=>
+      bmpTimeout(Promise.allSettled(V3.pool.publish([url],event)),5500,'directory-publish-relay-timeout')
+        .then(results=>results.some(x=>x.status==='fulfilled')).catch(()=>false)
+    );
+    const results=await Promise.allSettled(jobs);
+    return results.reduce((n,x)=>n+(x.status==='fulfilled'&&x.value?1:0),0);
+  }
+
+  async function publishRoom(r,offline=false){
+    if(!r?.public)return 0;
+    if((!V3.pool||!V3.nostr)&&V3.directoryReady){
+      try{await bmpTimeout(V3.directoryReady,6500,'directory-init-timeout');}catch(e){}
+    }
+    if(!V3.pool||!V3.nostr)return 0;
     try{
-      const event=V3.nostr.finalizeEvent({kind:V3.directoryKind,created_at:now(),tags:[['d','bmp-room:'+r.roomId],['app','BEHRAD_M_PLAYER'],['t','bmp-room']],content:JSON.stringify(roomRecord(r))},nostrSk());
-      await bmpTimeout(Promise.any(V3.pool.publish(V3.relayUrls,event)),6000,'directory-publish-timeout');
-      return true;
-    }catch(e){console.warn('room directory publish failed',e);return false;}
+      const until=offline?Date.now()-1000:Date.now()+V3.directoryTTL;
+      const rec=roomRecord(r,until);
+      const event=V3.nostr.finalizeEvent({
+        kind:V3.directoryKind,
+        created_at:now(),
+        tags:[
+          ['d','bmp-room:'+r.roomId],
+          ['app','BEHRAD_M_PLAYER'],
+          ['dir',V3.directoryTag],
+          ['t','bmp-room'],
+          ['room',rec.name],
+          ['host',rec.host]
+        ],
+        content:JSON.stringify(rec)
+      },nostrSk());
+      return await publishDirectoryEvent(event);
+    }catch(e){
+      console.warn('room directory publish failed',e);
+      return 0;
+    }
   }
-  async function queryRooms(){
+
+  async function queryRooms(searchTerm=''){
     if(!V3.pool)return [];
     const map=new Map();
-    try{
-      const events=await bmpTimeout(V3.pool.querySync(V3.relayUrls,{kinds:[V3.directoryKind],'#app':['BEHRAD_M_PLAYER'],limit:100}),8000,'directory-query-timeout');
-      (events||[]).forEach(ev=>{try{const r=JSON.parse(ev.content);if(!r.roomId||r.onlineUntil<Date.now())return;const old=map.get(r.roomId);if(!old||r.updatedAt>old.updatedAt)map.set(r.roomId,r);}catch(e){}});
-    }catch(e){console.warn('room directory query failed',e);}
-    return [...map.values()];
+    const filter={
+      kinds:[V3.directoryKind],
+      '#app':['BEHRAD_M_PLAYER'],
+      '#dir':[V3.directoryTag],
+      limit:100
+    };
+    /* Query relays independently so one dead/slow relay cannot kill discovery. */
+    const jobs=V3.relayUrls.map(url=>
+      bmpTimeout(Promise.resolve(V3.pool.querySync([url],filter)),5500,'directory-query-relay-timeout')
+        .catch(()=>[])
+    );
+    const results=await Promise.all(jobs);
+    const cutoff=Date.now();
+    results.flat().forEach(ev=>{
+      try{
+        const r=JSON.parse(ev.content||'{}');
+        if(r?.directory!==V3.directoryTag||!r.roomId||!r.onlineUntil||Number(r.onlineUntil)<=cutoff)return;
+        const old=map.get(String(r.roomId));
+        const stamp=Number(r.updatedAt||ev.created_at*1000||0);
+        if(!old||stamp>Number(old.updatedAt||0))map.set(String(r.roomId),{...r,updatedAt:stamp});
+      }catch(e){}
+    });
+    let rooms=[...map.values()];
+    const q=String(searchTerm||'').trim().toLocaleLowerCase('fa-IR');
+    if(q){
+      rooms=rooms.filter(r=>
+        String(r.name||'').toLocaleLowerCase('fa-IR').includes(q)||
+        String(r.host||'').toLocaleLowerCase('fa-IR').includes(q)
+      );
+    }
+    rooms.sort((a,b)=>Number(b.updatedAt||0)-Number(a.updatedAt||0));
+    return rooms.slice(0,100);
   }
+
   async function heartbeat(){
-    if(V3.active?.role==='host'&&V3.active.public)await publishRoom(V3.active);
+    if(V3.active?.role==='host'&&V3.active.public){
+      const ok=await publishRoom(V3.active);
+      if(ok>0)setRoomStatus('chatStatus','🟢 روم عمومی فعال است · '+ok+' مسیر کشف آنلاین');
+    }
   }
 
   /* ---------- room/chat ---------- */
@@ -6981,7 +7086,7 @@ document
       /* Directory publishing is deliberately non-blocking. The room is usable immediately. */
       void publishRoom(info);
       clearInterval(V3.heartbeat);
-      V3.heartbeat=setInterval(heartbeat,45000);
+      V3.heartbeat=setInterval(heartbeat,30000);
     }else{
       await saveRoom({...info,host:info.host||'Host',role:'guest',lastSeen:Date.now()});
     }
@@ -7046,19 +7151,21 @@ document
       console.error('joinRoom failed',e);setRoomStatus('joinRoomStatus','❌ جست‌وجوی روم‌ها ناموفق بود.');return false;
     }finally{window.bmpHideLoading?.(token);}
   };
-  window.findP2PRooms=async function(){
-    const token=window.bmpShowLoading?.('در حال پیدا کردن روم‌ها','در حال جست‌وجوی اتاق‌های آنلاین','اتصال به Relayها…');
+  window.findP2PRooms=async function(term=''){
+    const token=window.bmpShowLoading?.('در حال پیدا کردن روم‌ها','در حال جست‌وجوی اتاق‌های عمومی آنلاین','اتصال هم‌زمان به چند مسیر کشف…');
     try{
       const ready=await V3.ready;if(!ready)throw new Error('P2P is not ready');
-      const list=document.getElementById('roomList');if(list)list.innerHTML='<div class="room-card" style="grid-column:1/-1;text-align:center"><h3>🔎 در حال پیدا کردن روم‌ها...</h3><p>شبکهٔ غیرمتمرکز در حال جست‌وجوی اتاق‌های آنلاین است.</p></div>';
-      const found=await queryRooms();
-      found.forEach(r=>V3.rooms.set(r.roomId,{...r,role:'discovered',discovery:true,status:'آنلاین'}));
+      const list=document.getElementById('roomList');
+      if(list)list.innerHTML='<div class="room-card" style="grid-column:1/-1;text-align:center"><h3>🔎 در حال پیدا کردن روم‌ها...</h3><p>چند Relay غیرمتمرکز هم‌زمان بررسی می‌شوند؛ خرابی یکی مانع جست‌وجو نمی‌شود.</p></div>';
+      const found=await queryRooms(term);
+      found.forEach(r=>V3.rooms.set(String(r.roomId),{...r,roomId:String(r.roomId),role:'discovered',discovery:true,status:'آنلاین'}));
       await Promise.all(found.map(r=>saveRoom({...r,role:'discovered',discovery:true,lastSeen:Date.now()})));
       renderRooms();
-      if(!found.length)addSystemMessage('ℹ️ فعلاً روم عمومی فعالی پیدا نشد.');
+      if(!found.length)addSystemMessage(term?'ℹ️ روم عمومی فعالی با این جست‌وجو پیدا نشد.':'ℹ️ فعلاً روم عمومی فعالی پیدا نشد.');
+      else addSystemMessage('🔎 '+found.length+' روم عمومی فعال پیدا شد.');
       return found;
     }catch(e){
-      console.error('find rooms failed',e);addSystemMessage('❌ جست‌وجوی روم‌ها انجام نشد.');return [];
+      console.error('find rooms failed',e);addSystemMessage('❌ جست‌وجوی روم‌ها انجام نشد؛ بعداً دوباره امتحان کن.');return [];
     }finally{window.bmpHideLoading?.(token);}
   };
   window.connectToDiscoveredRoom=async function(i){
@@ -7096,12 +7203,21 @@ document
     list.innerHTML=rooms.map(r=>{
       const disc=r.discovery||r.role==='discovered';const mine=r.role==='host';
       const rid=esc(r.roomId);
-      return `<div class="room-card" data-room-id="${rid}"><h3>💬 ${esc(r.name||'اتاق')}</h3><p>${mine?'نقش: میزبان':disc?'🛰️ پیدا شده از شبکه · میزبان: '+esc(r.host||'Host'):'نقش: مهمان'} · ${new Date(r.createdAt||Date.now()).toLocaleString('fa-IR')}</p><div class="room-badges"><span class="room-badge">${disc?'🛰️ آنلاین':r.public?'🌐 قابل نمایش':'🔒 خصوصی'}</span><span class="room-badge">WebRTC</span></div><p style="margin-top:10px">🔐 اتصال و هویت فنی کاملاً پشت‌صحنه انجام می‌شوند.</p><div class="room-card-actions">${mine?`<button class="room-small-btn" onclick="roomActionById('${rid}','host')">▶️ باز کردن</button>`:`<button class="room-small-btn" onclick="roomActionById('${rid}','guest')">🔗 اتصال خودکار</button>`}</div></div>`;
+      return `<div class="room-card" data-room-id="${rid}"><h3>💬 ${esc(r.name||'اتاق')}</h3><p>${mine?'نقش: میزبان':disc?'🛰️ پیدا شده از شبکه · میزبان: '+esc(r.host||'Host'):'نقش: مهمان'} · ${new Date(r.createdAt||Date.now()).toLocaleString('fa-IR')}</p><div class="room-badges"><span class="room-badge">${disc?'🟢 آنلاین':r.public?'🌐 عمومی':'🔒 خصوصی'}</span><span class="room-badge">WebRTC · P2P</span></div><p style="margin-top:10px">🔐 اتصال و هویت فنی کاملاً پشت‌صحنه انجام می‌شوند.</p><div class="room-card-actions">${mine?`<button class="room-small-btn" onclick="roomActionById('${rid}','host')">▶️ باز کردن</button>`:`<button class="room-small-btn" onclick="roomActionById('${rid}','guest')">🔗 اتصال خودکار</button>`}</div></div>`;
     }).join('');
   };
   window.roomActionById=roomActionById;
   window.getPublicRoomCards=()=>[...V3.rooms.values()].filter(r=>r.public&&r.role==='host');
   window.storeDiscoveredRooms=(rooms)=>{(rooms||[]).forEach(r=>V3.rooms.set(r.roomId,{...r,discovery:true,role:'discovered'}));renderRooms();};
+
+  /* Publish an offline tombstone when possible, but never block page unload. */
+  window.addEventListener('pagehide',()=>{
+    try{
+      if(V3.active?.role==='host'&&V3.active.public&&V3.pool&&V3.nostr){
+        void publishRoom(V3.active,true);
+      }
+    }catch(e){}
+  });
 
   /* Replace the old first-run load behavior after all legacy functions exist. */
   window.addEventListener('load',()=>{
