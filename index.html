@@ -3238,17 +3238,32 @@ function bmpHandleRoomJoinFallback(packet){
   bmpPublish({v:BMP_NETWORK_VERSION,type:"room-offer",from:bmpPeerId,to:packet.from,roomId:activeRoom.roomId,code:pendingHost.code,name:activeRoom.name,host:activeRoom.userName,requestId:packet.requestId,ts:Date.now()});
 }
 
+let bmpMqttScriptLoading=false;
 function bmpLoadMqtt(){
   if(window.mqtt){bmpStartMqtt();return;}
-  const script=document.createElement("script");
-  script.src="https://unpkg.com/mqtt@5.10.4/dist/mqtt.min.js";
-  script.async=true;
-  script.onload=bmpStartMqtt;
-  script.onerror=()=>{
-    console.warn("BMP auto network library failed to load; manual P2P remains available.");
-    addSystemMessage("ℹ️ شبکهٔ خودکار در دسترس نشد؛ حالت اتصال دستی همچنان فعال است.");
+  if(bmpMqttScriptLoading)return;
+  bmpMqttScriptLoading=true;
+  const urls=[
+    "https://unpkg.com/mqtt@5.10.4/dist/mqtt.min.js",
+    "https://cdn.jsdelivr.net/npm/mqtt@5.10.4/dist/mqtt.min.js"
+  ];
+  let i=0;
+  const tryNext=()=>{
+    if(window.mqtt){bmpStartMqtt();bmpMqttScriptLoading=false;return;}
+    if(i>=urls.length){
+      bmpMqttScriptLoading=false;
+      console.warn("BMP MQTT browser library failed to load from all configured CDNs.");
+      addSystemMessage("❌ سرویس شبکه بارگذاری نشد؛ اگر اینترنت روشن است، یک‌بار صفحه را تازه‌سازی کن.");
+      return;
+    }
+    const script=document.createElement("script");
+    script.src=urls[i++];
+    script.async=true;
+    script.onload=()=>{bmpMqttScriptLoading=false;bmpStartMqtt();};
+    script.onerror=()=>{script.remove();tryNext();};
+    document.head.appendChild(script);
   };
-  document.head.appendChild(script);
+  tryNext();
 }
 
 function bmpStartMqtt(){
@@ -7353,6 +7368,16 @@ document
   const make10=()=>{const a=new Uint32Array(2);crypto.getRandomValues(a);return ((BigInt(a[0])<<32n|BigInt(a[1]))%10000000000n).toString().padStart(10,'0');};
   const offerTopic=c=>OFFER_ROOT+c, answerTopic=c=>ANSWER_ROOT+c, roomTopic=c=>ROOM_ROOT+c;
   const now=()=>Date.now();
+
+  // V13 FIX: the legacy network layer keeps MQTT in top-level lexical variables.
+  // The V12 public-room layer was reading window.bmpMqtt/window.bmpMqttReady,
+  // while an earlier compatibility override had also replaced bmpLoadMqtt with a no-op.
+  // Bridge the real values/functions instead of shadowing them.
+  try{
+    Object.defineProperty(window,'bmpMqtt',{configurable:true,get:()=>bmpMqtt});
+    Object.defineProperty(window,'bmpMqttReady',{configurable:true,get:()=>bmpMqttReady});
+  }catch(e){}
+  window.bmpLoadMqtt=function(){try{bmpLoadMqtt();}catch(e){console.error('BMP MQTT loader failed',e);}};
 
   function status(id,text){const e=$(id);if(e)e.textContent=text;}
   function copyText(v){try{navigator.clipboard?.writeText(String(v));status('chatStatus','📋 کد کپی شد.');}catch(e){}}
