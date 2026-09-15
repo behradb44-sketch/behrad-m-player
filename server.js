@@ -460,7 +460,7 @@ const requestUrl =
 new URL(
 req.url,
 
-http://${req.headers.host || 'localhost'}`
+const baseUrl = http://${req.headers.host || 'localhost'};
 );
 
 /* =====================
