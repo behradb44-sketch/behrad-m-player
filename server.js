@@ -261,7 +261,7 @@ return;
 */
 
 const roomMatch = pathname.match(
-/^/api/rooms/([^/]+)$/
+const roomMatch = pathname.match(/^\/api\/rooms\/([^/]+)$/);
 );
 
 if (req.method === 'GET' && roomMatch) {
