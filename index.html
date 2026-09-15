@@ -2260,6 +2260,77 @@ window.bmpHideLoading = function(){
 .rooms-panel{border-radius:28px!important;border:1px solid rgba(0,200,255,.14)!important;background:linear-gradient(145deg,rgba(4,10,18,.96),rgba(2,6,13,.96))!important;box-shadow:0 22px 70px rgba(0,0,0,.3)!important}.rooms-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.room-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px!important;padding:4px!important}.bmp-room-card-v19{border-radius:22px!important;padding:18px!important;background:linear-gradient(145deg,rgba(12,20,33,.94),rgba(5,10,19,.96))!important;border:1px solid rgba(0,200,255,.14)!important;box-shadow:0 16px 45px rgba(0,0,0,.25)!important;transition:.2s ease}.bmp-room-card-v19:hover{transform:translateY(-3px);border-color:rgba(0,200,255,.32)!important}.bmp-room-card-v19 .room-online{white-space:nowrap;font-size:10px;color:#8fffc7;background:rgba(32,255,155,.05);padding:6px 9px;border-radius:999px;border:1px solid rgba(32,255,155,.12)}.bmp-public-codes{gap:10px!important;margin:16px 0!important}.bmp-public-code{min-height:82px;padding:13px 14px!important;border-radius:16px!important;background:linear-gradient(145deg,rgba(0,200,255,.065),rgba(255,255,255,.025))!important;border:1px solid rgba(0,200,255,.13)!important;display:flex;flex-direction:column;justify-content:center}.bmp-public-code strong{font-size:20px!important;color:#eef8ff!important;letter-spacing:2px!important}.bmp-public-code strong[data-zero="1"]{opacity:.42;letter-spacing:1px}.bmp-room-card-v19 .room-primary-btn{width:100%;min-height:46px;border-radius:14px!important;font-weight:800;cursor:pointer;touch-action:manipulation}#activeChat{margin-top:18px!important}#activeChat .chat-layout{min-height:570px!important;border-radius:26px!important;border:1px solid rgba(0,200,255,.16)!important;box-shadow:0 24px 80px rgba(0,0,0,.38)!important}#activeChat .chat-main{min-height:570px!important}#activeChat .chat-messages{flex:1;height:auto!important;min-height:380px;max-height:58vh;overscroll-behavior:contain}#activeChat .chat-input-row{position:sticky;bottom:0;z-index:3;padding:12px!important}
 @media(max-width:900px){.room-list{grid-template-columns:1fr!important}.bmp-room-card-v19:hover{transform:none}#activeChat .chat-layout{grid-template-columns:1fr!important}}@media(max-width:600px){.rooms-panel{border-radius:20px!important}.room-list{gap:12px!important}.bmp-room-card-v19{padding:14px!important;border-radius:18px!important}.bmp-room-card-v19 .room-card-head b{font-size:16px}.bmp-public-codes{grid-template-columns:1fr 1fr!important;margin:12px 0!important}.bmp-public-code{min-height:72px;padding:10px!important}.bmp-public-code strong{font-size:17px!important;letter-spacing:1.5px!important}.room-primary-btn{min-height:48px!important}#activeChat .chat-layout,#activeChat .chat-main{min-height:0!important;border-radius:20px!important}#activeChat .chat-messages{min-height:280px;max-height:55svh;padding:14px!important}#activeChat .chat-msg{max-width:90%!important}#activeChat .chat-input-row{padding:9px!important}.room-header-actions{width:100%;display:flex;gap:8px}.room-header-actions button{flex:1;min-height:44px}}@media(max-width:390px){.bmp-public-codes{grid-template-columns:1fr!important}.bmp-public-code strong{font-size:16px!important}#activeChat .chat-send{flex-basis:64px!important}}
 </style>
+
+
+<style id="bmp-v26-polish">
+/* =========================================================
+   BEHRAD M PLAYER V26 — SMOOTH UI + RESPONSIVE DEPTH
+   Visual-only enhancement: existing content/layout preserved.
+========================================================= */
+:root{
+  --bmp-depth-x:0px;
+  --bmp-depth-y:0px;
+  --bmp-depth-x2:0px;
+  --bmp-depth-y2:0px;
+  --bmp-glow-x:50%;
+  --bmp-glow-y:35%;
+}
+html{scroll-behavior:smooth}
+body{
+  overflow-x:hidden;
+  background:#05070d;
+  -webkit-tap-highlight-color:transparent;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:-10vh -10vw;
+  z-index:-10;
+  pointer-events:none;
+  background:
+    radial-gradient(38vw 30vw at var(--bmp-glow-x) var(--bmp-glow-y),rgba(0,190,255,.11),transparent 68%),
+    radial-gradient(32vw 28vw at calc(100% - var(--bmp-glow-x)) calc(100% - var(--bmp-glow-y)),rgba(115,65,255,.08),transparent 70%),
+    linear-gradient(145deg,#05070d 0%,#070b13 52%,#03050a 100%);
+  transform:translate3d(var(--bmp-depth-x2),var(--bmp-depth-y2),0) scale(1.04);
+  transition:transform .18s ease-out;
+  will-change:transform;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:-20%;
+  z-index:-9;
+  pointer-events:none;
+  background:
+    radial-gradient(26vw 20vw at 18% 24%,rgba(0,210,255,.055),transparent 72%),
+    radial-gradient(28vw 22vw at 82% 72%,rgba(155,75,255,.045),transparent 72%);
+  transform:translate3d(var(--bmp-depth-x),var(--bmp-depth-y),0) scale(1.06);
+  will-change:transform;
+}
+/* Keep the original site's particle/cursor effects, but make transitions gentler. */
+button,input,select,textarea,a,[role="button"]{
+  transition:transform .18s ease,box-shadow .22s ease,border-color .22s ease,background-color .22s ease,opacity .18s ease;
+}
+button:not(:disabled):hover,[role="button"]:hover{transform:translateY(-1px)}
+button:not(:disabled):active,[role="button"]:active{transform:translateY(0) scale(.985)}
+input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(0,190,255,.10),0 8px 28px rgba(0,0,0,.18)}
+.bmp-depth-surface{
+  transform:translate3d(calc(var(--bmp-depth-x) * .22),calc(var(--bmp-depth-y) * .22),0);
+  transition:transform .22s ease-out;
+  will-change:transform;
+}
+@media(max-width:700px){
+  body::before{transition:transform .28s ease-out}
+  body::after{transition:transform .34s ease-out}
+  button,[role="button"]{min-height:42px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  body::before,body::after,.bmp-depth-surface{transition:none!important}
+  button,input,select,textarea,a,[role="button"]{transition:none!important}
+}
+</style>
+
 </head>
 
 
@@ -6567,6 +6638,122 @@ document
     document.querySelectorAll('.room-modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)window.closeRoomModals?.();}));
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
+
+
+<script id="bmp-v26-polish-js">
+/* =========================================================
+   BEHRAD M PLAYER V26 — MOUSE + PHONE DEPTH ENGINE
+   Desktop: follows pointer smoothly.
+   Mobile: uses DeviceOrientation when available, with touch fallback.
+========================================================= */
+(function(){
+  'use strict';
+  if(window.__BMP_V26_DEPTH__) return;
+  window.__BMP_V26_DEPTH__=true;
+
+  const root=document.documentElement;
+  const reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;
+
+  let targetX=0,targetY=0,currentX=0,currentY=0;
+  let raf=0;
+  let orientationActive=false;
+  let orientationRequested=false;
+  let lastTouch=0;
+
+  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+  const apply=()=>{
+    raf=0;
+    currentX += (targetX-currentX)*0.075;
+    currentY += (targetY-currentY)*0.075;
+    const x=currentX.toFixed(2)+'px';
+    const y=currentY.toFixed(2)+'px';
+    root.style.setProperty('--bmp-depth-x',x);
+    root.style.setProperty('--bmp-depth-y',y);
+    root.style.setProperty('--bmp-depth-x2',(currentX*.45).toFixed(2)+'px');
+    root.style.setProperty('--bmp-depth-y2',(currentY*.45).toFixed(2)+'px');
+    root.style.setProperty('--bmp-glow-x',(50+currentX*.34).toFixed(2)+'%');
+    root.style.setProperty('--bmp-glow-y',(35+currentY*.22).toFixed(2)+'%');
+    if(Math.abs(targetX-currentX)>0.05 || Math.abs(targetY-currentY)>0.05) raf=requestAnimationFrame(apply);
+  };
+  const setTarget=(x,y)=>{
+    targetX=clamp(x,-18,18);
+    targetY=clamp(y,-14,14);
+    if(!raf) raf=requestAnimationFrame(apply);
+  };
+
+  const pointerMove=e=>{
+    if(e.pointerType==='touch') return;
+    const nx=(e.clientX/window.innerWidth-.5)*2;
+    const ny=(e.clientY/window.innerHeight-.5)*2;
+    setTarget(nx*18,ny*14);
+  };
+  const pointerLeave=()=>setTarget(0,0);
+  window.addEventListener('pointermove',pointerMove,{passive:true});
+  window.addEventListener('pointerleave',pointerLeave,{passive:true});
+
+  const orientation=e=>{
+    if(e.gamma==null && e.beta==null) return;
+    orientationActive=true;
+    const gx=clamp(Number(e.gamma)||0,-35,35);
+    const by=clamp((Number(e.beta)||0)-45,-35,35);
+    setTarget((gx/35)*16,(by/35)*12);
+  };
+
+  const enableOrientation=async()=>{
+    if(orientationRequested) return;
+    orientationRequested=true;
+    try{
+      if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
+        const result=await DeviceOrientationEvent.requestPermission();
+        if(result==='granted'){
+          window.addEventListener('deviceorientation',orientation,{passive:true});
+          orientationActive=true;
+        }
+      }else if('DeviceOrientationEvent' in window){
+        window.addEventListener('deviceorientation',orientation,{passive:true});
+      }
+    }catch(_){ /* Touch fallback remains available. */ }
+  };
+
+  const touchMove=e=>{
+    const t=e.touches && e.touches[0];
+    if(!t) return;
+    lastTouch=Date.now();
+    if(orientationActive) return;
+    const nx=(t.clientX/window.innerWidth-.5)*2;
+    const ny=(t.clientY/window.innerHeight-.5)*2;
+    setTarget(nx*10,ny*8);
+  };
+  const touchEnd=()=>{ if(!orientationActive) setTarget(0,0); };
+  window.addEventListener('touchmove',touchMove,{passive:true});
+  window.addEventListener('touchend',touchEnd,{passive:true});
+  window.addEventListener('pointerdown',enableOrientation,{passive:true,once:false});
+
+  /* Also request orientation after a normal click/tap, where browsers permit it. */
+  document.addEventListener('click',enableOrientation,{passive:true,once:false});
+
+  /* Give major existing panels a tiny depth response without changing layout. */
+  const markSurfaces=()=>{
+    const selectors=['header','.section-title','main > section','.bmp-pro-panel','.game-wrapper','footer'];
+    document.querySelectorAll(selectors.join(',')).forEach(el=>{
+      if(!el.classList.contains('bmp-depth-surface')) el.classList.add('bmp-depth-surface');
+    });
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',markSurfaces,{once:true});
+  else markSurfaces();
+
+  /* Public diagnostic helper for console testing. */
+  window.bmpRunV26DepthTest=()=>({
+    ok:true,
+    reducedMotion:reduced,
+    orientationSupported:'DeviceOrientationEvent' in window,
+    pointerSupported:'PointerEvent' in window,
+    target:{x:targetX,y:targetY},
+    current:{x:Number(currentX.toFixed(2)),y:Number(currentY.toFixed(2))}
+  });
 })();
 </script>
 
