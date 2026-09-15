@@ -4,12 +4,13 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="bmp-version" content="V30-FULL-SITE-REALTIME">
 
 <meta
     name="viewport"
     content="width=device-width,initial-scale=1.0">
 
-<title>BEHRAD M PLAYER</title>
+<title>BEHRAD M PLAYER — Official Gaming Community</title>
 
 <style>
 
@@ -2256,85 +2257,31 @@ window.bmpHideLoading = function(){
 .bmp-active-codes{margin:0 0 14px}.bmp-active-codes b{font-size:19px}.room-empty{padding:25px;text-align:center;opacity:.65}
 @media(max-width:650px){.bmp-public-codes,.bmp-active-codes{grid-template-columns:1fr}.bmp-public-code strong,.bmp-active-codes b{font-size:16px}}
 </style>
-<style id="bmp-room-chat-pro-ui">
-.rooms-panel{border-radius:28px!important;border:1px solid rgba(0,200,255,.14)!important;background:linear-gradient(145deg,rgba(4,10,18,.96),rgba(2,6,13,.96))!important;box-shadow:0 22px 70px rgba(0,0,0,.3)!important}.rooms-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.room-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px!important;padding:4px!important}.bmp-room-card-v19{border-radius:22px!important;padding:18px!important;background:linear-gradient(145deg,rgba(12,20,33,.94),rgba(5,10,19,.96))!important;border:1px solid rgba(0,200,255,.14)!important;box-shadow:0 16px 45px rgba(0,0,0,.25)!important;transition:.2s ease}.bmp-room-card-v19:hover{transform:translateY(-3px);border-color:rgba(0,200,255,.32)!important}.bmp-room-card-v19 .room-online{white-space:nowrap;font-size:10px;color:#8fffc7;background:rgba(32,255,155,.05);padding:6px 9px;border-radius:999px;border:1px solid rgba(32,255,155,.12)}.bmp-public-codes{gap:10px!important;margin:16px 0!important}.bmp-public-code{min-height:82px;padding:13px 14px!important;border-radius:16px!important;background:linear-gradient(145deg,rgba(0,200,255,.065),rgba(255,255,255,.025))!important;border:1px solid rgba(0,200,255,.13)!important;display:flex;flex-direction:column;justify-content:center}.bmp-public-code strong{font-size:20px!important;color:#eef8ff!important;letter-spacing:2px!important}.bmp-public-code strong[data-zero="1"]{opacity:.42;letter-spacing:1px}.bmp-room-card-v19 .room-primary-btn{width:100%;min-height:46px;border-radius:14px!important;font-weight:800;cursor:pointer;touch-action:manipulation}#activeChat{margin-top:18px!important}#activeChat .chat-layout{min-height:570px!important;border-radius:26px!important;border:1px solid rgba(0,200,255,.16)!important;box-shadow:0 24px 80px rgba(0,0,0,.38)!important}#activeChat .chat-main{min-height:570px!important}#activeChat .chat-messages{flex:1;height:auto!important;min-height:380px;max-height:58vh;overscroll-behavior:contain}#activeChat .chat-input-row{position:sticky;bottom:0;z-index:3;padding:12px!important}
-@media(max-width:900px){.room-list{grid-template-columns:1fr!important}.bmp-room-card-v19:hover{transform:none}#activeChat .chat-layout{grid-template-columns:1fr!important}}@media(max-width:600px){.rooms-panel{border-radius:20px!important}.room-list{gap:12px!important}.bmp-room-card-v19{padding:14px!important;border-radius:18px!important}.bmp-room-card-v19 .room-card-head b{font-size:16px}.bmp-public-codes{grid-template-columns:1fr 1fr!important;margin:12px 0!important}.bmp-public-code{min-height:72px;padding:10px!important}.bmp-public-code strong{font-size:17px!important;letter-spacing:1.5px!important}.room-primary-btn{min-height:48px!important}#activeChat .chat-layout,#activeChat .chat-main{min-height:0!important;border-radius:20px!important}#activeChat .chat-messages{min-height:280px;max-height:55svh;padding:14px!important}#activeChat .chat-msg{max-width:90%!important}#activeChat .chat-input-row{padding:9px!important}.room-header-actions{width:100%;display:flex;gap:8px}.room-header-actions button{flex:1;min-height:44px}}@media(max-width:390px){.bmp-public-codes{grid-template-columns:1fr!important}.bmp-public-code strong{font-size:16px!important}#activeChat .chat-send{flex-basis:64px!important}}
-</style>
-
-
-<style id="bmp-v26-polish">
+<style>
 /* =========================================================
-   BEHRAD M PLAYER V26 — SMOOTH UI + RESPONSIVE DEPTH
-   Visual-only enhancement: existing content/layout preserved.
+   BMP REALTIME ROOMS V30 — merged into original full website
+   Scoped so the original site's visual system remains intact.
 ========================================================= */
-:root{
-  --bmp-depth-x:0px;
-  --bmp-depth-y:0px;
-  --bmp-depth-x2:0px;
-  --bmp-depth-y2:0px;
-  --bmp-glow-x:50%;
-  --bmp-glow-y:35%;
-}
-html{scroll-behavior:smooth}
-body{
-  overflow-x:hidden;
-  background:#05070d;
-  -webkit-tap-highlight-color:transparent;
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:-10vh -10vw;
-  z-index:-10;
-  pointer-events:none;
-  background:
-    radial-gradient(38vw 30vw at var(--bmp-glow-x) var(--bmp-glow-y),rgba(0,190,255,.11),transparent 68%),
-    radial-gradient(32vw 28vw at calc(100% - var(--bmp-glow-x)) calc(100% - var(--bmp-glow-y)),rgba(115,65,255,.08),transparent 70%),
-    linear-gradient(145deg,#05070d 0%,#070b13 52%,#03050a 100%);
-  transform:translate3d(var(--bmp-depth-x2),var(--bmp-depth-y2),0) scale(1.04);
-  transition:transform .18s ease-out;
-  will-change:transform;
-}
-body::after{
-  content:"";
-  position:fixed;
-  inset:-20%;
-  z-index:-9;
-  pointer-events:none;
-  background:
-    radial-gradient(26vw 20vw at 18% 24%,rgba(0,210,255,.055),transparent 72%),
-    radial-gradient(28vw 22vw at 82% 72%,rgba(155,75,255,.045),transparent 72%);
-  transform:translate3d(var(--bmp-depth-x),var(--bmp-depth-y),0) scale(1.06);
-  will-change:transform;
-}
-/* Keep the original site's particle/cursor effects, but make transitions gentler. */
-button,input,select,textarea,a,[role="button"]{
-  transition:transform .18s ease,box-shadow .22s ease,border-color .22s ease,background-color .22s ease,opacity .18s ease;
-}
-button:not(:disabled):hover,[role="button"]:hover{transform:translateY(-1px)}
-button:not(:disabled):active,[role="button"]:active{transform:translateY(0) scale(.985)}
-input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(0,190,255,.10),0 8px 28px rgba(0,0,0,.18)}
-.bmp-depth-surface{
-  transform:translate3d(calc(var(--bmp-depth-x) * .22),calc(var(--bmp-depth-y) * .22),0);
-  transition:transform .22s ease-out;
-  will-change:transform;
-}
-@media(max-width:700px){
-  body::before{transition:transform .28s ease-out}
-  body::after{transition:transform .34s ease-out}
-  button,[role="button"]{min-height:42px}
-}
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  body::before,body::after,.bmp-depth-surface{transition:none!important}
-  button,input,select,textarea,a,[role="button"]{transition:none!important}
-}
-</style>
+.bmpRT-shell{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:10px 0 20px;position:relative;}
 
-<style id="bmp-v27-global-fixes">
-*,*::before,*::after{box-sizing:border-box}
-html,body{max-width:100%;overflow-x:hidden}
-#rooms,#rooms *{box-sizing:border-box}
+:root{--bmp-rt-bg:#050712;--bmp-rt-panel:rgba(12,16,30,.78);--bmp-rt-panel2:rgba(16,21,39,.9);--bmp-rt-line:rgba(120,150,255,.18);--bmp-rt-text:#f5f7ff;--bmp-rt-muted:#9ba6c7;--bmp-rt-cyan:#43e8ff;--bmp-rt-blue:#6c7dff;--bmp-rt-green:#55ef9a;--bmp-rt-red:#ff6b83;--bmp-rt-shadow:0 24px 70px rgba(0,0,0,.38)}
+*{box-sizing:border-box}
+
+position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+.bmpRT-app{width:min(1180px,calc(100% - 28px));margin:auto;padding:24px 0 40px;position:relative}.bmpRT-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.bmpRT-brand{display:flex;align-items:center;gap:13px}.bmpRT-logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-weight:900;color:#001016;background:linear-gradient(135deg,var(--bmp-rt-cyan),#8b9aff);box-shadow:0 0 35px rgba(67,232,255,.25)}.bmpRT-brand h1{font-size:20px;margin:0}.bmpRT-brand small{display:block;color:var(--bmp-rt-muted);margin-top:2px}.bmpRT-status{display:flex;align-items:center;gap:9px;padding:10px 13px;border:1px solid var(--bmp-rt-line);background:rgba(8,11,23,.7);border-radius:999px;font-size:13px;color:var(--bmp-rt-muted)}.bmpRT-dot{width:9px;height:9px;border-radius:50%;background:#68708a;box-shadow:0 0 0 4px rgba(104,112,138,.08)}.bmpRT-dot.on{background:var(--bmp-rt-green);box-shadow:0 0 14px rgba(85,239,154,.65)}
+.bmpRT-hero{border:1px solid var(--bmp-rt-line);background:linear-gradient(145deg,rgba(14,19,38,.88),rgba(8,11,23,.76));box-shadow:var(--bmp-rt-shadow);border-radius:28px;padding:28px;margin-bottom:18px;overflow:hidden;position:relative}.bmpRT-hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(67,232,255,.09);filter:blur(30px);left:-100px;top:-130px}.bmpRT-hero h2{font-size:clamp(25px,4vw,42px);margin:0 0 10px;position:relative}.bmpRT-hero p{color:var(--bmp-rt-muted);margin:0;max-width:780px;line-height:1.9;position:relative}.bmpRT-rooms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.bmpRT-room{background:var(--bmp-rt-panel);border:1px solid var(--bmp-rt-line);border-radius:25px;padding:20px;box-shadow:var(--bmp-rt-shadow);backdrop-filter:blur(18px);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.bmpRT-room:hover{transform:translateY(-3px);border-color:rgba(67,232,255,.34)}.bmpRT-roomHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.bmpRT-roomTitle{display:flex;gap:12px;align-items:center}.bmpRT-roomIcon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:rgba(67,232,255,.09);border:1px solid rgba(67,232,255,.2);font-size:21px}.bmpRT-room h3{margin:0 0 3px;font-size:18px}.bmpRT-room .desc{margin:0;color:var(--bmp-rt-muted);font-size:12px}.bmpRT-badge{font-size:11px;padding:6px 9px;border-radius:999px;border:1px solid var(--bmp-rt-line);color:var(--bmp-rt-muted)}
+.bmpRT-codes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 13px}.bmpRT-codeBox{border:1px solid rgba(108,125,255,.22);background:linear-gradient(145deg,rgba(5,9,21,.88),rgba(14,19,36,.76));border-radius:17px;padding:12px}.bmpRT-codeLabel{font-size:11px;color:var(--bmp-rt-muted);margin-bottom:7px}.bmpRT-code{font:800 22px/1.1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:2px;direction:ltr;text-align:center;color:var(--bmp-rt-cyan);text-shadow:0 0 18px rgba(67,232,255,.24)}.bmpRT-code.zero{color:#65708f;text-shadow:none}.bmpRT-roomFoot{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--bmp-rt-muted);font-size:12px}.bmpRT-members{display:flex;align-items:center;gap:7px}.bmpRT-actions{display:flex;gap:9px;margin-top:15px}.bmpRT-btn{border:0;border-radius:14px;padding:12px 15px;font-weight:800;cursor:pointer;color:#061016;background:linear-gradient(135deg,var(--bmp-rt-cyan),#8a9aff);box-shadow:0 9px 28px rgba(67,232,255,.13);transition:transform .16s ease,filter .16s ease}.bmpRT-btn:hover{filter:brightness(1.07);transform:translateY(-1px)}.bmpRT-btn.secondary{color:var(--bmp-rt-text);background:rgba(255,255,255,.055);border:1px solid var(--bmp-rt-line);box-shadow:none}.bmpRT-btn.danger{background:rgba(255,107,131,.1);color:#ff9cad;border:1px solid rgba(255,107,131,.2)}.bmpRT-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.bmpRT-chat{margin-top:18px;display:none;background:var(--bmp-rt-panel);border:1px solid var(--bmp-rt-line);border-radius:25px;overflow:hidden;box-shadow:var(--bmp-rt-shadow)}.bmpRT-chat.open{display:block}.bmpRT-chatHead{padding:17px 20px;border-bottom:1px solid var(--bmp-rt-line);display:flex;justify-content:space-between;align-items:center}.bmpRT-chatHead h3{margin:0;font-size:17px}.bmpRT-chatState{font-size:12px;color:var(--bmp-rt-muted)}.bmpRT-messages{height:380px;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:9px}.bmpRT-msg{max-width:min(78%,650px);padding:10px 13px;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.05);align-self:flex-start}.bmpRT-msg.me{align-self:flex-end;background:rgba(67,232,255,.09);border-color:rgba(67,232,255,.16)}.bmpRT-msg b{font-size:11px;color:var(--bmp-rt-cyan);display:block;margin-bottom:3px}.bmpRT-msg p{margin:0;white-space:pre-wrap;line-height:1.65;font-size:14px}.bmpRT-composer{display:flex;gap:9px;padding:14px;border-top:1px solid var(--bmp-rt-line)}.bmpRT-composer input{min-width:0;flex:1;background:#070a15;color:var(--bmp-rt-text);border:1px solid var(--bmp-rt-line);outline:none;border-radius:14px;padding:13px}.bmpRT-composer input:focus{border-color:rgba(67,232,255,.45)}
+.bmpRT-modal{position:fixed;inset:0;background:rgba(0,0,0,.67);display:none;align-items:center;justify-content:center;padding:18px;z-index:20;backdrop-filter:blur(8px)}.bmpRT-modal.show{display:flex}.bmpRT-modalCard{width:min(430px,100%);background:#0b1020;border:1px solid var(--bmp-rt-line);border-radius:23px;padding:22px;box-shadow:0 30px 90px rgba(0,0,0,.6)}.bmpRT-modalCard h3{margin:0 0 7px}.bmpRT-modalCard p{color:var(--bmp-rt-muted);font-size:13px;line-height:1.8;margin:0 0 15px}.bmpRT-modalCard input{width:100%;background:#060914;color:var(--bmp-rt-text);border:1px solid var(--bmp-rt-line);padding:13px;border-radius:13px;outline:none}.bmpRT-modalActions{display:flex;gap:9px;margin-top:13px}.bmpRT-toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#10172a;border:1px solid var(--bmp-rt-line);padding:11px 15px;border-radius:13px;color:var(--bmp-rt-text);font-size:13px;transition:.22s;z-index:30}.bmpRT-toast.show{opacity:1;transform:translate(-50%,0)}.bmpRT-note{margin-top:18px;color:#76819f;font-size:11px;line-height:1.8;text-align:center}
+@media(max-width:760px){.bmpRT-app{width:min(100% - 18px,620px);padding-top:14px}.bmpRT-top{align-items:flex-start}.bmpRT-status{font-size:11px;padding:8px 10px}.bmpRT-brand h1{font-size:16px}.bmpRT-brand small{font-size:10px}.bmpRT-logo{width:42px;height:42px;border-radius:14px}.bmpRT-hero{padding:21px;border-radius:22px}.bmpRT-rooms{grid-template-columns:1fr;gap:13px}.bmpRT-room{padding:16px;border-radius:21px}.bmpRT-code{font-size:19px;letter-spacing:1.4px}.bmpRT-messages{height:330px;padding:13px}.bmpRT-msg{max-width:88%}.bmpRT-composer{padding:10px}.bmpRT-composer .bmpRT-btn{padding:11px 13px}.bmpRT-roomFoot{font-size:11px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.bmpRT-serverbar{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:0 auto 15px;padding:10px 14px;border:1px solid rgba(67,232,255,.13);border-radius:999px;background:rgba(3,8,17,.52);color:#aeb9c8;font-size:12px;backdrop-filter:blur(10px)}
+.bmpRT-statusdot{width:8px;height:8px;border-radius:50%;background:#6b7280;box-shadow:0 0 0 4px rgba(107,114,128,.08)}
+.bmpRT-statusdot.on{background:#55ef9a;box-shadow:0 0 14px rgba(85,239,154,.7)}
+.bmpRT-serverhint{opacity:.55}
+.bmpRT-room-note{margin:16px 0 0;padding:11px 14px;border-radius:14px;text-align:center;color:#8995b1;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);font-size:11px}
+@media(max-width:600px){.bmpRT-serverbar{border-radius:16px;line-height:1.7}.bmpRT-serverhint{display:none}}
 </style>
 </head>
 
@@ -2376,9 +2323,6 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="logo">
         BEHRAD <span>M</span> PLAYER
     </div>
-
-
-
     <nav>
 
         <button onclick="go('home')">
@@ -3008,176 +2952,63 @@ html,body{max-width:100%;overflow-x:hidden}
      MESSAGE
 ========================================================= -->
 
-<!-- =========================================================
-     BEHRAD M PLAYER — ADVANCED REALTIME ROOMS / CHAT
-     Only this room/chat area is redesigned.
-========================================================= -->
-<style id="bmp-rooms-pro-v28">
-/* =========================================================
-   BMP CHAT V28 — lightweight premium UI
-   Heavy visual effects are disabled/reduced on touch devices.
-========================================================= */
-#rooms{scroll-margin-top:82px;position:relative;isolation:isolate}
-#rooms,#rooms *{box-sizing:border-box}
-#rooms .section-title{margin-bottom:22px}
-.bmp-v28-shell{width:100%;max-width:1180px;margin:0 auto;padding:0 14px 40px}
-.bmp-v28-panel{position:relative;overflow:hidden;border:1px solid rgba(0,200,255,.18);border-radius:30px;background:linear-gradient(145deg,rgba(7,14,25,.97),rgba(2,6,13,.99));box-shadow:0 28px 90px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.05)}
-.bmp-v28-panel:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(0,200,255,.08),transparent 28%,transparent 68%,rgba(110,80,255,.07));pointer-events:none}
-.bmp-v28-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,200,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.7),transparent 75%);pointer-events:none;opacity:.55}
-.bmp-v28-orb{position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(0,200,255,.12),transparent 68%);filter:blur(18px);pointer-events:none;animation:bmpOrb 9s ease-in-out infinite alternate}
-.bmp-v28-orb.a{top:-150px;left:-90px}.bmp-v28-orb.b{bottom:-170px;right:-80px;background:radial-gradient(circle,rgba(110,80,255,.11),transparent 68%);animation-delay:-4s}
-@keyframes bmpOrb{from{transform:translate3d(0,0,0) scale(.9)}to{transform:translate3d(35px,22px,0) scale(1.08)}}
-.bmp-v28-top{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:19px 21px;border-bottom:1px solid rgba(255,255,255,.07)}
-.bmp-v28-brand{display:flex;align-items:center;gap:12px;min-width:0}.bmp-v28-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,rgba(0,200,255,.18),rgba(82,74,255,.12));border:1px solid rgba(0,200,255,.2);box-shadow:0 0 28px rgba(0,200,255,.08);font-size:22px}.bmp-v28-brand b{display:block;color:#f2fbff;font-size:15px}.bmp-v28-brand small{display:block;color:#7f8da1;font-size:10px;margin-top:4px}
-.bmp-v28-live{display:flex;align-items:center;gap:8px;white-space:nowrap;padding:8px 12px;border-radius:999px;border:1px solid rgba(44,255,170,.17);background:rgba(44,255,170,.045);color:#94ffcb;font-size:10px}.bmp-v28-live-dot{width:7px;height:7px;border-radius:50%;background:#3dffad;box-shadow:0 0 13px #3dffad;animation:bmpLive 1.6s ease-in-out infinite}@keyframes bmpLive{50%{opacity:.35;transform:scale(.72)}}
-.bmp-v28-toolbar{position:relative;z-index:2;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:14px 18px;background:rgba(255,255,255,.016);border-bottom:1px solid rgba(255,255,255,.055)}
-.bmp-v28-name{flex:1 1 240px;min-width:180px;height:46px;padding:0 14px;border-radius:13px;border:1px solid rgba(255,255,255,.1);outline:0;background:#060e18;color:#fff;font:inherit;transition:border-color .2s,box-shadow .2s}.bmp-v28-name:focus{border-color:rgba(0,200,255,.48);box-shadow:0 0 0 4px rgba(0,200,255,.055)}
-.bmp-v28-btn{height:46px;padding:0 15px;border-radius:13px;border:1px solid rgba(0,200,255,.18);background:linear-gradient(135deg,#00b7ff,#006cff);color:#fff;font-weight:800;cursor:pointer;touch-action:manipulation;transition:transform .18s,box-shadow .18s,border-color .18s}.bmp-v28-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,108,255,.2)}.bmp-v28-btn:active{transform:scale(.98)}.bmp-v28-btn.alt{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.1)}
-.bmp-v28-rooms{position:relative;z-index:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;padding:17px 18px 20px}
-.bmp-v28-room{position:relative;min-width:0;padding:19px;border-radius:22px;border:1px solid rgba(255,255,255,.085);background:linear-gradient(145deg,rgba(13,22,36,.96),rgba(5,9,16,.99));box-shadow:0 14px 38px rgba(0,0,0,.18);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.bmp-v28-room:hover{transform:translateY(-3px);border-color:rgba(0,200,255,.32);box-shadow:0 20px 50px rgba(0,0,0,.28),0 0 28px rgba(0,200,255,.035)}.bmp-v28-room.active{border-color:rgba(0,200,255,.48);box-shadow:0 0 38px rgba(0,200,255,.08)}
-.bmp-v28-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.bmp-v28-title{min-width:0}.bmp-v28-title b{display:block;font-size:18px;line-height:1.4}.bmp-v28-title small{display:block;color:#8391a4;margin-top:5px;font-size:10px}.bmp-v28-count{white-space:nowrap;color:#91ffca;border:1px solid rgba(44,255,170,.12);background:rgba(44,255,170,.04);border-radius:999px;padding:6px 9px;font-size:9px}
-.bmp-v28-codes{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:17px 0 13px}.bmp-v28-code{min-width:0;padding:13px 8px;text-align:center;border-radius:16px;border:1px solid rgba(0,200,255,.13);background:linear-gradient(145deg,rgba(0,200,255,.06),rgba(255,255,255,.014));position:relative;overflow:hidden}.bmp-v28-code:after{content:"";position:absolute;left:-40%;right:-40%;height:1px;top:0;background:rgba(90,230,255,.28);box-shadow:0 0 10px rgba(0,200,255,.28);animation:bmpScan 4.5s linear infinite;opacity:.65}@keyframes bmpScan{from{transform:translateY(0)}to{transform:translateY(125px)}}.bmp-v28-code small{display:block;color:#8190a4;font-size:9px;margin-bottom:7px}.bmp-v28-code strong{display:block;color:#ebfbff;font:900 20px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.8px;direction:ltr;white-space:nowrap}.bmp-v28-code strong.zero{opacity:.38;letter-spacing:1px}
-.bmp-v28-actions{display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:8px}.bmp-v28-enter{width:100%;min-height:45px}.bmp-v28-copy{min-height:45px;border-radius:13px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);color:#fff;cursor:pointer;touch-action:manipulation}
-.bmp-v28-chat{display:none;position:relative;z-index:2;border-top:1px solid rgba(255,255,255,.07);padding:18px}.bmp-v28-chat.visible{display:block;animation:bmpChatIn .35s cubic-bezier(.2,.8,.2,1)}@keyframes bmpChatIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.bmp-v28-chat-grid{display:grid;grid-template-columns:250px minmax(0,1fr);gap:13px}.bmp-v28-side,.bmp-v28-main{min-width:0;border:1px solid rgba(255,255,255,.08);border-radius:21px;background:rgba(3,8,15,.78);overflow:hidden}.bmp-v28-side{padding:16px}.bmp-v28-side-title{font-weight:900;font-size:17px}.bmp-v28-side-sub{margin-top:4px;color:#7d8a9c;font-size:10px}.bmp-v28-status{margin:14px 0;padding:12px;border-radius:14px;border:1px solid rgba(0,200,255,.1);background:rgba(0,200,255,.03)}.bmp-v28-status b{display:block;color:#8fe8ff;font-size:11px}.bmp-v28-status span{display:block;color:#c9d6e5;font-size:11px;line-height:1.8;margin-top:4px}.bmp-v28-members-title{display:flex;justify-content:space-between;margin:13px 0 8px;color:#aeb9c8;font-size:11px}.bmp-v28-members{display:flex;flex-direction:column;gap:6px;max-height:230px;overflow:auto}.bmp-v28-member{display:flex;align-items:center;gap:8px;padding:8px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.045)}.bmp-v28-avatar{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(145deg,#00b7ff,#006cff);font-size:11px;font-weight:900}.bmp-v28-member b{font-size:10px}.bmp-v28-member small{display:block;color:#718095;font-size:8px;margin-top:2px}.bmp-v28-side-actions{display:grid;gap:7px;margin-top:13px}.bmp-v28-side-actions button{width:100%;min-height:40px}
-.bmp-v28-chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07)}.bmp-v28-chat-head b{font-size:14px}.bmp-v28-chat-head small{color:#7d8b9d;font-size:9px}.bmp-v28-messages{height:430px;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}.bmp-v28-msg{max-width:min(78%,520px);padding:9px 12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.065);line-height:1.75;font-size:12px;word-break:break-word}.bmp-v28-msg.mine{align-self:flex-start;background:linear-gradient(145deg,rgba(0,183,255,.15),rgba(0,108,255,.08));border-color:rgba(0,200,255,.17)}.bmp-v28-msg .sender{display:block;color:#65dcff;font-size:9px;font-weight:800;margin-bottom:2px}.bmp-v28-msg.system{align-self:center;max-width:90%;color:#8795a8;background:rgba(255,255,255,.025);font-size:9px;text-align:center}.bmp-v28-input{display:flex;gap:8px;padding:11px;border-top:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.14)}.bmp-v28-input input{flex:1;min-width:0;height:44px;padding:0 13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);outline:0;background:#07101b;color:#fff;font:inherit}.bmp-v28-send{min-width:88px}
-.bmp-v28-modal{position:fixed;inset:0;z-index:2147482000;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.bmp-v28-modal.active{display:flex}.bmp-v28-modal-box{width:min(460px,100%);padding:22px;border-radius:23px;border:1px solid rgba(0,200,255,.22);background:linear-gradient(145deg,#08111e,#03070d);box-shadow:0 30px 90px rgba(0,0,0,.7)}.bmp-v28-modal-box h3{font-size:20px;margin-bottom:7px}.bmp-v28-modal-box p{color:#8795a8;font-size:11px;line-height:1.9;margin-bottom:14px}.bmp-v28-modal-box input,.bmp-v28-modal-box select{width:100%;height:46px;margin-bottom:9px;padding:0 12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:#0a1420;color:#fff;outline:0;font:inherit}.bmp-v28-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bmp-v28-modal-error{min-height:18px;margin-top:7px;text-align:center;color:#ff91aa;font-size:10px}
-@media(max-width:900px){.bmp-v28-rooms{grid-template-columns:1fr}.bmp-v28-chat-grid{grid-template-columns:1fr}.bmp-v28-side{order:2}.bmp-v28-main{order:1}}
-@media(max-width:600px){.bmp-v28-shell{padding:0 7px 26px}.bmp-v28-panel{border-radius:23px}.bmp-v28-top{padding:13px}.bmp-v28-brand small{display:none}.bmp-v28-toolbar{padding:11px}.bmp-v28-name{flex-basis:100%}.bmp-v28-toolbar .bmp-v28-btn{flex:1}.bmp-v28-rooms{padding:11px;gap:10px}.bmp-v28-room{padding:14px;border-radius:18px}.bmp-v28-codes{gap:7px;margin:13px 0 11px}.bmp-v28-code{padding:10px 5px}.bmp-v28-code strong{font-size:16px;letter-spacing:1px}.bmp-v28-chat{padding:9px}.bmp-v28-messages{height:52svh;min-height:270px;padding:11px}.bmp-v28-msg{max-width:90%}.bmp-v28-live{font-size:8px;padding:7px 8px}.bmp-v28-modal{align-items:flex-start;padding-top:10vh}.bmp-v28-modal-box{padding:18px;border-radius:20px}}
-@media(max-width:380px){.bmp-v28-codes{grid-template-columns:1fr}.bmp-v28-actions{grid-template-columns:1fr}.bmp-v28-copy{min-height:40px}}
-@media(pointer:coarse),(prefers-reduced-motion:reduce){.bmp-v28-orb{display:none}.bmp-v28-code:after{display:none}.bmp-v28-panel{box-shadow:0 18px 55px rgba(0,0,0,.3)}}
-</style>
 
-<section id="rooms">
-  <div class="section-title">
-    <h2>💬 <span>اتاق‌های چت</span></h2>
-    <p>دو روم ثابت؛ اتصال، کدها و هماهنگی اعضا کاملاً خودکار ⚡</p>
-  </div>
-  <div class="bmp-v28-shell">
-    <div class="bmp-v28-panel">
-      <div class="bmp-v28-grid"></div><div class="bmp-v28-orb a"></div><div class="bmp-v28-orb b"></div>
-      <div class="bmp-v28-top">
-        <div class="bmp-v28-brand"><div class="bmp-v28-icon">⚡</div><div><b>BEHRAD M PLAYER CHAT</b><small>Realtime WebSocket · WebRTC P2P</small></div></div>
-        <div class="bmp-v28-live"><span class="bmp-v28-live-dot"></span><span id="bmpBackendStatus">در حال اتصال...</span></div>
-      </div>
-      <div class="bmp-v28-toolbar">
-        <input id="meshUserName" class="bmp-v28-name" maxlength="30" placeholder="نام نمایشی شما">
-        <button class="bmp-v28-btn" onclick="refreshMeshUI()">🔄 بروزرسانی</button>
-        <button class="bmp-v28-btn alt" onclick="openJoinRoom()">🔑 ورود سریع</button>
-      </div>
-      <div id="roomList" class="bmp-v28-rooms" aria-live="polite"></div>
-      <div id="activeChat" class="bmp-v28-chat">
-        <div class="bmp-v28-chat-grid">
-          <aside class="bmp-v28-side">
-            <div class="bmp-v28-side-title" id="activeRoomTitle">اتاق</div>
-            <div class="bmp-v28-side-sub" id="activeRoomSubtitle">اتصال زنده</div>
-            <div class="bmp-v28-status"><b>وضعیت اتصال</b><span id="chatStatus">آماده اتصال...</span></div>
-            <div class="bmp-v28-members-title"><span>اعضای آنلاین</span><span id="bmpMemberCount">0</span></div>
-            <div id="bmpMembers" class="bmp-v28-members"></div>
-            <div class="bmp-v28-side-actions"><button class="bmp-v28-btn alt" onclick="copyActiveRoomCodes()">📋 کپی کدها</button><button class="bmp-v28-btn alt" onclick="leaveRoom()">✕ خروج</button></div>
-          </aside>
-          <div class="bmp-v28-main">
-            <div class="bmp-v28-chat-head"><div><b id="bmpChatHeadTitle">چت</b><small id="bmpChatHeadStatus"> در انتظار اتصال...</small></div><span class="bmp-v28-count">● LIVE</span></div>
-            <div id="chatMessages" class="bmp-v28-messages"></div>
-            <div class="bmp-v28-input"><input id="chatInput" maxlength="500" placeholder="پیامت رو بنوی..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage()}"><button class="bmp-v28-btn bmp-v28-send" onclick="sendChatMessage()">ارسال 🚀</button></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<div id="bmpJoinModal" class="bmp-v28-modal">
-  <div class="bmp-v28-modal-box">
-    <h3>🔐 ورود به روم</h3>
-    <p>روم را انتخاب کن. برای B.M.P COMMUNITY رمز لازم است. بقیه مراحل اتصال پشت‌صحنه انجام می‌شود.</p>
-    <select id="bmpJoinRoomSelect"><option value="public">چت عمومی</option><option value="community">B.M.P COMMUNITY</option></select>
-    <input id="bmpJoinName" maxlength="30" placeholder="نام نمایشی شما">
-    <input id="bmpJoinPassword" type="password" maxlength="100" placeholder="رمز B.M.P COMMUNITY">
-    <div class="bmp-v28-modal-actions"><button class="bmp-v28-btn" onclick="confirmJoinRoom()">ورود 🚀</button><button class="bmp-v28-btn alt" onclick="closeJoinModal()">انصراف</button></div>
-    <div id="bmpJoinError" class="bmp-v28-modal-error"></div>
-  </div>
+<section id="rooms" class="bmpRT-section">
+<div class="section-title">
+  <h2>💬 <span>اتاق‌های زنده B.M.P</span></h2>
+  <p>ارتباط بلادرنگ، کدهای ۱۰ رقمی و چت آنلاین؛ همه‌چیز از پشت صحنه هماهنگ می‌شود. ⚡</p>
 </div>
+<div class="bmpRT-shell">
+<div class="bmpRT-serverbar"><span class="bmpRT-statusdot" id="bmpRoomStatusDot"></span><span id="bmpRoomStatusText">در حال اتصال به سرور...</span><span class="bmpRT-serverhint">WebSocket + WebRTC</span></div>
+<section class="bmpRT-rooms">
+    <article class="bmpRT-room" id="room-community"><div class="bmpRT-roomHead"><div class="bmpRT-roomTitle"><div class="bmpRT-roomIcon">🔒</div><div><h3>B.M.P COMMUNITY</h3><p class="bmpRT-desc">اتاق خصوصی اعضای B.M.P</p></div></div><span class="bmpRT-badge">PRIVATE</span></div><div class="bmpRT-codes"><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد اتصال</div><div class="bmpRT-code zero" id="community-connection">0</div></div><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد پاسخ</div><div class="bmpRT-code zero" id="community-response">0</div></div></div><div class="bmpRT-roomFoot"><span class="bmpRT-members">👥 <span id="community-members">0 نفر</span></span><span id="community-sync">آماده</span></div><div class="bmpRT-actions"><button class="bmpRT-btn" onclick="joinRoom('community')">ورود به روم</button></div></article>
+    <article class="bmpRT-room" id="room-public"><div class="bmpRT-roomHead"><div class="bmpRT-roomTitle"><div class="bmpRT-roomIcon">🌐</div><div><h3>چت عمومی</h3><p class="bmpRT-desc">گفت‌وگوی عمومی کاربران</p></div></div><span class="bmpRT-badge">PUBLIC</span></div><div class="bmpRT-codes"><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد اتصال</div><div class="bmpRT-code zero" id="public-connection">0</div></div><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد پاسخ</div><div class="bmpRT-code zero" id="public-response">0</div></div></div><div class="bmpRT-roomFoot"><span class="bmpRT-members">👥 <span id="public-members">0 نفر</span></span><span id="public-sync">آماده</span></div><div class="bmpRT-actions"><button class="bmpRT-btn" onclick="joinRoom('public')">ورود به روم</button></div></article>
+  </section>
+  <section class="bmpRT-chat" id="chat"><div class="bmpRT-chatHead"><div><h3 id="chatTitle">چت</h3><div class="bmpRT-chatState" id="chatState">در حال آماده‌سازی...</div></div><button class="bmpRT-btn danger" onclick="leaveRoom()">خروج</button></div><div class="bmpRT-messages" id="messages"></div><form class="bmpRT-composer" onsubmit="sendChat(event)"><input id="chatInput" autocomplete="off" maxlength="2000" placeholder="پیامت رو بنویس..."><button class="bmpRT-btn">ارسال</button></form></section>
+<div class="bmpRT-room-note">🔐 B.M.P COMMUNITY خصوصی است؛ 🌐 چت عمومی برای همه کاربران در دسترس است.</div>
+</div>
+</section>
+
+<div class="bmpRT-modal" id="passwordModal"><div class="bmpRT-modalCard"><h3>ورود به B.M.P COMMUNITY</h3><p>این روم خصوصی است. رمز عبور را وارد کن تا اتصال به سرور و روم انجام شود.</p><input id="passwordInput" type="password" placeholder="رمز عبور" autocomplete="off"><div class="bmpRT-modalActions"><button class="bmpRT-btn secondary" onclick="closePassword()">لغو</button><button class="bmpRT-btn" onclick="confirmPassword()">ورود</button></div></div></div>
+<div class="bmpRT-toast" id="toast"></div>
 <script>
-/* =========================================================
-   BEHRAD M PLAYER V28 — REALTIME BACKEND CLIENT
-   Protocol matches the Render server previously deployed:
-   WebSocket /ws + hello + room-state + presence + signal + chat.
-========================================================= */
-const BMP_COMMUNITY_PASSWORD='bM.pcom.unitybrsecrityu';
-const BMP_ROOMS={public:{id:'public',name:'چت عمومی',private:false},community:{id:'community',name:'B.M.P COMMUNITY',private:true}};
-const BMP_BACKEND_URL='https://behrad-m-player.onrender.com';
-const BMP_WS_URL='wss://behrad-m-player.onrender.com/ws';
-const BMP_STORAGE='bmp_realtime_v28';
-const $=id=>document.getElementById(id);
-const now=()=>Date.now();
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-function rand10(){const a=new Uint32Array(10);if(window.crypto?.getRandomValues)crypto.getRandomValues(a);else for(let i=0;i<10;i++)a[i]=Math.random()*4294967295;return Array.from(a,x=>x%10).join('');}
-let myPeerId=localStorage.getItem(BMP_STORAGE+':peerId');if(!myPeerId){myPeerId='P-'+rand10();localStorage.setItem(BMP_STORAGE+':peerId',myPeerId);}
-let myName=localStorage.getItem(BMP_STORAGE+':name')||'';
-let activeRoomId='',activeRoom=null,roomPassword='',socket=null,reconnectTimer=null,reconnectDelay=1000,joinToken=0,backendOnline=false,intentionalClose=false,connecting=false;
-const roomStates={public:{roomId:'public',connectionCode:'0',responseCode:'0',hostPeerId:'',revision:0,updatedAt:0,online:0},community:{roomId:'community',connectionCode:'0',responseCode:'0',hostPeerId:'',revision:0,updatedAt:0,online:0}};
-const members=new Map(),rtcPeers=new Map();
-function go(id){const el=$(id);if(!el)return false;try{el.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){el.scrollIntoView();}return true;}
-function aparat(){window.location.href='https://www.aparat.com/BEHRAD_M_PLAYER_1393';}
-function setBackendStatus(t,ok){const el=$('bmpBackendStatus');if(el){el.textContent=t;el.style.color=ok?'#91ffca':'#9aa8bb';}}
-function setChatStatus(t){const a=$('chatStatus'),b=$('bmpChatHeadStatus');if(a)a.textContent=t;if(b)b.textContent=' '+t;}
-function addChatMessage(name,text,mine=false,system=false){const box=$('chatMessages');if(!box)return;const d=document.createElement('div');d.className='bmp-v28-msg'+(mine?' mine':'')+(system?' system':'');if(system)d.textContent=text;else d.innerHTML='<span class="sender">'+esc(name)+'</span><div>'+esc(text)+'</div>';box.appendChild(d);box.scrollTop=box.scrollHeight;}
-function chatSystem(t){addChatMessage('',t,false,true)}
-function chatMessage(n,t,m=false){addChatMessage(n,t,m,false)}
-function applyRoomState(state){if(!state||!roomStates[state.roomId])return false;const t=roomStates[state.roomId],rev=Number(state.revision||0),up=Number(state.updatedAt||0);if(rev<t.revision&&up<t.updatedAt)return false;const cc=String(state.connectionCode??'0'),rc=String(state.responseCode??'0');if(cc!=='0'&&!/^\d{10}$/.test(cc))return false;if(rc!=='0'&&!/^\d{10}$/.test(rc))return false;Object.assign(t,{connectionCode:cc,responseCode:rc,hostPeerId:String(state.hostPeerId||''),revision:Math.max(t.revision,rev),updatedAt:Math.max(t.updatedAt,up),online:Number(state.online||0)});renderRooms();return true;}
-function renderMembers(){const box=$('bmpMembers');if(!box)return;const arr=[...members.values()];$('bmpMemberCount').textContent=String(arr.length);if(!arr.length){box.innerHTML='<div style="color:#68778a;font-size:10px;padding:8px">هنوز عضوی آنلاین نیست.</div>';return;}box.innerHTML=arr.map(m=>'<div class="bmp-v28-member"><span class="bmp-v28-avatar">'+esc((m.name||'ک').slice(0,1))+'</span><div><b>'+esc(m.name||'کاربر')+(m.peerId===myPeerId?' · شما':'')+'</b><small>● آنلاین</small></div></div>').join('');}
-function renderRooms(){const list=$('roomList');if(!list)return;list.innerHTML=Object.values(BMP_ROOMS).map(room=>{const st=roomStates[room.id],active=activeRoomId===room.id;return '<article class="bmp-v28-room '+(active?'active':'')+'"><div class="bmp-v28-head"><div class="bmp-v28-title"><b>'+esc(room.name)+'</b><small>'+ (room.private?'🔒 خصوصی · رمزدار':'🌐 عمومی · آزاد')+'</small></div><span class="bmp-v28-count">● '+Number(st.online||0)+' آنلاین</span></div><div class="bmp-v28-codes"><div class="bmp-v28-code"><small>کد اتصال</small><strong class="'+(st.connectionCode==='0'?'zero':'')+'">'+esc(st.connectionCode)+'</strong></div><div class="bmp-v28-code"><small>کد پاسخ</small><strong class="'+(st.responseCode==='0'?'zero':'')+'">'+esc(st.responseCode)+'</strong></div></div><div class="bmp-v28-actions"><button class="bmp-v28-btn bmp-v28-enter" onclick="enterRoom(\''+room.id+'\')">'+(active?'✓ داخل روم هستی':'ورود به روم 🔗')+'</button><button class="bmp-v28-copy" title="کپی کدها" onclick="copyRoomCodes(\''+room.id+'\')">📋</button></div></article>';}).join('');}
-function copyRoomCodes(id){const s=roomStates[id];if(!s)return;const text=BMP_ROOMS[id].name+'\nکد اتصال: '+s.connectionCode+'\nکد پاسخ: '+s.responseCode;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>chatSystem('📋 کدهای روم کپی شدند.')).catch(()=>{});}
-function copyActiveRoomCodes(){if(activeRoomId)copyRoomCodes(activeRoomId)}
-function refreshMeshUI(){renderRooms();renderMembers();const direct=[...rtcPeers.values()].filter(x=>x.ready).length;if($('bmpBackendStatus')&&backendOnline)setBackendStatus('سرور آنلاین',true);if(activeRoomId)setChatStatus(direct?'🟢 '+direct+' اتصال مستقیم فعال':backendOnline?'🟡 سرور وصل است · در حال برقراری P2P':'⚪ در حال اتصال...');}
-function sendWs(data){if(socket?.readyState===WebSocket.OPEN){try{socket.send(JSON.stringify(data));return true}catch(e){}}return false;}
-function sendSignal(to,signalType,payload){return sendWs({type:'signal',roomId:activeRoomId,from:myPeerId,to,signalType,payload});}
-function closeRtcPeer(id){const r=rtcPeers.get(id);if(!r)return;try{r.pc.close()}catch(e){}rtcPeers.delete(id);}
-function attachDataChannel(id,ch){const r=rtcPeers.get(id);if(!r)return;r.channel=ch;ch.onopen=()=>{r.ready=true;refreshMeshUI()};ch.onclose=()=>{r.ready=false;refreshMeshUI()};ch.onerror=()=>{};ch.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(_){return}if(m.type==='chat'&&m.text)chatMessage(m.name||r.name||'کاربر',m.text,false)};}
-async function ensureRtcPeer(id,name){if(!id||id===myPeerId||!activeRoomId)return null;if(rtcPeers.has(id))return rtcPeers.get(id);if(!window.RTCPeerConnection)return null;const initiator=myPeerId<id;const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]});const r={pc,channel:null,initiator,ready:false,name:name||'کاربر',candidateQueue:[]};rtcPeers.set(id,r);pc.onicecandidate=e=>{if(e.candidate)sendSignal(id,'ice',e.candidate)};pc.onconnectionstatechange=()=>{if(pc.connectionState==='connected'){r.ready=true;setChatStatus('🟢 '+[...rtcPeers.values()].filter(x=>x.ready).length+' اتصال مستقیم فعال');refreshMeshUI()}else if(['failed','disconnected'].includes(pc.connectionState)){r.ready=false;setTimeout(()=>{if(rtcPeers.get(id)===r){closeRtcPeer(id);ensureRtcPeer(id,name)}},1500);refreshMeshUI()}};pc.ondatachannel=e=>attachDataChannel(id,e.channel);if(initiator){attachDataChannel(id,pc.createDataChannel('bmp-chat',{ordered:true}));const offer=await pc.createOffer();await pc.setLocalDescription(offer);sendSignal(id,'offer',pc.localDescription)}return r;}
-async function handleSignal(msg){if(msg.roomId!==activeRoomId||msg.to!==myPeerId||!msg.from)return;let r=rtcPeers.get(msg.from);if(!r)r=await ensureRtcPeer(msg.from);if(!r)return;try{if(msg.signalType==='offer'){await r.pc.setRemoteDescription(msg.payload);const ans=await r.pc.createAnswer();await r.pc.setLocalDescription(ans);sendSignal(msg.from,'answer',r.pc.localDescription)}else if(msg.signalType==='answer'){await r.pc.setRemoteDescription(msg.payload)}else if(msg.signalType==='ice'){if(r.pc.remoteDescription)await r.pc.addIceCandidate(msg.payload);else r.candidateQueue.push(msg.payload)}if(r.pc.remoteDescription&&r.candidateQueue.length){const q=r.candidateQueue.splice(0);for(const c of q){try{await r.pc.addIceCandidate(c)}catch(_){}}}}catch(e){console.warn('BMP signal',e)}}
-function applyPresence(list){if(!Array.isArray(list))return;members.clear();for(const m of list){if(m?.peerId)members.set(m.peerId,m)}renderMembers();renderRooms();for(const m of list){if(m.peerId&&m.peerId!==myPeerId)ensureRtcPeer(m.peerId,m.name)}}
-function openSocket(token){if(!activeRoomId)return;clearTimeout(reconnectTimer);connecting=true;setBackendStatus('در حال اتصال به سرور...',false);setChatStatus('در حال اتصال به سرور...');try{socket?.close()}catch(_){}let settled=false;let ws;try{ws=new WebSocket(BMP_WS_URL)}catch(e){connecting=false;setBackendStatus('ساخت WebSocket ناموفق',false);scheduleReconnect(token);return}socket=ws;const timeout=setTimeout(()=>{if(!settled&&ws.readyState===WebSocket.CONNECTING){try{ws.close()}catch(_){}}},12000);ws.onopen=()=>{settled=true;clearTimeout(timeout);connecting=false;if(token!==joinToken)return;backendOnline=true;reconnectDelay=1000;setBackendStatus('سرور آنلاین',true);sendWs({type:'hello',peerId:myPeerId,name:myName||'کاربر',roomId:activeRoomId,password:roomPassword})};ws.onmessage=async e=>{let m;try{m=JSON.parse(e.data)}catch(_){return}if(token!==joinToken)return;if(m.event==='ready'){backendOnline=true;applyRoomState(m.room);applyPresence(m.members||[]);setChatStatus('🟢 روم متصل است · کدها همگام شدند');chatSystem('🟢 وارد «'+(m.room?.name||activeRoom?.name||'روم')+'» شدی.')}else if(m.event==='room-state'){const changed=applyRoomState(m.state);if(changed&&m.state.roomId===activeRoomId&&m.state.connectionCode!=='0')setChatStatus('🟢 کدهای روم همگام شدند')}else if(m.event==='presence'){if(m.roomId===activeRoomId)applyPresence(m.members||[])}else if(m.event==='signal')await handleSignal(m);else if(m.event==='chat'){const x=m.message;if(x&&x.peerId!==myPeerId)chatMessage(x.name||'کاربر',x.text,false)}else if(m.event==='error'){if(m.error==='invalid_password'){backendOnline=true;chatSystem('❌ رمز روم خصوصی صحیح نیست.');setBackendStatus('سرور آنلاین',true);openJoinRoom()}else{setBackendStatus('خطای سرور',false);chatSystem('⚠️ '+(m.error||'خطای سرور'))}}};ws.onerror=()=>{clearTimeout(timeout);settled=true;backendOnline=false;connecting=false;setBackendStatus('اتصال ناموفق · تلاش مجدد',false)};ws.onclose=()=>{clearTimeout(timeout);backendOnline=false;connecting=false;if(token===joinToken&&!intentionalClose){setBackendStatus('اتصال قطع شد · تلاش مجدد',false);scheduleReconnect(token)}}}
-function scheduleReconnect(token){clearTimeout(reconnectTimer);if(!activeRoomId||token!==joinToken)return;reconnectTimer=setTimeout(()=>openSocket(token),reconnectDelay);reconnectDelay=Math.min(Math.round(reconnectDelay*1.5),10000)}
-function openJoinRoom(){const m=$('bmpJoinModal');if(!m)return;m.classList.add('active');$('bmpJoinName').value=myName;$('bmpJoinRoomSelect').value=activeRoomId||'public';$('bmpJoinPassword').style.display=$('bmpJoinRoomSelect').value==='community'?'block':'none';$('bmpJoinError').textContent=''}
-function closeJoinModal(){$('bmpJoinModal')?.classList.remove('active')}
-function openCreateRoom(){openJoinRoom()}
-async function confirmJoinRoom(){const room=$('bmpJoinRoomSelect').value,name=($('bmpJoinName').value||'').trim()||'کاربر',pass=$('bmpJoinPassword').value||'';if(room==='community'&&pass!==BMP_COMMUNITY_PASSWORD){$('bmpJoinError').textContent='رمز B.M.P COMMUNITY صحیح نیست.';return}closeJoinModal();await enterRoom(room,{name,password:pass})}
-async function enterRoom(roomId,opt={}){if(!BMP_ROOMS[roomId])return false;if(roomId==='community'&&(opt.password??roomPassword)!==BMP_COMMUNITY_PASSWORD){openJoinRoom();$('bmpJoinRoomSelect').value='community';$('bmpJoinPassword').style.display='block';return false}const token=++joinToken;intentionalClose=false;myName=(opt.name||myName||'کاربر').trim()||'کاربر';localStorage.setItem(BMP_STORAGE+':name',myName);activeRoomId=roomId;activeRoom=BMP_ROOMS[roomId];roomPassword=opt.password??(roomId==='community'?BMP_COMMUNITY_PASSWORD:'');for(const id of [...rtcPeers.keys()])closeRtcPeer(id);members.clear();$('activeChat')?.classList.add('visible');$('activeRoomTitle').textContent=activeRoom.name;$('activeRoomSubtitle').textContent=activeRoom.private?'🔒 روم خصوصی':'🌐 روم عمومی';$('bmpChatHeadTitle').textContent=activeRoom.name;$('chatMessages').innerHTML='';renderMembers();renderRooms();setChatStatus('در حال اتصال...');go('activeChat');openSocket(token);return true}
-function leaveRoom(){if(!activeRoomId)return;const old=activeRoomId;intentionalClose=true;try{sendWs({type:'presence',roomId:old,peerId:myPeerId})}catch(_){}clearTimeout(reconnectTimer);try{socket?.close()}catch(_){}for(const id of [...rtcPeers.keys()])closeRtcPeer(id);activeRoomId='';activeRoom=null;roomPassword='';members.clear();$('activeChat')?.classList.remove('visible');$('chatMessages').innerHTML='';setBackendStatus('آماده اتصال',false);renderRooms()}
-function sendChatMessage(){const input=$('chatInput'),text=(input?.value||'').trim();if(!text)return;const open=[...rtcPeers.values()].filter(r=>r.ready&&r.channel?.readyState==='open');if(!open.length&&!backendOnline){chatSystem('⚠️ هنوز اتصال برقرار نشده.');return}const packet=JSON.stringify({type:'chat',name:myName||'من',text,at:now()});for(const r of open){try{r.channel.send(packet)}catch(_){}}if(backendOnline)sendWs({type:'chat',roomId:activeRoomId,peerId:myPeerId,name:myName||'من',text,at:now()});chatMessage(myName||'من',text,true);input.value=''}
-async function bootstrapRoomState(){renderRooms();try{const r=await fetch(BMP_BACKEND_URL+'/api/rooms',{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();for(const x of d.rooms||[])applyRoomState(x);setBackendStatus('سرور آنلاین',true);backendOnline=true}catch(e){setBackendStatus('آماده · سرور با ورود فعال می‌شود',false)}}
-$('bmpJoinRoomSelect')?.addEventListener('change',e=>{$('bmpJoinPassword').style.display=e.target.value==='community'?'block':'none'});
-$('bmpJoinModal')?.addEventListener('click',e=>{if(e.target.id==='bmpJoinModal')closeJoinModal()});
-$('meshUserName')?.addEventListener('input',e=>{myName=e.target.value.trim();localStorage.setItem(BMP_STORAGE+':name',myName)});
-window.addEventListener('keydown',e=>{if(e.key==='Escape')closeJoinModal()});
-window.addEventListener('load',()=>{if($('meshUserName'))$('meshUserName').value=myName;renderRooms();renderMembers();bootstrapRoomState();setInterval(()=>{if(activeRoomId&&socket?.readyState===WebSocket.OPEN)sendWs({type:'presence',roomId:activeRoomId,peerId:myPeerId,name:myName})},10000);});
-window.addEventListener('beforeunload',()=>{intentionalClose=true;clearTimeout(reconnectTimer);try{socket?.close()}catch(_){}for(const id of [...rtcPeers.keys()])closeRtcPeer(id)});
-Object.assign(window,{go,aparat,openJoinRoom,closeJoinModal,confirmJoinRoom,enterRoom,leaveRoom,sendChatMessage,refreshMeshUI,copyRoomCodes,copyActiveRoomCodes});
+const API='https://behrad-m-player.onrender.com';
+const WS_URL='wss://behrad-m-player.onrender.com/ws';
+const rooms={community:{name:'B.M.P COMMUNITY'},public:{name:'چت عمومی'}};
+let myPeerId='peer-'+crypto.randomUUID();
+let myName='کاربر '+myPeerId.slice(-4);
+let activeRoom=null, socket=null, password='', pendingRoom=null, reconnectTimer=null, heartbeatTimer=null;
+const peers=new Map();
 
+function $(id){return document.getElementById(id)}
+function toast(t){const x=$('toast');x.textContent=t;x.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove('show'),2600)}
+function setStatus(t,on=false){const a=$('bmpRoomStatusText'),d=$('bmpRoomStatusDot');if(a)a.textContent=t;if(d)d.classList.toggle('on',on)}
+function setRoomUI(id,state,members){if(!state)return;const c=$(id+'-connection'),r=$(id+'-response'),m=$(id+'-members'),s=$(id+'-sync');c.textContent=state.connectionCode||'0';r.textContent=state.responseCode||'0';c.classList.toggle('zero',c.textContent==='0');r.classList.toggle('zero',r.textContent==='0');m.textContent=(state.memberCount??(members||[]).length)+' نفر';s.textContent=state.memberCount?'آنلاین · همگام':'آماده'}
+function applyRooms(list){for(const st of list||[])setRoomUI(st.roomId,st,st.members)}
+async function loadRooms(){try{const r=await fetch(API+'/api/rooms',{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();applyRooms(d.rooms);setStatus('سرور آنلاین',true)}catch(e){setStatus('در انتظار سرور...',false)}}
+async function loadRoom(id){try{const r=await fetch(API+'/api/rooms/'+encodeURIComponent(id),{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();setRoomUI(id,d.room,d.members);return d}catch(e){return null}}
+function joinRoom(id){if(id==='community'){pendingRoom=id;$('passwordInput').value='';$('passwordModal').classList.add('show');setTimeout(()=>$('passwordInput').focus(),50)}else{enterRoom(id,'')}}
+function closePassword(){$('passwordModal').classList.remove('show');pendingRoom=null}
+function confirmPassword(){const p=$('passwordInput').value;if(!p)return toast('رمز عبور را وارد کن');const id=pendingRoom;closePassword();enterRoom(id,p)}
+$('passwordInput').addEventListener('keydown',e=>{if(e.key==='Enter')confirmPassword()});
 
+async function enterRoom(id,pw){if(activeRoom)await leaveRoom();password=pw;setStatus('در حال ورود به روم...',false);await loadRoom(id);try{const res=await fetch(API+'/api/room/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:id,peerId:myPeerId,name:myName,password:pw})});const data=await res.json();if(res.status===403)throw new Error('رمز عبور اشتباه است');if(!res.ok)throw new Error(data.error||'خطای ورود');setRoomUI(id,data.room,data.members);activeRoom=id;openChat(id);connectWS();toast('وارد روم شدی');}catch(e){setStatus('اتصال ناموفق',false);toast(e.message||'اتصال ناموفق بود')}}
+
+function openChat(id){$('chat').classList.add('open');$('chatTitle').textContent=rooms[id].name;$('chatState').textContent='در حال اتصال مستقیم کاربران...';$('messages').innerHTML=''}
+function connectWS(){clearTimeout(reconnectTimer);if(socket){try{socket.close()}catch{}}socket=new WebSocket(WS_URL);socket.onopen=()=>{setStatus('اتصال زنده برقرار است',true);socket.send(JSON.stringify({type:'hello',roomId:activeRoom,peerId:myPeerId,name:myName,password}));clearInterval(heartbeatTimer);heartbeatTimer=setInterval(()=>{if(socket?.readyState===1)socket.send(JSON.stringify({type:'presence'}))},20000)};socket.onmessage=onWSMessage;socket.onerror=()=>setStatus('مشکل در اتصال زنده',false);socket.onclose=()=>{clearInterval(heartbeatTimer);if(activeRoom){setStatus('در حال تلاش برای اتصال مجدد...',false);clearTimeout(reconnectTimer);reconnectTimer=setTimeout(connectWS,2500)}}}
+async function onWSMessage(ev){let m;try{m=JSON.parse(ev.data)}catch{return}if(m.event==='connected')return;if(m.event==='error'){toast(m.error==='invalid_password'?'رمز عبور اشتباه است':'خطای سرور: '+m.error);return}if(m.event==='ready'||m.event==='room-state'||m.event==='presence'){const st=m.state||m.room;if(st)setRoomUI(activeRoom,st,m.members);if(Array.isArray(m.members))updatePeers(m.members);return}if(m.event==='signal'){if(m.to===myPeerId)handleSignal(m.from,m.data);return}if(m.event==='chat'){if(m.from!==myPeerId)addMessage(m.name||'کاربر',m.text,false);}}
+
+function updatePeers(members){if(!activeRoom)return;const ids=members.map(x=>x.peerId).filter(x=>x!==myPeerId);for(const [id,pc] of peers){if(!ids.includes(id)){try{pc.pc.close()}catch{};peers.delete(id)}}for(const id of ids)ensurePeer(id, id<myPeerId);$('chatState').textContent=ids.length?'اتصال مستقیم فعال · '+(ids.length+1)+' کاربر':'منتظر کاربر دیگر...'}
+function ensurePeer(id,initiator){if(peers.has(id))return peers.get(id);const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]});const item={pc,dc:null,queue:[]};peers.set(id,item);pc.onicecandidate=e=>{if(e.candidate)signal(id,{kind:'ice',candidate:e.candidate})};pc.onconnectionstatechange=()=>{if(['failed','closed','disconnected'].includes(pc.connectionState)){$('chatState').textContent='اتصال مستقیم ناپایدار؛ در حال بازیابی...'}};pc.ondatachannel=e=>setupDC(item,e.channel);if(initiator){setupDC(item,pc.createDataChannel('bmp-chat'));pc.createOffer().then(o=>pc.setLocalDescription(o)).then(()=>signal(id,{kind:'offer',description:pc.localDescription}))}return item}
+function setupDC(item,dc){item.dc=dc;dc.onopen=()=>{$('chatState').textContent='اتصال مستقیم فعال ✓'};dc.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.kind==='chat')addMessage(m.name||'کاربر',m.text,false)}catch{}}}
+async function handleSignal(from,data){const item=ensurePeer(from,from<myPeerId);const pc=item.pc;if(data.kind==='offer'){await pc.setRemoteDescription(data.description);const ans=await pc.createAnswer();await pc.setLocalDescription(ans);signal(from,{kind:'answer',description:pc.localDescription})}else if(data.kind==='answer'){await pc.setRemoteDescription(data.description)}else if(data.kind==='ice'){try{await pc.addIceCandidate(data.candidate)}catch{}}}
+function signal(to,data){if(socket?.readyState===1)socket.send(JSON.stringify({type:'signal',roomId:activeRoom,to,data}))}
+function addMessage(name,text,me){const box=document.createElement('div');box.className='msg'+(me?' me':'');const b=document.createElement('b');b.textContent=me?'شما':name;const p=document.createElement('p');p.textContent=text;box.append(b,p);$('messages').appendChild(box);$('messages').scrollTop=$('messages').scrollHeight}
+function sendChat(e){e.preventDefault();const input=$('chatInput');const text=input.value.trim();if(!text||!activeRoom)return;addMessage('شما',text,true);let delivered=false;for(const item of peers.values()){if(item.dc?.readyState==='open'){item.dc.send(JSON.stringify({kind:'chat',name:myName,text}));delivered=true}}if(socket?.readyState===1)socket.send(JSON.stringify({type:'chat',text}));input.value='';if(!delivered&&socket?.readyState!==1)toast('هنوز ارتباط برقرار نشده')}
+async function leaveRoom(){const old=activeRoom;if(!old)return;activeRoom=null;clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);if(socket){try{socket.close()}catch{}socket=null}for(const item of peers.values()){try{item.pc.close()}catch{}}peers.clear();try{await fetch(API+'/api/room/leave',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:old,peerId:myPeerId,password})})}catch{}$('chat').classList.remove('open');password='';setStatus('سرور آنلاین',true);await loadRooms();toast('از روم خارج شدی')}
+
+setInterval(()=>{if(!activeRoom)loadRooms();else loadRoom(activeRoom)},4000);loadRooms();
 </script>
-
-<script>
-/* V28 room/client self-tests. */
-function bmpRunRoomStateTests(){
-  const results=[];
-  const ok=(name,pass,detail='')=>results.push({name,pass:!!pass,detail});
-  try{
-    ok('exactly two fixed rooms',Object.keys(BMP_ROOMS).sort().join(',')==='community,public');
-    ok('empty public is 0/0',roomStates.public.connectionCode==='0'&&roomStates.public.responseCode==='0');
-    ok('empty community is 0/0',roomStates.community.connectionCode==='0'&&roomStates.community.responseCode==='0');
-    const saved={...roomStates.public};
-    applyRoomState({roomId:'public',connectionCode:'1234567890',responseCode:'0987654321',hostPeerId:'TEST',revision:4,updatedAt:Date.now()});
-    ok('connection code is 10 digits',/^\d{10}$/.test(roomStates.public.connectionCode));
-    ok('response code is 10 digits',/^\d{10}$/.test(roomStates.public.responseCode));
-    ok('state renderer contains code labels',($('roomList')?.innerHTML||'').includes('کد اتصال')&&($('roomList')?.innerHTML||'').includes('کد پاسخ'));
-    Object.assign(roomStates.public,saved);renderRooms();
-  }catch(e){ok('test runner',false,e.message);}
-  console.table(results);return {pass:results.every(x=>x.pass),results};
-}
-</script>
-
 <script>
 /* =========================================================
    FLAPPY BIRD
@@ -6286,123 +6117,10 @@ document
 </script>
 
 
-<script id="bmp-v26-polish-js">
-/* =========================================================
-   BEHRAD M PLAYER V26 — MOUSE + PHONE DEPTH ENGINE
-   Desktop: follows pointer smoothly.
-   Mobile: uses DeviceOrientation when available, with touch fallback.
-========================================================= */
-(function(){
-  'use strict';
-  if(window.__BMP_V26_DEPTH__) return;
-  window.__BMP_V26_DEPTH__=true;
-
-  const root=document.documentElement;
-  const reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduced) return;
-
-  let targetX=0,targetY=0,currentX=0,currentY=0;
-  let raf=0;
-  let orientationActive=false;
-  let orientationRequested=false;
-  let lastTouch=0;
-
-  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
-  const apply=()=>{
-    raf=0;
-    currentX += (targetX-currentX)*0.075;
-    currentY += (targetY-currentY)*0.075;
-    const x=currentX.toFixed(2)+'px';
-    const y=currentY.toFixed(2)+'px';
-    root.style.setProperty('--bmp-depth-x',x);
-    root.style.setProperty('--bmp-depth-y',y);
-    root.style.setProperty('--bmp-depth-x2',(currentX*.45).toFixed(2)+'px');
-    root.style.setProperty('--bmp-depth-y2',(currentY*.45).toFixed(2)+'px');
-    root.style.setProperty('--bmp-glow-x',(50+currentX*.34).toFixed(2)+'%');
-    root.style.setProperty('--bmp-glow-y',(35+currentY*.22).toFixed(2)+'%');
-    if(Math.abs(targetX-currentX)>0.05 || Math.abs(targetY-currentY)>0.05) raf=requestAnimationFrame(apply);
-  };
-  const setTarget=(x,y)=>{
-    targetX=clamp(x,-18,18);
-    targetY=clamp(y,-14,14);
-    if(!raf) raf=requestAnimationFrame(apply);
-  };
-
-  const pointerMove=e=>{
-    if(e.pointerType==='touch') return;
-    const nx=(e.clientX/window.innerWidth-.5)*2;
-    const ny=(e.clientY/window.innerHeight-.5)*2;
-    setTarget(nx*18,ny*14);
-  };
-  const pointerLeave=()=>setTarget(0,0);
-  window.addEventListener('pointermove',pointerMove,{passive:true});
-  window.addEventListener('pointerleave',pointerLeave,{passive:true});
-
-  const orientation=e=>{
-    if(e.gamma==null && e.beta==null) return;
-    orientationActive=true;
-    const gx=clamp(Number(e.gamma)||0,-35,35);
-    const by=clamp((Number(e.beta)||0)-45,-35,35);
-    setTarget((gx/35)*16,(by/35)*12);
-  };
-
-  const enableOrientation=async()=>{
-    if(orientationRequested) return;
-    orientationRequested=true;
-    try{
-      if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
-        const result=await DeviceOrientationEvent.requestPermission();
-        if(result==='granted'){
-          window.addEventListener('deviceorientation',orientation,{passive:true});
-          orientationActive=true;
-        }
-      }else if('DeviceOrientationEvent' in window){
-        window.addEventListener('deviceorientation',orientation,{passive:true});
-      }
-    }catch(_){ /* Touch fallback remains available. */ }
-  };
-
-  const touchMove=e=>{
-    const t=e.touches && e.touches[0];
-    if(!t) return;
-    lastTouch=Date.now();
-    if(orientationActive) return;
-    const nx=(t.clientX/window.innerWidth-.5)*2;
-    const ny=(t.clientY/window.innerHeight-.5)*2;
-    setTarget(nx*10,ny*8);
-  };
-  const touchEnd=()=>{ if(!orientationActive) setTarget(0,0); };
-  window.addEventListener('touchmove',touchMove,{passive:true});
-  window.addEventListener('touchend',touchEnd,{passive:true});
-  window.addEventListener('pointerdown',enableOrientation,{passive:true,once:false});
-
-  /* Also request orientation after a normal click/tap, where browsers permit it. */
-  document.addEventListener('click',enableOrientation,{passive:true,once:false});
-
-  /* Give major existing panels a tiny depth response without changing layout. */
-  const markSurfaces=()=>{
-    const selectors=['header','.section-title','main > section','.bmp-pro-panel','.game-wrapper','footer'];
-    document.querySelectorAll(selectors.join(',')).forEach(el=>{
-      if(!el.classList.contains('bmp-depth-surface')) el.classList.add('bmp-depth-surface');
-    });
-  };
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',markSurfaces,{once:true});
-  else markSurfaces();
-
-  /* Public diagnostic helper for console testing. */
-  window.bmpRunV26DepthTest=()=>({
-    ok:true,
-    reducedMotion:reduced,
-    orientationSupported:'DeviceOrientationEvent' in window,
-    pointerSupported:'PointerEvent' in window,
-    target:{x:targetX,y:targetY},
-    current:{x:Number(currentX.toFixed(2)),y:Number(currentY.toFixed(2))}
-  });
-})();
-</script>
-
 <script>
-(function(){const fine=window.matchMedia&&window.matchMedia('(pointer:fine)').matches;if(!fine||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const p=document.querySelector('.bmp-v28-panel');if(!p)return;let raf=0; p.addEventListener('pointermove',e=>{const r=p.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;if(!raf)raf=requestAnimationFrame(()=>{raf=0;p.style.transform='perspective(1100px) rotateX('+(-y*1.1)+'deg) rotateY('+(x*1.1)+'deg)'});});p.addEventListener('pointerleave',()=>{if(raf)cancelAnimationFrame(raf);raf=0;p.style.transform=''})})();
+/* BMP V30 navigation safety */
+window.go=window.go||function(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
+window.aparat=window.aparat||function(){window.location.href='https://www.aparat.com/BEHRAD_M_PLAYER_1393';};
 </script>
 </body>
 </html>
