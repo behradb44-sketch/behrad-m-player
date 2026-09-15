@@ -1909,12 +1909,153 @@ footer strong{
   .room-toolbar button{width:100%;}
 }
 
+
+/* =========================================================
+   BMP REAL LOADING OVERLAY
+========================================================= */
+.bmp-loading-overlay{
+    position:fixed;
+    inset:0;
+    z-index:1000000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(2,5,10,.84);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+}
+.bmp-loading-overlay.active{
+    display:flex;
+    animation:bmpLoadingFade .18s ease both;
+}
+.bmp-loading-box{
+    width:min(390px,92vw);
+    padding:30px 25px;
+    text-align:center;
+    border-radius:24px;
+    background:linear-gradient(145deg,rgba(10,18,30,.98),rgba(3,8,15,.98));
+    border:1px solid rgba(0,200,255,.30);
+    box-shadow:0 25px 90px rgba(0,0,0,.6),0 0 45px rgba(0,180,255,.10);
+}
+.bmp-spinner{
+    width:58px;
+    height:58px;
+    margin:0 auto 18px;
+    border-radius:50%;
+    border:4px solid rgba(255,255,255,.10);
+    border-top-color:#00c8ff;
+    border-right-color:#006cff;
+    animation:bmpSpin .8s linear infinite;
+    box-shadow:0 0 25px rgba(0,200,255,.22);
+}
+.bmp-loading-title{
+    font-size:18px;
+    font-weight:900;
+    margin-bottom:8px;
+}
+.bmp-loading-text{
+    color:#9eabba;
+    font-size:13px;
+    line-height:1.9;
+}
+.bmp-loading-dots::after{
+    content:"";
+    animation:bmpDots 1.2s steps(4,end) infinite;
+}
+@keyframes bmpSpin{to{transform:rotate(360deg)}}
+@keyframes bmpLoadingFade{from{opacity:0}to{opacity:1}}
+@keyframes bmpDots{
+    0%{content:""} 25%{content:"."} 50%{content:".."} 75%,100%{content:"..."}
+}
+
 </style>
+
+
+<style id="bmp-auto-only-ui">
+  .room-code,#hostOfferCode,#answerCode,#guestAnswerCode{display:none !important;}
+  [onclick*="copyRoomCode"],[onclick*="copyActiveCode"],[onclick*="showHostAnswer"],[onclick*="openJoinRoom"],[onclick*="completeHostConnection"]{display:none !important;}
+</style>
+
+<style id="bmp-chat-v3">
+/* =========================================================
+   BMP CHAT V3 — dedicated chat UI only
+   The rest of the website is intentionally untouched.
+========================================================= */
+.rooms-panel{position:relative;overflow:hidden}
+.rooms-panel::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 10%,rgba(0,200,255,.07),transparent 28%),radial-gradient(circle at 85% 90%,rgba(0,108,255,.06),transparent 30%)}
+.rooms-toolbar,.room-list,#activeChat{position:relative;z-index:1}
+#activeChat{margin-top:24px}
+#activeChat .chat-layout{grid-template-columns:230px minmax(0,1fr);gap:0;overflow:hidden;border:1px solid rgba(0,200,255,.2);border-radius:24px;background:linear-gradient(145deg,rgba(4,10,18,.98),rgba(2,5,11,.98));box-shadow:0 25px 90px rgba(0,0,0,.42),0 0 45px rgba(0,200,255,.06)}
+#activeChat .chat-sidebar{border:0;border-left:1px solid rgba(255,255,255,.07);border-radius:0;padding:22px;background:linear-gradient(180deg,rgba(0,200,255,.06),rgba(255,255,255,.015));display:flex;flex-direction:column;min-width:0}
+#activeChat .chat-sidebar h3{font-size:18px;display:flex;align-items:center;gap:8px}
+#activeChat .chat-sidebar h3::before{content:"●";font-size:9px;color:#20ff9b;text-shadow:0 0 12px #20ff9b}
+#activeChat .chat-status{padding:11px 12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.07);margin-top:8px}
+#activeChat .chat-sidebar .room-card-actions{margin-top:auto;flex-direction:column}
+#activeChat .chat-sidebar .room-small-btn{width:100%}
+#activeChat .chat-main{border:0;border-radius:0;background:rgba(0,0,0,.12);display:flex;flex-direction:column;min-width:0;overflow:hidden}
+#activeChat .chat-main::before{content:"P2P SECURE CHAT";display:block;padding:12px 18px;font-size:10px;letter-spacing:2px;color:#62ddff;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.16)}
+#activeChat .chat-messages{height:460px;padding:22px;gap:12px;background:radial-gradient(circle at 50% 0%,rgba(0,200,255,.035),transparent 45%)}
+#activeChat .chat-msg{position:relative;max-width:min(78%,620px);padding:11px 14px 12px;border-radius:17px;background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 25px rgba(0,0,0,.16)}
+#activeChat .chat-msg.mine{align-self:flex-start;background:linear-gradient(145deg,rgba(0,183,255,.18),rgba(0,108,255,.11));border-color:rgba(0,200,255,.25);border-bottom-left-radius:6px}
+#activeChat .chat-msg:not(.mine){align-self:flex-end;border-bottom-right-radius:6px}
+#activeChat .chat-msg .sender{font-size:10px;color:#62ddff;margin-bottom:5px;font-weight:700}
+#activeChat .chat-msg.system{align-self:center;max-width:92%;font-size:11px;color:#91a0b3;text-align:center;background:rgba(255,255,255,.025)}
+#activeChat .chat-input-row{padding:14px;border-top:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.2)}
+#activeChat .chat-input{height:48px;border-radius:15px;background:rgba(4,9,16,.95);border-color:rgba(0,200,255,.12);font-size:14px}
+#activeChat .chat-input:focus{border-color:rgba(0,200,255,.45);box-shadow:0 0 0 3px rgba(0,200,255,.06)}
+#activeChat .chat-send{min-width:94px;height:48px;border-radius:15px;box-shadow:0 0 22px rgba(0,183,255,.14)}
+.bmp-network-pill{display:inline-flex;align-items:center;gap:7px;margin-top:15px;padding:8px 10px;border-radius:10px;background:rgba(32,255,155,.055);border:1px solid rgba(32,255,155,.14);color:#89ffc9;font-size:10px;line-height:1.7}
+.bmp-network-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#20ff9b;box-shadow:0 0 10px #20ff9b}
+.bmp-profile-modal .room-modal-box{max-width:430px;text-align:center}
+.bmp-profile-modal .bmp-avatar{width:64px;height:64px;margin:0 auto 14px;border-radius:20px;display:grid;place-items:center;font-size:27px;background:linear-gradient(135deg,#00b7ff,#006cff);box-shadow:0 0 35px rgba(0,183,255,.22)}
+.bmp-profile-modal input{width:100%;padding:14px;border-radius:13px;border:1px solid rgba(255,255,255,.1);background:rgba(16,22,33,.9);color:#fff;outline:none;text-align:center;font-size:15px}
+.bmp-profile-modal input:focus{border-color:rgba(0,200,255,.45);box-shadow:0 0 0 3px rgba(0,200,255,.06)}
+@media(max-width:850px){#activeChat .chat-layout{grid-template-columns:1fr}#activeChat .chat-sidebar{border-left:0;border-bottom:1px solid rgba(255,255,255,.07);padding:16px}#activeChat .chat-sidebar .room-card-actions{margin-top:12px;flex-direction:row}#activeChat .chat-sidebar .room-small-btn{flex:1}.bmp-network-pill{margin-top:8px}}
+@media(max-width:500px){#activeChat .chat-messages{height:52svh;min-height:300px;padding:15px}#activeChat .chat-msg{max-width:88%}#activeChat .chat-input-row{gap:7px}#activeChat .chat-send{min-width:70px;padding:10px}}
+</style>
+
+
+<script>
+/* =========================================================
+   BMP REAL LOADING UI
+========================================================= */
+window.bmpShowLoading = function(title, text){
+    const overlay=document.getElementById("bmpLoadingOverlay");
+    if(!overlay)return;
+    const titleEl=document.getElementById("bmpLoadingTitle");
+    const textEl=document.getElementById("bmpLoadingText");
+    if(titleEl) titleEl.textContent=title || "در حال انجام عملیات";
+    if(textEl) textEl.innerHTML=(text || "لطفاً چند لحظه صبر کنید")+"<span class=\"bmp-loading-dots\"></span>";
+    overlay.classList.add("active");
+    overlay.setAttribute("aria-hidden","false");
+};
+window.bmpHideLoading = function(){
+    const overlay=document.getElementById("bmpLoadingOverlay");
+    if(!overlay)return;
+    overlay.classList.remove("active");
+    overlay.setAttribute("aria-hidden","true");
+};
+</script>
+
+
+
+
 
 </head>
 
 
 <body>
+
+<!-- BMP REAL LOADING OVERLAY -->
+<div class="bmp-loading-overlay" id="bmpLoadingOverlay" aria-hidden="true">
+  <div class="bmp-loading-box">
+    <div class="bmp-spinner"></div>
+    <div class="bmp-loading-title" id="bmpLoadingTitle">در حال انجام عملیات</div>
+    <div class="bmp-loading-text" id="bmpLoadingText">لطفاً چند لحظه صبر کنید<span class="bmp-loading-dots"></span></div>
+  </div>
+</div>
+
 
 
 <!-- =========================================================
@@ -2592,7 +2733,7 @@ footer strong{
 <div class="rooms-panel">
     <div class="rooms-toolbar">
         <button class="room-action-btn" onclick="openCreateRoom()">➕ ساخت اتاق جدید</button>
-        <button class="room-action-btn alt" onclick="openJoinRoom()">🔑 ورود با کد اتصال</button>
+        <button class="room-action-btn alt" onclick="openJoinRoom()">🔑 ورود به اتاق</button>
         <button class="room-action-btn alt" onclick="findP2PRooms()">🔎 پیدا کردن روم‌ها</button>
     </div>
     <div id="roomList" class="room-list"></div>
@@ -2601,6 +2742,7 @@ footer strong{
             <aside class="chat-sidebar">
                 <h3 id="activeRoomTitle">اتاق</h3>
                 <div id="chatStatus" class="chat-status">در حال اتصال...</div>
+                <div class="bmp-network-pill">WebRTC مستقیم · بدون VPS</div>
                 <div class="room-card-actions">
                     <button class="room-small-btn" onclick="copyActiveCode()">📋 کپی کد</button>
                     <button class="room-small-btn" onclick="leaveRoom()">✕ خروج</button>
@@ -2628,10 +2770,10 @@ footer strong{
   <div class="room-modal-box">
     <button class="room-modal-close" onclick="closeRoomModals()">×</button>
     <h2>➕ ساخت اتاق جدید</h2>
-    <p>یک اتاق P2P بساز و کد اتصال را با دوستت به اشتراک بگذار.</p>
+    <p>یک اتاق P2P بساز؛ پیدا کردن و اتصال به آن به‌صورت خودکار انجام می‌شود.</p>
     <input id="createRoomName" class="room-field" maxlength="40" placeholder="نام اتاق">
     <input id="createUserName" class="room-field" maxlength="30" placeholder="نام شما">
-    <label class="room-check"><input id="createPublicRoom" type="checkbox" checked> کد اتصال روی کارت این اتاق نمایش داده شود</label>
+    <label class="room-check"><input id="createPublicRoom" type="checkbox" checked> اتاق در فهرست عمومی نمایش داده شود</label>
     <div id="createRoomStatus" class="room-modal-status"></div>
     <button class="room-primary-btn" onclick="createRoom()">ساخت اتاق 🚀</button>
   </div>
@@ -2641,7 +2783,7 @@ footer strong{
   <div class="room-modal-box">
     <button class="room-modal-close" onclick="closeRoomModals()">×</button>
     <h2>🔑 ورود به اتاق</h2>
-    <p>کد اتصال میزبان را اینجا وارد کن.</p>
+    <p>برای ورود دستی کد اتصال را وارد کن؛ روم‌های عمومی بدون کد هم وصل می‌شوند.</p>
     <input id="joinUserName" class="room-field" maxlength="30" placeholder="نام شما">
     <textarea id="hostOfferCode" class="room-field room-code-input" rows="5" placeholder="کد اتصال میزبان"></textarea>
     <div id="joinRoomStatus" class="room-modal-status"></div>
@@ -2657,7 +2799,7 @@ footer strong{
   <div class="room-modal-box">
     <button class="room-modal-close" onclick="closeRoomModals()">×</button>
     <h2>🤝 تکمیل اتصال</h2>
-    <p>کد پاسخ مهمان را از او بگیر و اینجا وارد کن.</p>
+    <p>این بخش فقط برای اتصال دستی است؛ در روم‌های عمومی پاسخ خودکار ارسال می‌شود.</p>
     <textarea id="guestAnswerCode" class="room-field room-code-input" rows="5" placeholder="کد پاسخ مهمان"></textarea>
     <div id="answerStatus" class="room-modal-status"></div>
     <button class="room-primary-btn" onclick="completeHostConnection()">اتصال نهایی 🔗</button>
@@ -2725,22 +2867,128 @@ let discoveryBusy = false;
    No dedicated BMP backend: a public MQTT relay only carries
    short-lived discovery/signaling messages. Chat stays WebRTC P2P.
 ========================================================= */
-const BMP_NETWORK_VERSION = "bmp-auto-p2p-v1";
+const BMP_NETWORK_VERSION = "bmp-auto-p2p-v2";
 const BMP_MQTT_URL = "wss://broker.hivemq.com:8884/mqtt";
-const BMP_NETWORK_TOPIC = "bmp/behrad-m-player/network/v1";
-const BMP_MAX_AUTO_PEERS = 4;
+const BMP_NETWORK_TOPIC = "bmp/behrad-m-player/network/v2";
+const BMP_MAIN_MAX_GUESTS = 80;
+const BMP_MAX_AUTO_PEERS = 5;
 const BMP_PRESENCE_TTL = 45000;
+const BMP_ROOM_DIRECTORY_TTL = 120000;
 const BMP_MQTT_CLIENT_ID = "bmp_" + safeId();
 let bmpMqtt = null;
 let bmpMqttReady = false;
 let bmpPresenceTimer = null;
+let bmpMainPeerId = null;
 const bmpPeerMap = new Map();
+const bmpRoomDirectory = new Map();
+const bmpPendingJoins = new Map();
+
+// The phone marked once with ?bmp-main=1 becomes the site's invisible Main Peer.
+// Users never see or type this ID. It is discovered from the bootstrap presence packet.
+const BMP_MAIN_FLAG_KEY = "bmp_main_peer_v2";
+if(new URLSearchParams(location.search).get("bmp-main")==="1") localStorage.setItem(BMP_MAIN_FLAG_KEY,"1");
+if(new URLSearchParams(location.search).get("bmp-main")==="0") localStorage.removeItem(BMP_MAIN_FLAG_KEY);
+const BMP_IS_MAIN_PEER = localStorage.getItem(BMP_MAIN_FLAG_KEY)==="1";
 const bmpPeerId = (()=>{
-  const key="bmp_auto_peer_id_v1";
+  const key="bmp_auto_peer_id_v2";
   let id=localStorage.getItem(key);
   if(!id){id="peer_"+safeId()+"_"+Math.random().toString(36).slice(2,7);localStorage.setItem(key,id);}
   return id;
 })();
+
+function bmpRoomId(){ return "room_"+safeId()+"_"+Math.random().toString(36).slice(2,6); }
+function bmpPublishRoom(room){
+  if(!room || !room.public || !room.roomId || !room.code)return;
+  const packet={v:BMP_NETWORK_VERSION,type:"room-register",roomId:room.roomId,hostPeerId:bmpPeerId,name:room.name||"اتاق",host:room.userName||"Host",code:room.code,createdAt:room.createdAt||Date.now(),ts:Date.now()};
+  // MQTT is only a bootstrap fallback. The Main Peer also receives the same record over P2P.
+  bmpPublish(packet);
+  bmpSendToMain({type:"main-room-register",room:packet});
+}
+function bmpRequestRoomDirectory(){
+  if(bmpMainPeerId && bmpSendToMain({type:"main-room-list-request",from:bmpPeerId,requestId:safeId()})) return;
+  bmpPublish({v:BMP_NETWORK_VERSION,type:"room-list-request",from:bmpPeerId,ts:Date.now()});
+}
+function bmpSendRoomJoin(roomId,hostPeerId){
+  const msg={type:"main-room-join",from:bmpPeerId,to:hostPeerId,roomId,requestId:safeId(),ts:Date.now()};
+  if(!bmpSendToMain(msg)) bmpPublish({v:BMP_NETWORK_VERSION,type:"room-join",from:bmpPeerId,to:hostPeerId,roomId,requestId:msg.requestId,ts:Date.now()});
+}
+function bmpRegisterRoomPacket(packet){
+  if(!packet.roomId||!packet.hostPeerId||!packet.code)return;
+  const record={roomId:packet.roomId,hostPeerId:packet.hostPeerId,name:packet.name||"اتاق",host:packet.host||"Host",code:packet.code,createdAt:packet.createdAt||Date.now(),lastSeen:Date.now(),public:true};
+  bmpRoomDirectory.set(packet.roomId,record);
+  storeDiscoveredRooms([record]);
+}
+function bmpCleanupRoomDirectory(){ const cutoff=Date.now()-BMP_ROOM_DIRECTORY_TTL; for(const [id,r] of bmpRoomDirectory){if((r.lastSeen||0)<cutoff)bmpRoomDirectory.delete(id);} }
+function bmpFindChannel(peerId){
+  const e=bmpPeerMap.get(peerId); const ch=e?.channel;
+  return ch?.readyState==="open" ? ch : null;
+}
+function bmpSendToPeer(peerId,msg){ const ch=bmpFindChannel(peerId); if(!ch)return false; try{ch.send(JSON.stringify(msg));return true;}catch(e){return false;} }
+function bmpSendToMain(msg){ return !BMP_IS_MAIN_PEER && bmpMainPeerId ? bmpSendToPeer(bmpMainPeerId,msg) : false; }
+
+function bmpMainRegisterRoom(room){
+  if(!BMP_IS_MAIN_PEER||!room?.roomId||!room.hostPeerId||!room.code)return;
+  const record={...room,lastSeen:Date.now()};
+  bmpRoomDirectory.set(room.roomId,record);
+  bmpBroadcastMainDirectory();
+}
+function bmpMainRemoveRoom(roomId){
+  if(!BMP_IS_MAIN_PEER)return;
+  bmpRoomDirectory.delete(roomId); bmpBroadcastMainDirectory();
+}
+function bmpMainDirectory(){
+  bmpCleanupRoomDirectory();
+  return [...bmpRoomDirectory.values()].filter(r=>r.public&&r.code).slice(-50);
+}
+function bmpBroadcastMainDirectory(){
+  if(!BMP_IS_MAIN_PEER)return;
+  const rooms=bmpMainDirectory();
+  bmpPeerMap.forEach((entry,peerId)=>{ if(peerId===bmpMainPeerId)return; const ch=entry.channel; if(ch?.readyState==="open"){try{ch.send(JSON.stringify({type:"main-room-directory",rooms}));}catch(_){}} });
+}
+function bmpMainRouteJoin(packet){
+  if(!BMP_IS_MAIN_PEER||!packet?.from||!packet?.roomId)return;
+  const room=bmpRoomDirectory.get(packet.roomId);
+  if(!room)return;
+  const offer={type:"main-room-offer",to:packet.from,from:room.hostPeerId,roomId:room.roomId,code:room.code,name:room.name,host:room.host,requestId:packet.requestId,ts:Date.now()};
+  bmpSendToPeer(packet.from,offer);
+}
+function bmpHandleMainMessage(channel,data){
+  if(!data)return;
+  if(!BMP_IS_MAIN_PEER && data.type==="main-room-offer" && data.to===bmpPeerId){ bmpHandleRoomOffer(data).catch(console.error); return; }
+  if(!BMP_IS_MAIN_PEER && data.type==="main-room-answer" && data.to===bmpPeerId){ bmpHandleRoomAnswer(data); return; }
+  if(BMP_IS_MAIN_PEER){
+    if(data.type==="main-room-register"&&data.room){ bmpMainRegisterRoom(data.room); return; }
+    if(data.type==="main-room-list-request"){
+      try{channel.send(JSON.stringify({type:"main-room-directory",rooms:bmpMainDirectory()}));}catch(_){}
+      return;
+    }
+    if(data.type==="main-room-join"){
+      bmpMainRouteJoin(data); return;
+    }
+    if(data.type==="main-room-answer"){
+      if(data.to) bmpSendToPeer(data.to,data); return;
+    }
+    if(data.type==="main-room-offer"){
+      if(data.to) bmpSendToPeer(data.to,data); return;
+    }
+  }
+}
+
+async function bmpHandleRoomOffer(packet){
+  if(packet.to!==bmpPeerId||!packet.code)return;
+  const pending=bmpPendingJoins.get(packet.roomId); if(!pending)return;
+  bmpPendingJoins.delete(packet.roomId);
+  await joinRoomWithOffer(packet.code,pending.userName,packet.roomId,packet.from,true);
+}
+async function bmpHandleRoomAnswer(packet){
+  if(packet.to!==bmpPeerId||!pendingHost?.pc)return;
+  if(packet.roomId!==pendingHost.roomId)return;
+  try{ const answer=decodeSignal(packet.code); if(answer.type!=="answer")return; await pendingHost.pc.setRemoteDescription(answer.sdp); setRoomStatus("chatStatus","🟢 اتصال خودکار برقرار شد؛ مهمان وارد روم شد."); }catch(e){ console.warn("auto room answer failed",e); }
+}
+function bmpSendRoomAnswer(roomId,hostPeerId,code){
+  const packet={type:"main-room-answer",from:bmpPeerId,to:hostPeerId,roomId,code,ts:Date.now()};
+  if(!bmpSendToMain(packet)) bmpPublish({v:BMP_NETWORK_VERSION,type:"room-answer",from:bmpPeerId,to:hostPeerId,roomId,code,ts:Date.now()});
+}
 
 function bmpPublish(payload){
   if(!bmpMqttReady || !bmpMqtt)return;
@@ -2748,19 +2996,44 @@ function bmpPublish(payload){
 }
 
 function bmpPresence(){
-  bmpPublish({v:BMP_NETWORK_VERSION,type:"presence",peerId:bmpPeerId,ts:Date.now()});
+  bmpPublish({v:BMP_NETWORK_VERSION,type:"presence",peerId:bmpPeerId,main:BMP_IS_MAIN_PEER,ts:Date.now()});
+}
+function bmpRequestMainPeer(){
+  if(BMP_IS_MAIN_PEER){ bmpMainPeerId=bmpPeerId; return; }
+  bmpPublish({v:BMP_NETWORK_VERSION,type:"main-discovery-request",from:bmpPeerId,ts:Date.now()});
 }
 
 function bmpNetworkMessage(packet){
   if(!packet || packet.v!==BMP_NETWORK_VERSION || packet.peerId===bmpPeerId)return;
-  if(packet.ts && Date.now()-packet.ts>90000)return;
-  if(packet.type==="presence"){
-    bmpMaybeConnect(packet.peerId);
+  if(packet.ts && Date.now()-packet.ts>120000)return;
+  if(packet.type==="main-discovery-request"){
+    if(BMP_IS_MAIN_PEER) bmpPresence();
     return;
   }
-  if(packet.type==="signal" && packet.to===bmpPeerId){
-    bmpHandleSignal(packet).catch(console.error);
+  if(packet.type==="presence"){
+    if(packet.main) bmpMainPeerId=packet.peerId;
+    bmpMaybeConnect(packet.peerId,!!packet.main);
+    return;
   }
+  if(packet.type==="room-register"){
+    bmpRegisterRoomPacket(packet);
+    if(BMP_IS_MAIN_PEER) bmpMainRegisterRoom(packet);
+    return;
+  }
+  if(packet.type==="room-list-request"){
+    if(BMP_IS_MAIN_PEER) bmpBroadcastMainDirectory();
+    getPublicRoomCards().forEach(r=>bmpPublishRoom(r));
+    return;
+  }
+  if(packet.type==="room-join"){ bmpHandleRoomJoinFallback(packet); return; }
+  if(packet.type==="room-offer"){ bmpHandleRoomOffer(packet).catch(console.error); return; }
+  if(packet.type==="room-answer"){ bmpHandleRoomAnswer(packet); return; }
+  if(packet.type==="signal" && packet.to===bmpPeerId){ bmpHandleSignal(packet).catch(console.error); }
+}
+function bmpHandleRoomJoinFallback(packet){
+  if(packet.to!==bmpPeerId||!pendingHost||!activeRoom?.roomId)return;
+  if(packet.roomId!==activeRoom.roomId)return;
+  bmpPublish({v:BMP_NETWORK_VERSION,type:"room-offer",from:bmpPeerId,to:packet.from,roomId:activeRoom.roomId,code:pendingHost.code,name:activeRoom.name,host:activeRoom.userName,requestId:packet.requestId,ts:Date.now()});
 }
 
 function bmpLoadMqtt(){
@@ -2784,9 +3057,10 @@ function bmpStartMqtt(){
       bmpMqttReady=true;
       bmpMqtt.subscribe(BMP_NETWORK_TOPIC,{qos:0});
       bmpPresence();
+      bmpRequestMainPeer();
       clearInterval(bmpPresenceTimer);
-      bmpPresenceTimer=setInterval(()=>{bmpPresence();bmpBroadcastRoomUpdate();},20000);
-      setTimeout(()=>{bmpPresence();bmpBroadcastRoomUpdate();},800);
+      bmpPresenceTimer=setInterval(()=>{bmpPresence();bmpRequestMainPeer();bmpBroadcastRoomUpdate();},20000);
+      setTimeout(()=>{bmpPresence();bmpRequestMainPeer();bmpBroadcastRoomUpdate();bmpRequestRoomDirectory();getPublicRoomCards().forEach(r=>bmpPublishRoom(r));},800);
       console.log("BMP auto P2P bootstrap ready",bmpPeerId);
     });
     bmpMqtt.on("message",(_,raw)=>{
@@ -2801,13 +3075,16 @@ function bmpRelaySignal(to,data){
 }
 
 function bmpCanConnectTo(peerId){
-  return peerId && peerId!==bmpPeerId && !bmpPeerMap.has(peerId) && bmpPeerMap.size<BMP_MAX_AUTO_PEERS;
+  if(!peerId || peerId===bmpPeerId || bmpPeerMap.has(peerId))return false;
+  if(BMP_IS_MAIN_PEER) return bmpPeerMap.size<BMP_MAIN_MAX_GUESTS;
+  return bmpPeerMap.size<BMP_MAX_AUTO_PEERS;
 }
 
-function bmpMaybeConnect(peerId){
+function bmpMaybeConnect(peerId,isMain=false){
   if(!bmpCanConnectTo(peerId))return;
-  // Deterministic initiator: only the lexicographically smaller Peer ID offers.
-  if(bmpPeerId.localeCompare(peerId)<0) bmpCreateAutoPeer(peerId);
+  // Every normal browser initiates toward the single Main Peer.
+  if(!BMP_IS_MAIN_PEER && (isMain || peerId===bmpMainPeerId)){ bmpCreateAutoPeer(peerId); return; }
+  // Main accepts incoming offers; normal peers only form the Main link automatically.
 }
 
 async function bmpCreateAutoPeer(peerId){
@@ -2817,10 +3094,11 @@ async function bmpCreateAutoPeer(peerId){
   bmpPeerMap.set(peerId,{pc,channel,initiator:true});
   channel.onopen=()=>{
     registerPeerChannel(channel);
-    try{channel.send(JSON.stringify({type:"network-hello",peerId:bmpPeerId}));}catch(e){}
-    const rooms=getPublicRoomCards();
-    try{channel.send(JSON.stringify({type:"room-discovery-response",rooms}));}catch(e){}
-    setRoomStatus("chatStatus","🟢 شبکهٔ P2P خودکار متصل است.");
+    if(!BMP_IS_MAIN_PEER && peerId===bmpMainPeerId) bmpMainPeerId=peerId;
+    try{channel.send(JSON.stringify({type:"network-hello",peerId:bmpPeerId,main:BMP_IS_MAIN_PEER}));}catch(e){}
+    const rooms=BMP_IS_MAIN_PEER?bmpMainDirectory():getPublicRoomCards();
+    try{channel.send(JSON.stringify({type:"main-room-directory",rooms}));}catch(e){}
+    setRoomStatus("chatStatus","🟢 اتصال خودکار به Main Peer برقرار است.");
   };
   channel.onmessage=e=>bmpAutoChannelMessage(channel,e);
   channel.onclose=()=>{bmpPeerMap.delete(peerId);knownPeers.delete(channel);};
@@ -2839,7 +3117,7 @@ async function bmpHandleSignal(packet){
   const data=packet.data||{};
   if(data.kind==="offer"){
     if(bmpPeerMap.has(from))return;
-    if(bmpPeerMap.size>=BMP_MAX_AUTO_PEERS)return;
+    if(BMP_IS_MAIN_PEER ? bmpPeerMap.size>=BMP_MAIN_MAX_GUESTS : bmpPeerMap.size>=BMP_MAX_AUTO_PEERS)return;
     const pc=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun.cloudflare.com:3478"}]});
     bmpPeerMap.set(from,{pc,initiator:false});
     pc.ondatachannel=e=>{
@@ -2848,7 +3126,9 @@ async function bmpHandleSignal(packet){
       ch.onmessage=ev=>bmpAutoChannelMessage(ch,ev);
       ch.onopen=()=>{
         registerPeerChannel(ch);
-        setRoomStatus("chatStatus","🟢 شبکهٔ P2P خودکار متصل است.");
+        if(BMP_IS_MAIN_PEER) bmpBroadcastMainDirectory();
+        else if(!bmpMainPeerId) bmpMainPeerId=from;
+        setRoomStatus("chatStatus",BMP_IS_MAIN_PEER?"🟢 یک Peer به Main Peer متصل شد.":"🟢 اتصال خودکار به Main Peer برقرار است.");
       };
       ch.onclose=()=>{bmpPeerMap.delete(from);knownPeers.delete(ch);};
     };
@@ -2869,21 +3149,31 @@ async function bmpHandleSignal(packet){
 function bmpAutoChannelMessage(channel,event){
   try{
     const data=JSON.parse(event.data);
+    if(data.type==="main-room-register"||data.type==="main-room-list-request"||data.type==="main-room-join"||data.type==="main-room-answer"||data.type==="main-room-offer"){
+      bmpHandleMainMessage(channel,data); return;
+    }
+    if(data.type==="main-room-directory"){
+      storeDiscoveredRooms(data.rooms||[]); renderRooms(); return;
+    }
     if(data.type==="room-discovery-request"){
-      const rooms=getPublicRoomCards();
+      const rooms=BMP_IS_MAIN_PEER?bmpMainDirectory():getPublicRoomCards();
       channel.send(JSON.stringify({type:"room-discovery-response",rooms}));
     }else if(data.type==="room-discovery-response"){
-      storeDiscoveredRooms(data.rooms||[]);
-      renderRooms();
+      storeDiscoveredRooms(data.rooms||[]); renderRooms();
     }else if(data.type==="network-hello"){
-      const rooms=getPublicRoomCards();
-      channel.send(JSON.stringify({type:"room-discovery-response",rooms}));
+      if(BMP_IS_MAIN_PEER){
+        bmpMainPeerId=bmpPeerId;
+        channel.send(JSON.stringify({type:"main-room-directory",rooms:bmpMainDirectory()}));
+      }else{
+        const rooms=getPublicRoomCards(); channel.send(JSON.stringify({type:"room-discovery-response",rooms}));
+      }
     }
   }catch(e){}
 }
 
 function bmpBroadcastRoomUpdate(){
   const rooms=getPublicRoomCards();
+  rooms.forEach(r=>bmpPublishRoom(r));
   bmpPeerMap.forEach(entry=>{
     const ch=entry.channel;
     if(ch?.readyState==="open"){try{ch.send(JSON.stringify({type:"room-discovery-response",rooms}));}catch(e){}}
@@ -2972,11 +3262,24 @@ function makePeer(){
     return new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun.cloudflare.com:3478"}]});
 }
 
+async function bmpEnsureMainPeer(timeout=3500){
+    if(BMP_IS_MAIN_PEER) return true;
+    if(bmpMainPeerId && bmpFindChannel(bmpMainPeerId)) return true;
+    bmpRequestMainPeer();
+    const started=Date.now();
+    while(Date.now()-started<timeout){
+        if(bmpMainPeerId && bmpFindChannel(bmpMainPeerId)) return true;
+        await new Promise(r=>setTimeout(r,100));
+    }
+    return !!(bmpMainPeerId && bmpFindChannel(bmpMainPeerId));
+}
+
 async function createRoom(){
     const roomName=document.getElementById("createRoomName").value.trim() || "اتاق جدید";
     const userName=document.getElementById("createUserName").value.trim() || "Host";
     const isPublic=document.getElementById("createPublicRoom").checked;
-    setRoomStatus("createRoomStatus","⏳ در حال ساخت کد اتصال...");
+    setRoomStatus("createRoomStatus","⏳ در حال اتصال به Main Peer و ساخت اتاق...");
+    if(!BMP_IS_MAIN_PEER){ await bmpEnsureMainPeer(); }
 
     try{
         const pc=makePeer();
@@ -2988,21 +3291,23 @@ async function createRoom(){
         await waitForIce(pc);
 
         const code=encodeSignal({v:1,type:"offer",room:roomName,host:userName,sdp:pc.localDescription});
-        pendingHost={pc,roomName,userName,code,isPublic,channel};
-        activeRoom={name:roomName,role:"host",userName};
+        const roomId=bmpRoomId();
+        pendingHost={pc,roomName,userName,code,isPublic,channel,roomId};
+        activeRoom={name:roomName,role:"host",userName,roomId};
 
         const rooms=loadRooms();
-        rooms.unshift({id:safeId(),name:roomName,role:"host",public:isPublic,code,createdAt:Date.now(),status:"آماده / ورود خودکار"});
+        rooms.unshift({id:safeId(),roomId,name:roomName,role:"host",public:isPublic,code,createdAt:Date.now(),status:"آماده / اتصال خودکار",hostPeerId:bmpPeerId});
         saveRooms(rooms);
         renderRooms();
         bmpBroadcastRoomUpdate();
+        if(isPublic) bmpPublishRoom({roomId,name:roomName,userName,code,public:true,createdAt:Date.now()});
 
         closeRoomModals();
         document.getElementById("activeRoomTitle").textContent=roomName;
         document.getElementById("chatStatus").textContent="🟢 اتاق آماده است؛ هر کسی که به آن متصل شود مستقیم وارد چت می‌شود.";
         document.getElementById("activeChat").style.display="block";
         document.getElementById("activeChat").scrollIntoView({behavior:"smooth"});
-        addSystemMessage("اتاق ساخته شد. کد اتصال را برای مهمان بفرست.");
+        addSystemMessage(BMP_IS_MAIN_PEER?"اتاق ساخته شد و در شبکه منتشر شد.":"اتاق ساخته شد و به‌صورت خودکار در شبکه ثبت شد.");
     }catch(err){
         console.error(err);
         setRoomStatus("createRoomStatus","❌ ساخت اتاق انجام نشد: "+err.message);
@@ -3031,36 +3336,21 @@ async function joinRoom(){
     const userName=document.getElementById("joinUserName").value.trim() || "Guest";
     const code=document.getElementById("hostOfferCode").value.trim();
     if(!code){setRoomStatus("joinRoomStatus","⚠️ کد میزبان را وارد کن.");return;}
-    setRoomStatus("joinRoomStatus","⏳ در حال ساخت پاسخ اتصال...");
+    await joinRoomWithOffer(code,userName,null,null,false);
+}
+async function joinRoomWithOffer(code,userName,roomId,hostPeerId,autoMode){
+    setRoomStatus("joinRoomStatus",autoMode?"⏳ در حال اتصال خودکار...":"⏳ در حال ساخت پاسخ اتصال...");
     try{
-        const offer=decodeSignal(code);
-        if(offer.type!=="offer")throw new Error("کد میزبان معتبر نیست");
-        const pc=makePeer();
-        pc.ondatachannel=e=>setupDataChannel(e.channel,userName,false);
-        await pc.setRemoteDescription(offer.sdp);
-        const answer=await pc.createAnswer();
-        await pc.setLocalDescription(answer);
-        await waitForIce(pc);
+        const offer=decodeSignal(code); if(offer.type!=="offer")throw new Error("invalid offer");
+        const pc=makePeer(); pc.ondatachannel=e=>setupDataChannel(e.channel,userName,false);
+        await pc.setRemoteDescription(offer.sdp); const answer=await pc.createAnswer(); await pc.setLocalDescription(answer); await waitForIce(pc);
         const answerCode=encodeSignal({v:1,type:"answer",sdp:pc.localDescription});
-
-        activePeer=pc;
-        activeRoom={name:offer.room || "اتاق",code,role:"guest",userName,accepted:true};
-        document.getElementById("answerCode").value=answerCode;
-        document.getElementById("answerBox").style.display="block";
-        setRoomStatus("joinRoomStatus","✅ کد مهمان ساخته شد. آن را برای صاحب اتاق بفرست.");
-
-        const rooms=loadRooms();
-        rooms.unshift({id:safeId(),name:offer.room || "اتاق",role:"guest",public:false,code,createdAt:Date.now(),status:"متصل / ورود خودکار"});
-        saveRooms(rooms); renderRooms();
-
-        document.getElementById("activeRoomTitle").textContent=offer.room || "اتاق";
-        document.getElementById("chatStatus").textContent="🟢 ورود خودکار؛ به محض برقراری اتصال وارد اتاق می‌شوی.";
-        document.getElementById("activeChat").style.display="block";
-        document.getElementById("activeChat").scrollIntoView({behavior:"smooth"});
-    }catch(err){
-        console.error(err);
-        setRoomStatus("joinRoomStatus","❌ کد اتصال معتبر نیست یا این مرورگر از WebRTC پشتیبانی نمی‌کند.");
-    }
+        activePeer=pc; activeRoom={name:offer.room||"اتاق",roomId:roomId||offer.roomId||null,hostPeerId:hostPeerId||null,code,role:"guest",userName,accepted:true};
+        document.getElementById("answerCode").value=answerCode; document.getElementById("answerBox").style.display=autoMode?"none":"block";
+        const rooms=loadRooms(); rooms.unshift({id:safeId(),roomId:activeRoom.roomId,name:activeRoom.name,role:"guest",public:false,code,createdAt:Date.now(),status:autoMode?"اتصال خودکار":"متصل / ورود خودکار",hostPeerId}); saveRooms(rooms); renderRooms();
+        document.getElementById("activeRoomTitle").textContent=activeRoom.name; document.getElementById("chatStatus").textContent=autoMode?"🟡 اتصال خودکار در حال تکمیل است...":"🟢 ورود خودکار؛ به محض برقراری اتصال وارد اتاق می‌شوی."; document.getElementById("activeChat").style.display="block"; document.getElementById("activeChat").scrollIntoView({behavior:"smooth"});
+        if(autoMode&&activeRoom.roomId&&hostPeerId){ bmpSendRoomAnswer(activeRoom.roomId,hostPeerId,answerCode); closeRoomModals(); } else setRoomStatus("joinRoomStatus","✅ کد مهمان ساخته شد. آن را برای صاحب اتاق بفرست.");
+    }catch(err){ console.error(err); setRoomStatus("joinRoomStatus",autoMode?"❌ اتصال خودکار انجام نشد.":"❌ کد اتصال معتبر نیست یا این مرورگر از WebRTC پشتیبانی نمی‌کند."); }
 }
 
 function registerPeerChannel(channel){
@@ -3073,25 +3363,17 @@ function getPublicRoomCards(){
     return loadRooms()
         .filter(r=>r.role==="host" && r.public && r.code)
         .slice(0,10)
-        .map(r=>({name:r.name,host:r.userName||r.hostName||"Host",code:r.code,createdAt:r.createdAt}));
+        .map(r=>({roomId:r.roomId||null,hostPeerId:r.hostPeerId||bmpPeerId,name:r.name,host:r.userName||r.hostName||"Host",code:r.code,createdAt:r.createdAt,public:true}));
 }
 
 function storeDiscoveredRooms(rooms){
-    if(!Array.isArray(rooms) || !rooms.length)return;
-    const local=loadRooms().filter(r=>r.discovery!==true);
-    const discovered=loadRooms().filter(r=>r.discovery===true);
-    rooms.forEach(r=>{
-        if(!r?.code)return;
-        const existing=discovered.find(x=>x.code===r.code);
-        if(existing){
-            existing.lastSeen=Date.now();
-            existing.name=r.name||existing.name;
-            existing.hostName=r.host||existing.hostName||"Host";
-        }else{
-            discovered.push({id:safeId(),name:r.name||"اتاق",role:"discovered",public:true,code:r.code,createdAt:r.createdAt||Date.now(),lastSeen:Date.now(),status:"پیدا شد",hostName:r.host||"Host",discovery:true});
-        }
-    });
-    saveRooms([...discovered.slice(-20),...local].slice(0,30));
+    if(!Array.isArray(rooms)||!rooms.length)return;
+    const local=loadRooms().filter(r=>r.discovery!==true), discovered=loadRooms().filter(r=>r.discovery===true);
+    rooms.forEach(r=>{ if(!r?.code)return; const key=r.roomId||r.code; let x=discovered.find(v=>(v.roomId||v.code)===key);
+      if(!x){x={id:safeId(),roomId:r.roomId||null,hostPeerId:r.hostPeerId||null,name:r.name||"اتاق",role:"discovered",public:true,code:r.code,createdAt:r.createdAt||Date.now(),lastSeen:Date.now(),status:"پیدا شد",hostName:r.host||"Host",discovery:true}; discovered.push(x);}
+      else {x.lastSeen=Date.now();x.name=r.name||x.name;x.hostName=r.host||x.hostName;x.hostPeerId=r.hostPeerId||x.hostPeerId;x.code=r.code||x.code;x.roomId=r.roomId||x.roomId;}
+      if(r.roomId&&r.hostPeerId)bmpRoomDirectory.set(r.roomId,{...r,lastSeen:Date.now()});
+    }); saveRooms([...discovered.slice(-20),...local].slice(0,30));
 }
 
 function cleanupStaleDiscoveredRooms(){
@@ -3109,23 +3391,27 @@ function findP2PRooms(){
     if(discoveryBusy)return;
     discoveryBusy=true;
     renderDiscoveryMessage();
-    const peers=[...knownPeers].filter(ch=>ch.readyState==="open");
-    bmpPeerMap.forEach(entry=>{if(entry.channel?.readyState==="open" && !peers.includes(entry.channel))peers.push(entry.channel);});
-    if(!peers.length){
-        discoveryBusy=false;
-        renderRooms();
-        addSystemMessage("ℹ️ برای جستجوی کاملاً P2P، حداقل یک بار باید با یک دستگاه دیگر اتصال WebRTC برقرار شده باشد. بعد از آن همان Peer می‌تواند روم‌های عمومی شناخته‌شده را معرفی کند.");
-        return;
-    }
-    const requestId=safeId();
-    seenDiscoveryRequests.add(requestId);
-    const packet={type:"room-discovery-request",requestId,ttl:3};
-    peers.forEach(ch=>{try{ch.send(JSON.stringify(packet));}catch(_){}});
-    bmpPublish({v:BMP_NETWORK_VERSION,type:"presence",peerId:bmpPeerId,ts:Date.now(),discover:true});
+    cleanupStaleDiscoveredRooms();
+    bmpCleanupRoomDirectory();
+    if(!BMP_IS_MAIN_PEER) bmpEnsureMainPeer(2500).then(()=>bmpRequestRoomDirectory());
+    else bmpRequestRoomDirectory();
+    if(BMP_IS_MAIN_PEER){ renderRooms(); discoveryBusy=false; return; }
     setTimeout(()=>{
-        discoveryBusy=false;
-        renderRooms();
-    },1800);
+      discoveryBusy=false;
+      renderRooms();
+      if(!loadRooms().some(r=>r.discovery===true)) addSystemMessage("ℹ️ فعلاً روم عمومی فعالی پیدا نشد.");
+    },2200);
+}
+async function connectToDiscoveredRoom(i){
+    const r=loadRooms()[i]; if(!r||r.discovery!==true)return;
+    if(!r.roomId||!r.hostPeerId){ addSystemMessage("⚠️ اطلاعات این روم کامل نیست؛ دوباره روم‌ها را پیدا کن."); return; }
+    const userName=prompt("نام شما:","Guest")?.trim()||"Guest";
+    bmpPendingJoins.set(r.roomId,{userName,createdAt:Date.now()});
+    if(!BMP_IS_MAIN_PEER && !(bmpMainPeerId && bmpFindChannel(bmpMainPeerId))){ await bmpEnsureMainPeer(); }
+    document.getElementById("activeRoomTitle").textContent=r.name; document.getElementById("activeChat").style.display="block"; setRoomStatus("chatStatus","⏳ در حال اتصال خودکار به «"+r.name+"»...");
+    bmpSendRoomJoin(r.roomId,r.hostPeerId);
+    setTimeout(()=>{if(bmpPendingJoins.has(r.roomId))bmpSendRoomJoin(r.roomId,r.hostPeerId);},1800);
+    setTimeout(()=>{if(bmpPendingJoins.has(r.roomId)){bmpPendingJoins.delete(r.roomId);setRoomStatus("chatStatus","❌ اتصال خودکار انجام نشد؛ دوباره امتحان کن.");}},10000);
 }
 
 function setupDataChannel(channel,userName,isHost){
@@ -3229,27 +3515,21 @@ function copyActiveCode(){
 }
 
 function renderRooms(){
-    cleanupStaleDiscoveredRooms();
-    const list=document.getElementById("roomList");
-    if(!list)return;
-    const rooms=loadRooms();
-    if(!rooms.length){
-        list.innerHTML='<div class="room-card" style="grid-column:1/-1;text-align:center"><h3>هنوز اتاقی ساخته نشده</h3><p>اولین اتاق را بساز و کد اتصال را با دوستت به اشتراک بگذار. 🚀</p></div>';
-        return;
-    }
+    cleanupStaleDiscoveredRooms(); const list=document.getElementById("roomList"); if(!list)return; const rooms=loadRooms();
+    if(!rooms.length){list.innerHTML='<div class="room-card" style="grid-column:1/-1;text-align:center"><h3>هنوز اتاقی ساخته نشده</h3><p>اولین اتاق را بساز یا روم‌های عمومی را پیدا کن. 🚀</p></div>';return;}
     list.innerHTML=rooms.map((r,i)=>{
-        const codeVisible=(r.public || r.discovery) && r.code;
-        return `<div class="room-card">
-            <h3>💬 ${escapeHTML(r.name)}</h3>
-            <p>${r.role==="host"?"نقش: میزبان":r.role==="discovered"?`🛰️ پیدا شده از شبکهٔ P2P · میزبان: ${escapeHTML(r.hostName||"Host")}`:"نقش: مهمان"} · ${new Date(r.createdAt).toLocaleString("fa-IR")}</p>
-            <div class="room-badges"><span class="room-badge">${r.discovery?"🛰️ کشف‌شده":r.public?"🌐 قابل نمایش":"🔒 خصوصی"}</span><span class="room-badge">P2P</span></div>
-            ${codeVisible?`<div class="room-code">${escapeHTML(r.code)}</div>`:`<p style="margin-top:10px">کد این اتاق مخفی است.</p>`}
-            <div class="room-card-actions">
-                ${r.code?`<button class="room-small-btn" onclick="copyRoomCode(${i})">📋 کپی کد</button>`:""}
-                ${r.role==="host"?`<button class="room-small-btn" onclick="showHostAnswer()">🤝 کد پاسخ</button>`:`<button class="room-small-btn" onclick="joinSavedRoom(${i})">🔗 اتصال</button>`}
-            </div>
-        </div>`;
+      const discovered=r.discovery===true;
+      return `<div class="room-card"><h3>💬 ${escapeHTML(r.name)}</h3><p>${r.role==="host"?"نقش: میزبان":discovered?`🛰️ پیدا شده از شبکه · میزبان: ${escapeHTML(r.hostName||"Host")}`:"نقش: مهمان"} · ${new Date(r.createdAt).toLocaleString("fa-IR")}</p><div class="room-badges"><span class="room-badge">${discovered?"🛰️ آنلاین":r.public?"🌐 قابل نمایش":"🔒 خصوصی"}</span><span class="room-badge">P2P</span></div><p style="margin-top:10px">🔐 اتصال و کدها کاملاً پشت‌صحنه انجام می‌شوند.</p><div class="room-card-actions">${r.role==="host"?`<button class="room-small-btn" onclick="openActiveHostRoom(${i})">▶️ باز کردن</button>`:discovered?`<button class="room-small-btn" onclick="connectToDiscoveredRoom(${i})">🔗 اتصال خودکار</button>`:`<button class="room-small-btn" onclick="joinSavedRoom(${i})">🔗 اتصال</button>`}</div></div>`;
     }).join("");
+}
+
+function openActiveHostRoom(i){
+    const r=loadRooms()[i];
+    if(!r)return;
+    document.getElementById("activeRoomTitle").textContent=r.name||"اتاق";
+    document.getElementById("activeChat").style.display="block";
+    document.getElementById("activeChat").scrollIntoView({behavior:"smooth"});
+    setRoomStatus("chatStatus",pendingHost?.roomId===r.roomId?"🟢 اتاق آمادهٔ اتصال خودکار است.":"ℹ️ این اتاق در این مرورگر دیگر فعال نیست.");
 }
 
 function copyRoomCode(i){
@@ -3274,7 +3554,6 @@ function joinSavedRoom(i){
    AUTO NETWORK STARTUP
 ========================================================= */
 window.addEventListener("load",()=>{
-  setTimeout(()=>bmpLoadMqtt(),700);
   setTimeout(()=>{try{renderRooms();}catch(e){}},900);
 });
 
@@ -6298,6 +6577,373 @@ document
 </script>
 
 
+
+<script>
+/* =========================================================
+   BMP CHAT V3
+   Trystero/Nostr discovery + WebRTC P2P + IndexedDB cache.
+   This layer intentionally overrides only chat/network behavior.
+========================================================= */
+(function(){
+  const V3={
+    appId:'behrad-m-player-chat-v3',
+    roomPrefix:'bmpv3_',
+    dbName:'bmp_chat_v3_db',
+    dbVersion:1,
+    relayUrls:['wss://relay.damus.io','wss://nos.lol','wss://relay.primal.net','wss://relay.nostr.band'],
+    directoryKind:30078,
+    rooms:new Map(),
+    active:null,
+    profile:null,
+    trystero:null,
+    nostr:null,
+    pool:null,
+    heartbeat:null,
+    ready:null
+  };
+  window.BMPV3=V3;
+
+  function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+  function id(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36);}
+  function now(){return Math.floor(Date.now()/1000);}
+
+  /* ---------- IndexedDB ---------- */
+  function db(){return new Promise((resolve,reject)=>{
+    const r=indexedDB.open(V3.dbName,V3.dbVersion);
+    r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('rooms'))d.createObjectStore('rooms',{keyPath:'roomId'});};
+    r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);
+  });}
+  async function kvGet(k){try{const d=await db();return await new Promise((res,rej)=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);});}catch(e){return null;}}
+  async function kvSet(k,v){try{const d=await db();await new Promise((res,rej)=>{const q=d.transaction('kv','readwrite').objectStore('kv').put(v,k);q.onsuccess=()=>res();q.onerror=()=>rej(q.error);});}catch(e){}}
+  async function saveRoom(r){try{const d=await db();await new Promise((res,rej)=>{const q=d.transaction('rooms','readwrite').objectStore('rooms').put(r);q.onsuccess=()=>res();q.onerror=()=>rej(q.error);});}catch(e){}}
+  async function readRooms(){try{const d=await db();return await new Promise((res,rej)=>{const q=d.transaction('rooms').objectStore('rooms').getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error);});}catch(e){return [];}}
+
+  /* ---------- first-time identity ---------- */
+  async function ensureProfile(){
+    let p=await kvGet('profile');
+    if(p?.username&&p?.secretKeyHex){V3.profile=p;return p;}
+    return await new Promise(resolve=>{
+      let m=document.getElementById('bmpProfileModal');
+      if(!m){
+        m=document.createElement('div');m.id='bmpProfileModal';m.className='room-modal bmp-profile-modal';
+        m.innerHTML=`<div class="room-modal-box"><div class="bmp-avatar">🎮</div><h2>نام کاربری شما</h2><p style="color:#8f9aaa;font-size:13px;line-height:1.9;margin:9px 0 18px">این نام فقط برای نمایش در چت و اتاق‌هاست. شناسهٔ فنی شبکه در پس‌زمینه ساخته و ذخیره می‌شود.</p><input id="bmpProfileName" maxlength="24" autocomplete="nickname" placeholder="مثلاً Behrad"><div id="bmpProfileStatus" class="room-alert"></div><div class="room-modal-actions" style="margin-top:14px"><button class="room-confirm" id="bmpProfileSave">ادامه 🚀</button></div></div>`;
+        document.body.appendChild(m);
+      }
+      m.classList.add('active');
+      const input=document.getElementById('bmpProfileName');setTimeout(()=>input?.focus(),50);
+      const save=async()=>{
+        const username=input.value.trim().replace(/\s+/g,' ');
+        if(username.length<2){document.getElementById('bmpProfileStatus').textContent='⚠️ حداقل ۲ کاراکتر وارد کن.';return;}
+        let sk=null;
+        try{ sk=V3.nostr?.generateSecretKey?.() || crypto.getRandomValues(new Uint8Array(32)); }catch(e){
+          try{ sk=crypto.getRandomValues(new Uint8Array(32)); }catch(e2){
+            document.getElementById('bmpProfileStatus').textContent='❌ ساخت شناسه محلی انجام نشد؛ مرورگر را تازه‌سازی کن.';return;
+          }
+        }
+        const hex=V3.nostr?.bytesToHex?V3.nostr.bytesToHex(sk):Array.from(sk).map(x=>x.toString(16).padStart(2,'0')).join('');
+        p={username,secretKeyHex:hex,createdAt:Date.now()};V3.profile=p;await kvSet('profile',p);m.classList.remove('active');resolve(p);
+      };
+      document.getElementById('bmpProfileSave').onclick=save;
+      input.onkeydown=e=>{if(e.key==='Enter')save();};
+    });
+  }
+
+  /* ---------- libraries / first-run bootstrap ---------- */
+  const bmpTimeout=(promise,ms,label)=>Promise.race([
+    promise,
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error(label||'timeout')),ms))
+  ]);
+
+  V3.ready=(async()=>{
+    /* IMPORTANT: profile comes first. It must never wait for CDN relays. */
+    let profileOK=false;
+    try{
+      await bmpTimeout(ensureProfile(),10000,'profile-timeout');
+      profileOK=!!V3.profile;
+    }catch(e){
+      console.error('BMP profile init failed',e);
+      setRoomStatus('chatStatus','❌ آماده‌سازی نام کاربری انجام نشد؛ دوباره تلاش کن.');
+    }
+
+    let libsOK=false;
+    if(profileOK){
+      try{
+        const [t,n]=await bmpTimeout(Promise.all([
+          import('https://esm.run/trystero'),
+          import('https://esm.run/@nostr/tools/pure')
+        ]),12000,'p2p-library-timeout');
+        const poolMod=await bmpTimeout(import('https://esm.run/@nostr/tools/pool'),8000,'nostr-pool-timeout');
+        V3.trystero=t;V3.nostr={...n,...poolMod};
+        if(typeof V3.nostr.SimplePool==='function') V3.pool=new V3.nostr.SimplePool();
+        libsOK=!!V3.trystero;
+      }catch(e){
+        console.error('BMP V3 library init failed',e);
+      }
+    }
+
+    try{await loadCachedRooms();renderRooms();}catch(e){console.error('BMP cache init failed',e);}
+    if(!libsOK){
+      setRoomStatus('chatStatus','⚠️ شبکه P2P هنوز آماده نیست؛ اینترنت/مرورگر را بررسی کن.');
+    }
+    return profileOK && libsOK;
+  })();
+
+  async function loadCachedRooms(){
+    const rs=await readRooms();rs.forEach(r=>V3.rooms.set(r.roomId,r));
+    try{const old=JSON.parse(localStorage.getItem('bmp_p2p_rooms_v1')||'[]');old.filter(r=>r?.roomId).forEach(r=>{if(!V3.rooms.has(r.roomId))V3.rooms.set(r.roomId,{roomId:r.roomId,name:r.name||'اتاق',host:r.userName||r.hostName||'Host',public:!!r.public,localOnly:true,createdAt:r.createdAt||Date.now(),status:r.status||'محلی'});});}catch(e){}
+  }
+
+  function nostrSk(){
+    const h=V3.profile.secretKeyHex;return V3.nostr.hexToBytes?V3.nostr.hexToBytes(h):Uint8Array.from(h.match(/../g).map(x=>parseInt(x,16)));
+  }
+  function roomRecord(r){return {app:'BEHRAD_M_PLAYER',roomId:r.roomId,name:r.name,host:V3.profile.username,public:true,createdAt:r.createdAt,updatedAt:Date.now(),onlineUntil:Date.now()+90000};}
+  async function publishRoom(r){
+    if(!r?.public||!V3.pool||!V3.nostr)return false;
+    try{
+      const event=V3.nostr.finalizeEvent({kind:V3.directoryKind,created_at:now(),tags:[['d','bmp-room:'+r.roomId],['app','BEHRAD_M_PLAYER'],['t','bmp-room']],content:JSON.stringify(roomRecord(r))},nostrSk());
+      await bmpTimeout(Promise.any(V3.pool.publish(V3.relayUrls,event)),6000,'directory-publish-timeout');
+      return true;
+    }catch(e){console.warn('room directory publish failed',e);return false;}
+  }
+  async function queryRooms(){
+    if(!V3.pool)return [];
+    const map=new Map();
+    try{
+      const events=await bmpTimeout(V3.pool.querySync(V3.relayUrls,{kinds:[V3.directoryKind],'#app':['BEHRAD_M_PLAYER'],limit:100}),8000,'directory-query-timeout');
+      (events||[]).forEach(ev=>{try{const r=JSON.parse(ev.content);if(!r.roomId||r.onlineUntil<Date.now())return;const old=map.get(r.roomId);if(!old||r.updatedAt>old.updatedAt)map.set(r.roomId,r);}catch(e){}});
+    }catch(e){console.warn('room directory query failed',e);}
+    return [...map.values()];
+  }
+  async function heartbeat(){
+    if(V3.active?.role==='host'&&V3.active.public)await publishRoom(V3.active);
+  }
+
+  /* ---------- room/chat ---------- */
+  function trysteroConfig(){return {appId:V3.appId,rtcConfig:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun.cloudflare.com:3478'}]},relayConfig:{redundancy:3}};}
+  function bindRoom(room,role,roomInfo){
+    const nameAction=room.makeAction('bmp-name-v3');
+    const chatAction=room.makeAction('bmp-chat-v3');
+    const peerNames=new Map();
+    room.onPeerJoin=peer=>{setRoomStatus('chatStatus','🟢 یک نفر به اتاق وصل شد.');nameAction.send(V3.profile.username,{target:peer});};
+    room.onPeerLeave=peer=>{const n=peerNames.get(peer)||'یک کاربر';peerNames.delete(peer);addSystemMessage('👋 '+n+' از اتاق خارج شد.');updatePeerCount(room);};
+    nameAction.onMessage=(name,{peerId})=>{peerNames.set(peerId,String(name||'Player'));addSystemMessage('👤 '+String(name||'Player')+' وارد شد.');updatePeerCount(room);};
+    chatAction.onMessage=(data,{peerId})=>{const n=peerNames.get(peerId)||data?.name||'Player';if(data?.text)addChatMessage(n,data.text,false);};
+    room.onPeerJoin=peer=>{setRoomStatus('chatStatus','🟢 اتصال P2P برقرار است.');nameAction.send(V3.profile.username,{target:peer});};
+    V3.active={room,role,roomInfo,public:!!roomInfo.public,userName:V3.profile.username,roomId:roomInfo.roomId,name:roomInfo.name};
+    room.__chatAction=chatAction;room.__nameAction=nameAction;
+    showActive(roomInfo.name,role==='host'?'🟢 اتاق آماده است؛ اتصال‌ها مستقیم انجام می‌شوند.':'🟢 وارد اتاق شدی؛ چت آماده است.');
+    updatePeerCount(room);
+  }
+  function updatePeerCount(room){const c=Object.keys(room.getPeers?.()||{}).length;const el=document.getElementById('chatPeerCount');if(el)el.textContent=c+' اتصال';}
+  function showActive(title,status){
+    document.getElementById('activeRoomTitle').textContent=title||'اتاق';document.getElementById('activeChat').style.display='block';document.getElementById('chatStatus').textContent=status||'';
+    document.getElementById('chatMessages').innerHTML='';
+    document.getElementById('activeChat').scrollIntoView({behavior:'smooth',block:'center'});
+    const s=document.querySelector('#activeChat .chat-sidebar');
+    if(s&&!document.getElementById('chatPeerCount')){const x=document.createElement('div');x.id='chatPeerCount';x.className='room-badge';x.style.marginTop='10px';x.textContent='0 اتصال';s.appendChild(x);}
+  }
+  async function joinP2PRoom(info,role){
+    const ready=await V3.ready;
+    if(!ready || !V3.trystero || !V3.profile) throw new Error('P2P initialization failed');
+    if(!info?.roomId) throw new Error('Invalid room');
+    if(V3.active?.room){try{V3.active.room.leave();}catch(e){}}
+    const rid=V3.roomPrefix+info.roomId;
+    const room=V3.trystero.joinRoom(trysteroConfig(),rid);
+    if(!room) throw new Error('Trystero did not return a room');
+    bindRoom(room,role,info);
+    if(role==='host'){
+      V3.active.public=!!info.public;
+      await saveRoom({...info,host:V3.profile.username,role:'host',lastSeen:Date.now()});
+      /* Directory publishing is deliberately non-blocking. The room is usable immediately. */
+      void publishRoom(info);
+      clearInterval(V3.heartbeat);
+      V3.heartbeat=setInterval(heartbeat,45000);
+    }else{
+      await saveRoom({...info,host:info.host||'Host',role:'guest',lastSeen:Date.now()});
+    }
+    renderRooms();
+    addSystemMessage(role==='host'?'🔐 اتاق با هویت فنی مخفی ساخته شد.':'🔗 اتاق باز شد؛ در حال پیدا کردن هم‌اتصال…');
+    return true;
+  }
+
+  /* Public bridge for room-card buttons and the release layer. */
+  window.joinP2PRoom=joinP2PRoom;
+
+  /* ---------- UI overrides ---------- */
+  window.bmpLoadMqtt=()=>{};
+  window.openCreateRoom=function(){
+    closeRoomModals();const m=document.getElementById('createRoomModal');if(!m)return;m.classList.add('active');
+    const n=document.getElementById('createUserName');if(n){n.value=V3.profile?.username||'';n.style.display='none';}
+    const label=n?.previousElementSibling;if(label?.tagName==='LABEL')label.style.display='none';
+    document.getElementById('createRoomName')?.focus();
+  };
+  window.openJoinRoom=function(){
+    closeRoomModals();const m=document.getElementById('joinRoomModal');if(!m)return;m.classList.add('active');
+    const n=document.getElementById('joinUserName');if(n){n.value=V3.profile?.username||'';n.style.display='none';}
+    const code=document.getElementById('hostOfferCode');if(code){code.style.display='none';code.value='';}
+    const answer=document.getElementById('answerBox');if(answer)answer.style.display='none';
+    const btn=m.querySelector('.room-primary-btn');if(btn)btn.textContent='ورود به اتاق 🔗';
+    document.getElementById('joinRoomStatus').textContent='از بخش «پیدا کردن روم‌ها» یک اتاق را انتخاب کن.';
+  };
+  window.createRoom=async function(){
+    const token=window.bmpShowLoading?.('در حال ساخت روم','در حال آماده‌سازی اتاق P2P','بررسی نام کاربری…');
+    try{
+      const ready=await V3.ready;
+      if(!ready) throw new Error('P2P is not ready');
+      window.bmpSetLoadingPhase?.('ساخت شناسه اتاق…');
+      const name=(document.getElementById('createRoomName')?.value||'اتاق جدید').trim()||'اتاق جدید';
+      const pub=!!document.getElementById('createPublicRoom')?.checked;
+      const info={roomId:id(),name,host:V3.profile.username,public:pub,createdAt:Date.now(),status:'آنلاین · P2P'};
+      window.bmpSetLoadingPhase?.('باز کردن کانال WebRTC…');
+      await bmpTimeout(joinP2PRoom(info,'host'),12000,'room-create-timeout');
+      closeRoomModals();
+      setRoomStatus('createRoomStatus','✅ روم با موفقیت ساخته شد.');
+      window.bmpSetLoadingPhase?.('روم آماده است ✓');
+      return true;
+    }catch(e){
+      console.error('createRoom failed',e);
+      setRoomStatus('createRoomStatus','❌ ساخت روم ناموفق بود؛ دوباره تلاش کن.');
+      window.bmpSetLoadingPhase?.('ساخت روم ناموفق بود');
+      throw e;
+    }finally{
+      window.bmpHideLoading?.(token);
+    }
+  };
+  window.joinRoom=async function(){
+    const token=window.bmpShowLoading?.('در حال پیدا کردن روم‌ها','در حال جست‌وجوی اتاق‌های عمومی','اتصال به شبکه…');
+    try{
+      const ready=await V3.ready;if(!ready)throw new Error('P2P is not ready');
+      const list=await queryRooms();
+      if(!list.length){setRoomStatus('joinRoomStatus','ℹ️ فعلاً روم عمومی آنلاینی پیدا نشد.');return false;}
+      list.forEach(r=>V3.rooms.set(r.roomId,{...r,role:'discovered',discovery:true,status:'آنلاین'}));
+      await Promise.all(list.map(r=>saveRoom({...r,role:'discovered',discovery:true,lastSeen:Date.now()})));
+      renderRooms();closeRoomModals();setRoomStatus('joinRoomStatus','🔎 روم‌ها نمایش داده شدند.');return true;
+    }catch(e){
+      console.error('joinRoom failed',e);setRoomStatus('joinRoomStatus','❌ جست‌وجوی روم‌ها ناموفق بود.');return false;
+    }finally{window.bmpHideLoading?.(token);}
+  };
+  window.findP2PRooms=async function(){
+    const token=window.bmpShowLoading?.('در حال پیدا کردن روم‌ها','در حال جست‌وجوی اتاق‌های آنلاین','اتصال به Relayها…');
+    try{
+      const ready=await V3.ready;if(!ready)throw new Error('P2P is not ready');
+      const list=document.getElementById('roomList');if(list)list.innerHTML='<div class="room-card" style="grid-column:1/-1;text-align:center"><h3>🔎 در حال پیدا کردن روم‌ها...</h3><p>شبکهٔ غیرمتمرکز در حال جست‌وجوی اتاق‌های آنلاین است.</p></div>';
+      const found=await queryRooms();
+      found.forEach(r=>V3.rooms.set(r.roomId,{...r,role:'discovered',discovery:true,status:'آنلاین'}));
+      await Promise.all(found.map(r=>saveRoom({...r,role:'discovered',discovery:true,lastSeen:Date.now()})));
+      renderRooms();
+      if(!found.length)addSystemMessage('ℹ️ فعلاً روم عمومی فعالی پیدا نشد.');
+      return found;
+    }catch(e){
+      console.error('find rooms failed',e);addSystemMessage('❌ جست‌وجوی روم‌ها انجام نشد.');return [];
+    }finally{window.bmpHideLoading?.(token);}
+  };
+  window.connectToDiscoveredRoom=async function(i){
+    const arr=[...V3.rooms.values()].filter(r=>r.discovery||r.role==='discovered');const r=arr[i];if(!r)return;
+    await joinP2PRoom(r,'guest');
+  };
+  window.openActiveHostRoom=function(i){const r=[...V3.rooms.values()][i];if(r?.roomId)joinP2PRoom(r,'host');};
+  window.joinSavedRoom=async function(i){const r=[...V3.rooms.values()][i];if(r?.roomId)await joinP2PRoom(r,'guest');};
+  window.completeHostConnection=()=>addSystemMessage('ℹ️ اتصال دستی دیگر لازم نیست؛ شبکهٔ P2P به‌صورت خودکار انجام می‌شود.');
+  window.copyActiveCode=()=>addSystemMessage('🔐 کد اتصال فنی است و پشت‌صحنه مدیریت می‌شود.');
+  window.copyRoomCode=()=>{};
+  window.showHostAnswer=()=>addSystemMessage('🔐 اتصال این نسخه کاملاً خودکار است.');
+  window.bmpEnsureMainPeer=async()=>true;
+  window.bmpRequestMainPeer=()=>{};
+  window.bmpPublish=()=>{};
+  window.bmpRequestRoomDirectory=()=>{};
+  window.bmpBroadcastRoomUpdate=()=>{};
+  window.bmpSendRoomJoin=()=>{};
+  window.setupDataChannel=()=>{};
+
+  window.sendChatMessage=function(){
+    const input=document.getElementById('chatInput');const text=(input?.value||'').trim();if(!text)return;
+    const a=V3.active;if(!a?.room?.__chatAction){addSystemMessage('⚠️ هنوز به اتاق وصل نیستی.');return;}
+    try{a.room.__chatAction.send({name:V3.profile.username,text,ts:Date.now()});addChatMessage(V3.profile.username,text,true);input.value='';input.focus();}catch(e){addSystemMessage('❌ ارسال پیام انجام نشد.');}
+  };
+  window.addChatMessage=function(name,text,mine){const box=document.getElementById('chatMessages');if(!box)return;const d=document.createElement('div');d.className='chat-msg'+(mine?' mine':'');d.innerHTML='<span class="sender">'+esc(name)+'</span>'+esc(text);box.appendChild(d);box.scrollTop=box.scrollHeight;};
+  window.addSystemMessage=function(text){const box=document.getElementById('chatMessages');if(!box)return;const d=document.createElement('div');d.className='chat-msg system';d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;};
+  window.leaveRoom=function(){try{if(V3.active?.room)V3.active.room.leave();}catch(e){}clearInterval(V3.heartbeat);V3.active=null;document.getElementById('activeChat').style.display='none';document.getElementById('chatMessages').innerHTML='';renderRooms();};
+  window.renderRooms=function(){
+    const list=document.getElementById('roomList');if(!list)return;
+    const rooms=[...V3.rooms.values()].sort((a,b)=>(b.updatedAt||b.createdAt||0)-(a.updatedAt||a.createdAt||0));
+    if(!rooms.length){list.innerHTML='<div class="room-card" style="grid-column:1/-1;text-align:center"><h3>هنوز اتاقی ساخته نشده</h3><p>اولین اتاق را بساز یا روم‌های عمومی را پیدا کن. 🚀</p></div>';return;}
+    list.innerHTML=rooms.map((r,i)=>{
+      const disc=r.discovery||r.role==='discovered';const mine=r.role==='host';
+      return `<div class="room-card"><h3>💬 ${esc(r.name||'اتاق')}</h3><p>${mine?'نقش: میزبان':disc?'🛰️ پیدا شده از شبکه · میزبان: '+esc(r.host||'Host'):'نقش: مهمان'} · ${new Date(r.createdAt||Date.now()).toLocaleString('fa-IR')}</p><div class="room-badges"><span class="room-badge">${disc?'🛰️ آنلاین':r.public?'🌐 قابل نمایش':'🔒 خصوصی'}</span><span class="room-badge">WebRTC</span></div><p style="margin-top:10px">🔐 اتصال و هویت فنی کاملاً پشت‌صحنه انجام می‌شوند.</p><div class="room-card-actions">${mine?`<button class="room-small-btn" onclick="openActiveHostRoom(${i})">▶️ باز کردن</button>`:disc?`<button class="room-small-btn" onclick="connectToDiscoveredRoom(${i})">🔗 اتصال خودکار</button>`:`<button class="room-small-btn" onclick="joinSavedRoom(${i})">🔗 اتصال</button>`}</div></div>`;
+    }).join('');
+  };
+  window.getPublicRoomCards=()=>[...V3.rooms.values()].filter(r=>r.public&&r.role==='host');
+  window.storeDiscoveredRooms=(rooms)=>{(rooms||[]).forEach(r=>V3.rooms.set(r.roomId,{...r,discovery:true,role:'discovered'}));renderRooms();};
+
+  /* Replace the old first-run load behavior after all legacy functions exist. */
+  window.addEventListener('load',()=>{
+    V3.ready.then(()=>{
+      const n=document.getElementById('createUserName');if(n){n.value=V3.profile.username;n.style.display='none';}
+      const j=document.getElementById('joinUserName');if(j){j.value=V3.profile.username;j.style.display='none';}
+      renderRooms();
+    });
+  });
+})();
+</script>
+
+
+
+<!-- BMP RELEASE V7: polished UI + fail-safe loading -->
+<style id="bmp-release-v7">
+#bmpLoadingOverlay{position:fixed!important;inset:0!important;z-index:2147483000!important;display:flex!important;align-items:center!important;justify-content:center!important;visibility:hidden;opacity:0;pointer-events:none;background:rgba(2,5,12,.82);backdrop-filter:blur(12px) saturate(125%);-webkit-backdrop-filter:blur(12px) saturate(125%);transition:opacity .2s ease,visibility .2s ease}
+#bmpLoadingOverlay.active{visibility:visible;opacity:1;pointer-events:auto}
+#bmpLoadingOverlay .bmp-loading-box{position:relative;width:min(440px,calc(100vw - 32px));padding:34px 28px 28px;border:1px solid rgba(0,195,255,.22);border-radius:28px;background:linear-gradient(145deg,rgba(9,17,30,.96),rgba(4,9,18,.94));box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 55px rgba(0,180,255,.10);text-align:center;overflow:hidden}
+#bmpLoadingOverlay .bmp-loading-box:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,200,255,.08),transparent);transform:translateX(-100%);animation:bmpScan 1.7s linear infinite}
+@keyframes bmpScan{to{transform:translateX(100%)}}
+.bmp-v7-spinner{width:70px;height:70px;margin:0 auto 18px;border:3px solid rgba(255,255,255,.08);border-top-color:#00c8ff;border-right-color:#7c5cff;border-radius:50%;animation:bmpSpin .8s linear infinite;box-shadow:0 0 30px rgba(0,190,255,.18)}
+@keyframes bmpSpin{to{transform:rotate(360deg)}}
+#bmpLoadingTitle{font-size:20px;font-weight:900;color:#fff;margin-bottom:7px}#bmpLoadingText{font-size:13px;color:#aebbd0;line-height:1.9}#bmpLoadingPhase{font-size:12px;color:#55dfff;margin-top:13px;min-height:20px}.bmp-loading-progress{height:4px;margin-top:20px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}.bmp-loading-progress i{display:block;width:38%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#00c8ff,#7c5cff);animation:bmpProgress 1.2s ease-in-out infinite}@keyframes bmpProgress{0%{transform:translateX(-130%)}100%{transform:translateX(310%)}}
+@media (max-width:700px),(pointer:coarse){#bmpLoadingOverlay{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(2,5,12,.94)}#bmpLoadingOverlay .bmp-loading-box{width:min(350px,calc(100vw - 28px));padding:27px 20px;border-radius:22px;box-shadow:0 20px 55px rgba(0,0,0,.5)}.bmp-v7-spinner{width:56px;height:56px}.bmp-loading-progress{margin-top:15px}}
+@media (prefers-reduced-motion:reduce){#bmpLoadingOverlay .bmp-loading-box:before,.bmp-v7-spinner,#bmpLoadingOverlay .bmp-loading-progress i{animation:none!important}}
+</style>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  let seq=0;
+  window.bmpShowLoading=function(title,text,phase){
+    const o=$('bmpLoadingOverlay');if(!o)return 0;
+    let box=o.querySelector('.bmp-loading-box');
+    if(box&&!box.querySelector('.bmp-v7-spinner')){const sp=document.createElement('div');sp.className='bmp-v7-spinner';box.insertBefore(sp,box.firstChild);}
+    if(box&&!$('bmpLoadingPhase')){const p=document.createElement('div');p.id='bmpLoadingPhase';box.appendChild(p);}
+    if(box&&!box.querySelector('.bmp-loading-progress')){const p=document.createElement('div');p.className='bmp-loading-progress';p.innerHTML='<i></i>';box.appendChild(p);}
+    const token=++seq;o.classList.add('active');o.setAttribute('aria-hidden','false');
+    if($('bmpLoadingTitle'))$('bmpLoadingTitle').textContent=title||'در حال انجام';
+    if($('bmpLoadingText'))$('bmpLoadingText').textContent=text||'لطفاً چند لحظه صبر کنید…';
+    if($('bmpLoadingPhase'))$('bmpLoadingPhase').textContent=phase||'در حال آماده‌سازی…';
+    return token;
+  };
+  window.bmpSetLoadingPhase=function(t){if($('bmpLoadingPhase'))$('bmpLoadingPhase').textContent=t||'در حال پردازش…';};
+  window.bmpHideLoading=function(token){if(token&&token!==seq)return;const o=$('bmpLoadingOverlay');if(!o)return;o.classList.remove('active');o.setAttribute('aria-hidden','true');};
+
+  /* Stable room actions: use room IDs instead of array positions. */
+  window.openActiveHostRoom=function(i){
+    const rooms=[...BMPV3.rooms.values()].sort((a,b)=>(b.updatedAt||b.createdAt||0)-(a.updatedAt||a.createdAt||0));
+    const r=rooms[Number(i)];if(r?.roomId)window.joinP2PRoom?.(r,'host');
+  };
+  window.connectToDiscoveredRoom=function(i){
+    const rooms=[...BMPV3.rooms.values()].filter(r=>r.discovery||r.role==='discovered').sort((a,b)=>(b.updatedAt||b.createdAt||0)-(a.updatedAt||a.createdAt||0));
+    const r=rooms[Number(i)];if(!r)return;
+    const token=bmpShowLoading('در حال ورود به روم','در حال برقراری اتصال مستقیم','پیدا کردن میزبان…');
+    Promise.resolve(window.joinP2PRoom?.(r,'guest')).then(()=>bmpSetLoadingPhase('اتاق آماده است ✓')).catch(()=>bmpSetLoadingPhase('اتصال ناموفق بود')).finally(()=>setTimeout(()=>bmpHideLoading(token),350));
+  };
+  window.joinSavedRoom=window.connectToDiscoveredRoom;
+
+  /* Safety net: no loader may survive longer than 15 seconds. */
+  setInterval(()=>{const o=$('bmpLoadingOverlay');if(o&&o.classList.contains('active')&&o.dataset.bmpStarted){if(Date.now()-Number(o.dataset.bmpStarted)>15000){o.classList.remove('active');o.setAttribute('aria-hidden','true');}}},1000);
+  const oldShow=window.bmpShowLoading;
+  window.bmpShowLoading=function(){const token=oldShow.apply(this,arguments);const o=$('bmpLoadingOverlay');if(o)o.dataset.bmpStarted=String(Date.now());return token;};
+
+  /* Fast, low-cost visual mode for phones. */
+  const lite=matchMedia('(pointer:coarse)').matches||innerWidth<=700||(navigator.deviceMemory&&navigator.deviceMemory<=4)||navigator.connection?.saveData;
+  document.documentElement.dataset.bmpPerf=lite?'lite':'pro';
+  if(lite){const st=document.createElement('style');st.textContent='*{scroll-behavior:auto!important}.mouse-light,.cursor-ring,.cursor-dot{display:none!important}';document.head.appendChild(st);}
+})();
+</script>
 </body>
 
 </html>
