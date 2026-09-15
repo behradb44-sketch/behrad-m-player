@@ -3070,7 +3070,7 @@ let discoveryBusy = false;
    short-lived discovery/signaling messages. Chat stays WebRTC P2P.
 ========================================================= */
 const BMP_NETWORK_VERSION = "bmp-auto-p2p-v2";
-const BMP_MQTT_URL = "wss://broker.hivemq.com:8884/mqtt";
+const BMP_MQTT_URLS = ["wss://broker.emqx.io:8084/mqtt","wss://broker.hivemq.com:8884/mqtt"];
 const BMP_NETWORK_TOPIC = "bmp/behrad-m-player/network/v2";
 const BMP_MAIN_MAX_GUESTS = 80;
 const BMP_MAX_AUTO_PEERS = 5;
@@ -3238,53 +3238,128 @@ function bmpHandleRoomJoinFallback(packet){
   bmpPublish({v:BMP_NETWORK_VERSION,type:"room-offer",from:bmpPeerId,to:packet.from,roomId:activeRoom.roomId,code:pendingHost.code,name:activeRoom.name,host:activeRoom.userName,requestId:packet.requestId,ts:Date.now()});
 }
 
-let bmpMqttScriptLoading=false;
-function bmpLoadMqtt(){
-  if(window.mqtt){bmpStartMqtt();return;}
-  if(bmpMqttScriptLoading)return;
-  bmpMqttScriptLoading=true;
-  const urls=[
-    "https://unpkg.com/mqtt@5.10.4/dist/mqtt.min.js",
-    "https://cdn.jsdelivr.net/npm/mqtt@5.10.4/dist/mqtt.min.js"
-  ];
-  let i=0;
-  const tryNext=()=>{
-    if(window.mqtt){bmpStartMqtt();bmpMqttScriptLoading=false;return;}
-    if(i>=urls.length){
-      bmpMqttScriptLoading=false;
-      console.warn("BMP MQTT browser library failed to load from all configured CDNs.");
-      addSystemMessage("❌ سرویس شبکه بارگذاری نشد؛ اگر اینترنت روشن است، یک‌بار صفحه را تازه‌سازی کن.");
-      return;
+/* =========================================================
+   BMP NATIVE MQTT OVER WSS — NO EXTERNAL MQTT LIBRARY
+   Self-contained MQTT 3.1.1 client for browser WebSocket.
+   This removes the CDN/MQTT.js dependency that caused the
+   previous "network service unavailable" failures.
+========================================================= */
+class BMPNativeMqttClient{
+  constructor(url,options={}){
+    this.url=url; this.options=options; this.ws=null; this.connected=false;
+    this.listenersMap=new Map(); this.packetId=1; this.buffer=new Uint8Array(0);
+    this.pingTimer=0; this.reconnectTimer=0; this.closedByUser=false;
+  }
+  on(ev,fn){if(!this.listenersMap.has(ev))this.listenersMap.set(ev,new Set());this.listenersMap.get(ev).add(fn);return this;}
+  emit(ev,...args){const set=this.listenersMap.get(ev);if(set)for(const fn of [...set]){try{fn(...args)}catch(e){setTimeout(()=>{throw e})}}}
+  removeAllListeners(){this.listenersMap.clear();return this;}
+  listeners(ev){return [...(this.listenersMap.get(ev)||[])];}
+  nextId(){this.packetId=(this.packetId%65535)+1;return this.packetId;}
+  static bytes(v){return new TextEncoder().encode(String(v));}
+  static u16(n){return new Uint8Array([(n>>8)&255,n&255]);}
+  static concat(...arrs){let n=arrs.reduce((a,b)=>a+b.length,0),o=new Uint8Array(n),p=0;for(const a of arrs){o.set(a,p);p+=a.length}return o;}
+  static str(v){const b=BMPNativeMqttClient.bytes(v);return BMPNativeMqttClient.concat(BMPNativeMqttClient.u16(b.length),b)}
+  static remLen(n){const a=[];do{let d=n%128;n=Math.floor(n/128);if(n>0)d|=128;a.push(d)}while(n>0);return new Uint8Array(a)}
+  static packet(type,body){const r=BMPNativeMqttClient.remLen(body.length);return BMPNativeMqttClient.concat(new Uint8Array([type]),r,body)}
+  connect(){
+    this.closedByUser=false;
+    try{
+      this.ws=new WebSocket(this.url,'mqtt');
+      this.ws.binaryType='arraybuffer';
+      this.ws.onopen=()=>this._onOpen();
+      this.ws.onmessage=e=>this._onData(e.data);
+      this.ws.onerror=e=>this.emit('error',e);
+      this.ws.onclose=e=>this._onClose(e);
+    }catch(e){this.emit('error',e);this._scheduleReconnect()}
+    return this;
+  }
+  _onOpen(){
+    const id=this.options.clientId||('bmp_'+Math.random().toString(36).slice(2,12));
+    const vh=BMPNativeMqttClient.concat(BMPNativeMqttClient.str('MQTT'),new Uint8Array([4,2,0,60]));
+    const body=BMPNativeMqttClient.concat(vh,BMPNativeMqttClient.str(id));
+    try{this.ws.send(BMPNativeMqttClient.packet(0x10,body));}catch(e){this.emit('error',e);}
+  }
+  _onData(data){
+    let bytes;
+    if(data instanceof ArrayBuffer)bytes=new Uint8Array(data);
+    else if(data instanceof Blob){data.arrayBuffer().then(b=>this._onData(b));return;}
+    else return;
+    this.buffer=BMPNativeMqttClient.concat(this.buffer,bytes);
+    while(this.buffer.length>=2){
+      let multiplier=1,rem=0,idx=1,b;
+      do{if(idx>=this.buffer.length)return;b=this.buffer[idx++];rem+=(b&127)*multiplier;multiplier*=128;if(multiplier>2097152){this.buffer=new Uint8Array(0);return}}while(b&128);
+      const total=idx+rem;if(this.buffer.length<total)return;
+      const header=this.buffer[0],payload=this.buffer.slice(idx,total);this.buffer=this.buffer.slice(total);this._packetWithHeader(header,payload);
     }
-    const script=document.createElement("script");
-    script.src=urls[i++];
-    script.async=true;
-    script.onload=()=>{bmpMqttScriptLoading=false;bmpStartMqtt();};
-    script.onerror=()=>{script.remove();tryNext();};
-    document.head.appendChild(script);
-  };
-  tryNext();
+  }
+  _packet(type,p){
+    if(type===2){
+      if(p.length<2)return;
+      const rc=p[1]; if(rc!==0){this.connected=false;this.emit('error',new Error('MQTT CONNACK code '+rc));try{this.ws.close()}catch(e){};return;}
+      this.connected=true;this.emit('connect');this._startPing();return;
+    }
+    if(type===3){
+      if(p.length<2)return;const n=(p[0]<<8)|p[1];if(p.length<2+n)return;
+      const topic=new TextDecoder().decode(p.slice(2,2+n));let pos=2+n;const qos=(this._lastHeaderQoS||0);
+      // QoS is read from the fixed header by _packetWithHeader; all BMP publishes are QoS 0.
+      this.emit('message',topic,p.slice(pos));return;
+    }
+    if(type===13)return;
+  }
+  // Replaced parser with header-aware version below.
+  _packetWithHeader(header,p){
+    const type=header>>4;
+    if(type===2){this._packet(type,p);return;}
+    if(type===3){
+      if(p.length<2)return;const n=(p[0]<<8)|p[1];if(p.length<2+n)return;
+      const topic=new TextDecoder().decode(p.slice(2,2+n));let pos=2+n;const qos=(header>>1)&3;
+      if(qos>0)pos+=2;this.emit('message',topic,p.slice(pos));return;
+    }
+    this._packet(type,p);
+  }
+  _startPing(){clearInterval(this.pingTimer);this.pingTimer=setInterval(()=>{if(this.connected&&this.ws?.readyState===1){try{this.ws.send(new Uint8Array([0xC0,0]))}catch(e){}}},20000)}
+  _onClose(e){clearInterval(this.pingTimer);this.pingTimer=0;const was=this.connected;this.connected=false;this.emit('close',e);if(!this.closedByUser&&!was)this._scheduleReconnect()}
+  _scheduleReconnect(){if(this.reconnectTimer||this.closedByUser)return;this.reconnectTimer=setTimeout(()=>{this.reconnectTimer=0;if(!this.closedByUser)this.connect()},5000)}
+  subscribe(topic,opts,cb){if(typeof opts==='function'){cb=opts;opts={}}const id=this.nextId();const t=BMPNativeMqttClient.str(topic);const body=BMPNativeMqttClient.concat(BMPNativeMqttClient.u16(id),t,new Uint8Array([0]));if(this.ws?.readyState===1){try{this.ws.send(BMPNativeMqttClient.packet(0x82,body));cb?.(null,[{topic,qos:0}]);return true}catch(e){cb?.(e);return false}}cb?.(new Error('not connected'));return false}
+  unsubscribe(topic,cb){const id=this.nextId(),body=BMPNativeMqttClient.concat(BMPNativeMqttClient.u16(id),BMPNativeMqttClient.str(topic));if(this.ws?.readyState===1){try{this.ws.send(BMPNativeMqttClient.packet(0xA2,body));cb?.(null);return true}catch(e){cb?.(e);return false}}return false}
+  publish(topic,payload,opts={},cb){const t=BMPNativeMqttClient.str(topic),data=payload instanceof Uint8Array?payload:BMPNativeMqttClient.bytes(payload??'');const flags=opts?.retain?1:0;const body=BMPNativeMqttClient.concat(t,data);if(this.ws?.readyState===1){try{this.ws.send(BMPNativeMqttClient.packet(0x30|flags,body));cb?.(null);return true}catch(e){cb?.(e);return false}}cb?.(new Error('not connected'));return false}
+  end(force){this.closedByUser=true;clearTimeout(this.reconnectTimer);clearInterval(this.pingTimer);try{if(this.ws?.readyState===1&&!force)this.ws.send(new Uint8Array([0xE0,0]))}catch(e){}try{this.ws?.close()}catch(e){}this.connected=false}
 }
 
+// Replace the old MQTT.js/CDN loader completely.
+let bmpMqttScriptLoading=false;
+function bmpLoadMqtt(){bmpStartMqtt();}
+let bmpMqttBrokerIndex=0;
+let bmpMqttConnecting=false;
 function bmpStartMqtt(){
-  if(bmpMqtt || !window.mqtt)return;
+  if(bmpMqtt||bmpMqttConnecting)return;
+  bmpMqttConnecting=true;
+  const url=BMP_MQTT_URLS[bmpMqttBrokerIndex % BMP_MQTT_URLS.length];
+  const clientId=BMP_MQTT_CLIENT_ID+'_'+Math.random().toString(36).slice(2,8);
   try{
-    bmpMqtt=window.mqtt.connect(BMP_MQTT_URL,{clientId:BMP_MQTT_CLIENT_ID,clean:true,connectTimeout:8000,reconnectPeriod:5000});
-    bmpMqtt.on("connect",()=>{
-      bmpMqttReady=true;
-      bmpMqtt.subscribe(BMP_NETWORK_TOPIC,{qos:0});
-      bmpPresence();
-      bmpRequestMainPeer();
-      clearInterval(bmpPresenceTimer);
-      bmpPresenceTimer=setInterval(()=>{bmpPresence();bmpRequestMainPeer();bmpBroadcastRoomUpdate();},20000);
-      setTimeout(()=>{bmpPresence();bmpRequestMainPeer();bmpBroadcastRoomUpdate();bmpRequestRoomDirectory();getPublicRoomCards().forEach(r=>bmpPublishRoom(r));},800);
-      console.log("BMP auto P2P bootstrap ready",bmpPeerId);
+    const client=new BMPNativeMqttClient(url,{clientId});
+    bmpMqtt=client;
+    const failTimer=setTimeout(()=>{
+      if(!bmpMqttReady&&bmpMqtt===client){try{client.end(true)}catch(e){};bmpMqtt=null;bmpMqttConnecting=false;bmpMqttBrokerIndex=(bmpMqttBrokerIndex+1)%BMP_MQTT_URLS.length;setTimeout(()=>bmpStartMqtt(),200)}
+    },9000);
+    client.on('connect',()=>{
+      clearTimeout(failTimer);bmpMqttConnecting=false;bmpMqttReady=true;
+      try{client.subscribe(BMP_NETWORK_TOPIC,{qos:0})}catch(e){}
+      bmpPresence();bmpRequestMainPeer();clearInterval(bmpPresenceTimer);
+      bmpPresenceTimer=setInterval(()=>{bmpPresence();bmpRequestMainPeer();bmpBroadcastRoomUpdate?.()},20000);
+      setTimeout(()=>{bmpPresence();bmpRequestMainPeer();bmpBroadcastRoomUpdate?.();bmpRequestRoomDirectory();getPublicRoomCards().forEach(r=>bmpPublishRoom(r))},800);
+      console.log('BMP native MQTT ready:',url);
     });
-    bmpMqtt.on("message",(_,raw)=>{
-      try{bmpNetworkMessage(JSON.parse(raw.toString()));}catch(e){}
+    client.on('message',(topic,raw)=>{try{if(topic===BMP_NETWORK_TOPIC)bmpNetworkMessage(JSON.parse(new TextDecoder().decode(raw)))}catch(e){}});
+    client.on('error',err=>{bmpMqttReady=false;console.warn('BMP native MQTT error:',url,err?.message||err)});
+    client.on('close',()=>{
+      clearTimeout(failTimer);bmpMqttReady=false;bmpMqttConnecting=false;
+      if(bmpMqtt===client)bmpMqtt=null;
+      bmpMqttBrokerIndex=(bmpMqttBrokerIndex+1)%BMP_MQTT_URLS.length;
+      if(!client.closedByUser)setTimeout(()=>bmpStartMqtt(),400);
     });
-    bmpMqtt.on("close",()=>{bmpMqttReady=false;});
-  }catch(e){console.error(e);}
+    client.connect();
+  }catch(e){bmpMqttConnecting=false;bmpMqtt=null;bmpMqttBrokerIndex=(bmpMqttBrokerIndex+1)%BMP_MQTT_URLS.length;setTimeout(()=>bmpStartMqtt(),400)}
 }
 
 function bmpRelaySignal(to,data){
@@ -7114,7 +7189,6 @@ document
   window.joinP2PRoom=joinP2PRoom;
 
   /* ---------- UI overrides ---------- */
-  window.bmpLoadMqtt=()=>{};
   window.openCreateRoom=function(){
     closeRoomModals();const m=document.getElementById('createRoomModal');if(!m)return;m.classList.add('active');
     const n=document.getElementById('createUserName');if(n){n.value=V3.profile?.username||'';n.style.display='none';}
@@ -7435,7 +7509,7 @@ document
     window.bmpMqtt.on('message',(topic,raw)=>{
       if(!topic.startsWith(ROOT+'/'))return;
       const fn=handlers.get(topic);
-      let packet=null;try{packet=JSON.parse(raw.toString());}catch(e){return;}
+      let packet=null;try{const text=(raw instanceof Uint8Array)?new TextDecoder().decode(raw):String(raw);packet=JSON.parse(text);}catch(e){return;}
       if(topic.startsWith(ROOM_ROOT)){
         if(!packet||packet.type!=='room'||!valid(packet.connectionCode)||!valid(packet.responseCode)){return;}
         if(!packet.createdAt||now()-Number(packet.createdAt)>TTL*1000){removePublicRoom(packet.connectionCode);renderPublicRooms();return;}
@@ -7626,8 +7700,21 @@ document
   function boot(){
     patchToolbar();
     initDirectory();
+
+    // V14 FIX: V13 restored the MQTT loader but never actually called it.
+    // Therefore waitMqtt() could only wait forever and the UI reported the
+    // generic "network service unavailable" message even with a working connection.
+    try{ window.bmpLoadMqtt?.(); }catch(e){ console.error('BMP MQTT startup failed',e); }
+
     setInterval(()=>{patchToolbar();renderPublicRooms();},3000);
-    const wait=setInterval(()=>{if(window.bmpMqttReady&&window.bmpMqtt){patchMqttReconnect();ensurePublicDirectorySubscription();renderPublicRooms();clearInterval(wait);}},250);
+    const wait=setInterval(()=>{
+      if(window.bmpMqttReady&&window.bmpMqtt){
+        patchMqttReconnect();
+        ensurePublicDirectorySubscription();
+        renderPublicRooms();
+        clearInterval(wait);
+      }
+    },250);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
