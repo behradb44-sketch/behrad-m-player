@@ -257,7 +257,17 @@ wss.on('connection', ws => {
     if (m.type === 'chat') {
       const text = String(m.text || '').trim().slice(0, 2000);
       if (!text) return;
-      broadcast(room, { event: 'chat', from: peerId, name: room.members.get(peerId)?.name || 'کاربر', text, ts: Date.now() }, null);
+      broadcast(room, {
+        event: 'chat',
+        from: peerId,
+        name: room.members.get(peerId)?.name || 'کاربر',
+        text,
+        msgId: m.msgId || '',
+        replyTo: String(m.replyTo || '').slice(0, 200),
+        replyName: String(m.replyName || '').slice(0, 80),
+        replyText: String(m.replyText || '').slice(0, 2000),
+        ts: Date.now()
+      }, null);
       return;
     }
   });
