@@ -9,7 +9,8 @@ const COMMUNITY_PASSWORD = process.env.BMP_COMMUNITY_PASSWORD || 'bM.pcom.unityb
 const ROOMS = {
   community: { id: 'community', name: 'B.M.P COMMUNITY', type: 'text', private: true, password: COMMUNITY_PASSWORD, inviteToken: '', permanent: true },
   public: { id: 'public', name: 'چت عمومی', type: 'text', private: false, password: '', inviteToken: '', permanent: true },
-  public_voice: { id: 'public_voice', name: 'گفتگوی صوتی عمومی', type: 'voice', private: false, password: '', inviteToken: '', permanent: true }
+  public_voice: { id: 'public_voice', name: 'گفتگوی صوتی عمومی', type: 'voice', private: false, password: '', inviteToken: '', permanent: true },
+  public_video: { id: 'public_video', name: 'تماس ویدیویی', type: 'video', private: false, password: '', inviteToken: '', permanent: true }
 };
 
 const rooms = new Map();
@@ -148,7 +149,7 @@ const server = http.createServer(async (req, res) => {
     try {
       const b = await readBody(req);
       const name = String(b.name || '').trim().slice(0, 50);
-      const type = b.type === 'voice' ? 'voice' : 'text';
+      const type = b.type === 'video' ? 'video' : (b.type === 'voice' ? 'voice' : 'text');
       const roomPassword = String(b.password || '').slice(0, 64);
       const privateRoom = !!b.private || !!roomPassword;
       const ownerPeerId = String(b.ownerPeerId || '').slice(0, 128);
@@ -196,7 +197,7 @@ const server = http.createServer(async (req, res) => {
       const id = String(b.roomId || '');
       const room = validRoom(id);
       if (!room) return json(res, 404, { ok: false, error: 'room_not_found' });
-      if (room.permanent || id === 'community' || id === 'public' || id === 'public_voice') {
+      if (room.permanent || id === 'community' || id === 'public' || id === 'public_voice' || id === 'public_video') {
         return json(res, 403, { ok: false, error: 'room_cannot_be_deleted' });
       }
       const ownerToken = String(b.ownerToken || '');
