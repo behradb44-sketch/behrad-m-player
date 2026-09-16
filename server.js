@@ -284,8 +284,23 @@ wss.on('connection', ws => {
       if (room && room !== nextRoom) removeMember(room, peerId);
       room = nextRoom;
       peerId = nextPeer;
+
+      // One live WebSocket per peerId. A stale/reconnecting socket must never
+      // be allowed to remove the newer connection's presence on close.
+      const existingMember = room.members.get(peerId);
+      const existingSocket = existingMember?.ws;
+      if (existingSocket && existingSocket !== ws) {
+        room.sockets.delete(existingSocket);
+        try { existingSocket.close(4001, 'replaced_by_new_connection'); } catch {}
+      }
       room.sockets.add(ws);
-      room.members.set(peerId, { peerId, name: String(m.name || 'کاربر').slice(0, 40), username: String(m.username || '').replace(/^@/, '').slice(0, 24), joinedAt: Date.now() });
+      room.members.set(peerId, {
+        peerId,
+        name: String(m.name || existingMember?.name || 'کاربر').slice(0, 40),
+        username: String(m.username || existingMember?.username || '').replace(/^@/, '').slice(0, 24),
+        joinedAt: existingMember?.joinedAt || Date.now(),
+        ws
+      });
       ensureCodes(room);
       room.revision++;
       room.updatedAt = Date.now();
@@ -301,6 +316,7 @@ wss.on('connection', ws => {
       if (member) {
         member.name = String(m.name || member.name || 'کاربر').slice(0, 40);
         member.username = String(m.username || member.username || '').replace(/^@/, '').slice(0, 24);
+        member.ws = ws;
         room.members.set(peerId, member);
         room.updatedAt = Date.now();
         broadcast(room, { event: 'presence', members: publicMembers(room), state: publicRoom(room) });
@@ -350,7 +366,10 @@ wss.on('connection', ws => {
   ws.on('close', () => {
     if (!room || !peerId) return;
     room.sockets.delete(ws);
-    removeMember(room, peerId);
+    // Only the currently registered socket may remove this peer.
+    // This prevents ghost "online" members during reconnect races.
+    const current = room.members.get(peerId);
+    if (current?.ws === ws) removeMember(room, peerId);
   });
 
   ws.on('error', () => {});
