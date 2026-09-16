@@ -2313,13 +2313,45 @@ position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-g
 .bmpV33-modalCard{width:min(480px,100%)}.bmpV33-modalGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bmpV33-modalGrid label{display:block;color:#9eabc0;font-size:11px;margin-bottom:6px}.bmpV33-modalGrid input,.bmpV33-modalGrid select{width:100%;background:#060914;color:#eef8ff;border:1px solid var(--bmp-rt-line);padding:12px;border-radius:12px;outline:none}.bmpV33-modalGrid .full{grid-column:1/-1}.bmpV33-modalHint{font-size:11px;color:#7f8ba5;line-height:1.8;margin-top:10px}.bmpV33-check{display:flex;align-items:center;gap:8px;color:#b8c3d5;font-size:11px;margin-top:9px}.bmpV33-check input{accent-color:#00c8ff}
 @media(max-width:600px){.bmpV33-profileBar{align-items:flex-start;flex-direction:column}.bmpV33-profileBtns{width:100%;justify-content:stretch}.bmpV33-profileBtns button{flex:1}.bmpV33-modalGrid{grid-template-columns:1fr}.bmpV33-modalGrid .full{grid-column:auto}.bmpV33-voiceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 <style id="bmp-v35-media">
-.bmpV35-video{width:auto;height:auto;max-width:100%;max-height:70vh;aspect-ratio:auto;object-fit:contain;object-position:center;border-radius:13px;background:#02050b;border:1px solid rgba(67,232,255,.12);display:block;margin:0 auto 9px}.bmpV35-video.mirror{transform:scaleX(-1)}.bmpV35-callBtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.bmpV35-callBtns button{font-size:10px;padding:7px 9px;flex:1;min-width:92px}.bmpV35-mediaUser{min-width:150px;min-width:0;align-self:start}.bmpV35-cameraBtn{min-width:120px}
 </style>
+</style>
+
+<style id="bmp3d-wire-background">
+:root{--bmp-bg-x:50%;--bmp-bg-y:50%;--bmp-hue:195;}
+body{background:#030611;overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:-20%;z-index:-3;pointer-events:none;background:radial-gradient(circle at var(--bmp-bg-x) var(--bmp-bg-y),hsla(var(--bmp-hue),100%,58%,.16),transparent 24%),radial-gradient(circle at calc(100% - var(--bmp-bg-x)) calc(100% - var(--bmp-bg-y)),hsla(calc(var(--bmp-hue) + 105),100%,62%,.09),transparent 30%),linear-gradient(135deg,#02040b,#07101d 52%,#02040a);transition:background .12s linear;}
+.bmp3d-background{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;perspective:1000px;transform-style:preserve-3d;filter:saturate(1.15);}
+.bmp3d-model{position:absolute;transform-style:preserve-3d;opacity:.34;will-change:transform;filter:drop-shadow(0 0 12px hsla(var(--bmp-hue),100%,60%,.25));}
+.bmp3d-model::before,.bmp3d-model::after,.bmp3d-model i::before,.bmp3d-model i::after{content:"";position:absolute;box-sizing:border-box;border:1px solid hsla(var(--bmp-hue),100%,70%,.38);}
+.cube{width:82px;height:82px;border:1px solid hsla(var(--bmp-hue),100%,70%,.42);}
+.cube::before,.cube::after{inset:10px;border:1px solid hsla(calc(var(--bmp-hue) + 45),100%,70%,.32);}
+.cube i::before{inset:20px;transform:translateZ(20px);border-color:hsla(calc(var(--bmp-hue) + 80),100%,70%,.28);}
+.cube i::after{left:0;top:0;width:100%;height:100%;transform:rotateY(58deg);}
+.pyramid{width:100px;height:100px;border-left:1px solid hsla(var(--bmp-hue),100%,70%,.4);border-bottom:1px solid hsla(var(--bmp-hue),100%,70%,.4);transform-style:preserve-3d;}
+.pyramid::before,.pyramid::after{left:50%;top:50%;width:100px;height:100px;transform-origin:0 0;border:1px solid hsla(calc(var(--bmp-hue) + 55),100%,70%,.34);}
+.pyramid::before{transform:rotate(45deg) skew(-18deg,-18deg);}.pyramid::after{transform:rotate(-45deg) skew(18deg,18deg);}
+.ring{width:105px;height:105px;border:2px solid hsla(var(--bmp-hue),100%,70%,.4);border-radius:50%;box-shadow:inset 0 0 24px hsla(var(--bmp-hue),100%,60%,.08),0 0 24px hsla(var(--bmp-hue),100%,60%,.08);}
+.ring::before{inset:14px;border-radius:50%;border-color:hsla(calc(var(--bmp-hue) + 75),100%,70%,.34);transform:rotateX(65deg);}.ring::after{inset:25px;border-radius:50%;border-color:hsla(calc(var(--bmp-hue) + 155),100%,70%,.3);transform:rotateY(65deg);}
+.octa{width:90px;height:90px;transform-style:preserve-3d;}.octa::before,.octa::after{left:5px;top:5px;width:80px;height:80px;transform:rotate(45deg);border-color:hsla(var(--bmp-hue),100%,70%,.4);}.octa::after{transform:rotate(45deg) rotateX(70deg);border-color:hsla(calc(var(--bmp-hue) + 95),100%,70%,.3);}
+.m1{left:4%;top:12%;}.m2{left:21%;top:72%;}.m3{left:47%;top:12%;}.m4{right:7%;top:20%;}.m5{left:10%;top:44%;}.m6{right:18%;top:64%;}.m7{left:34%;top:47%;}.m8{right:37%;top:78%;}.m9{right:3%;top:74%;}.m10{left:52%;top:63%;}.m11{left:74%;top:7%;}.m12{left:67%;top:39%;}.m13{left:2%;top:84%;}.m14{right:23%;top:8%;}.m15{right:47%;top:4%;}.m16{right:4%;top:48%;}.m17{left:38%;top:87%;}.m18{right:68%;top:27%;}
+@media(max-width:700px){.bmp3d-model{opacity:.24;transform:scale(.7)}.m2,.m9,.m13,.m17{display:none}}
+@media(prefers-reduced-motion:reduce){.bmp3d-model{animation:none!important;}}
 </style>
 </head>
 
 
 <body>
+<div id="bmp3dBackground" class="bmp3d-background" aria-hidden="true">
+  <div class="bmp3d-model cube m1"><i></i></div><div class="bmp3d-model cube m2"><i></i></div>
+  <div class="bmp3d-model pyramid m3"><i></i></div><div class="bmp3d-model pyramid m4"><i></i></div>
+  <div class="bmp3d-model ring m5"></div><div class="bmp3d-model ring m6"></div>
+  <div class="bmp3d-model octa m7"><i></i></div><div class="bmp3d-model octa m8"><i></i></div>
+  <div class="bmp3d-model cube m9"><i></i></div><div class="bmp3d-model ring m10"></div>
+  <div class="bmp3d-model pyramid m11"><i></i></div><div class="bmp3d-model cube m12"><i></i></div>
+  <div class="bmp3d-model ring m13"></div><div class="bmp3d-model octa m14"><i></i></div>
+  <div class="bmp3d-model cube m15"><i></i></div><div class="bmp3d-model pyramid m16"><i></i></div>
+  <div class="bmp3d-model ring m17"></div><div class="bmp3d-model octa m18"><i></i></div>
+</div>
 
 <!-- BMP REAL LOADING OVERLAY -->
 <div class="bmp-loading-overlay" id="bmpLoadingOverlay" aria-hidden="true">
@@ -2996,27 +3028,27 @@ position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-g
 <div class="bmpV33-profileBar"><div class="bmpV33-profileMain"><div class="bmpV33-avatar" id="profileAvatar">ب</div><div class="bmpV33-profileText"><b id="profileDisplayName">کاربر</b><small id="profileUsername">@user</small></div></div><div class="bmpV33-profileBtns"><button class="bmpV33-miniBtn" onclick="openProfileModal()">✏️ ویرایش پروفایل</button><button class="bmpV33-miniBtn" onclick="copyProfile()">📋 کپی نام کاربری</button></div></div>
 <div class="bmpV33-roomTools"><button class="bmpRT-btn" onclick="openCreateRoomModal()">＋ ساخت روم جدید</button><button class="bmpRT-btn secondary" onclick="loadRooms();toast('لیست روم‌ها تازه شد')">↻ بروزرسانی روم‌ها</button></div>
 <section class="bmpRT-rooms" id="roomList"></section>
-  <section class="bmpRT-chat" id="chat"><div class="bmpRT-chatHead"><div><h3 id="chatTitle">چت</h3><div class="bmpRT-chatState" id="chatState">در حال آماده‌سازی...</div></div><button class="bmpRT-btn danger" onclick="leaveRoom()">خروج</button></div><div class="bmpRT-messages" id="messages"></div><section class="bmpV33-voicePanel" id="voicePanel"><div class="bmpV33-voiceHead"><h4 id="mediaPanelTitle">🎙️ اتاق صوتی</h4><span id="voiceState">میکروفون خاموش</span></div><div class="bmpV33-voiceGrid" id="voiceGrid"></div><div class="bmpV33-voiceControls"><button class="bmpRT-btn" id="micToggle" onclick="toggleMic()">🎙️ روشن کردن میکروفون</button><button class="bmpRT-btn secondary bmpV35-cameraBtn" id="cameraToggle" onclick="toggleCamera()" style="display:none">📹 خاموش کردن دوربین</button></div></section><div class="bmpRT-replyBar" id="replyBar"><div class="bmpRT-replyLine"></div><div class="bmpRT-replyInfo"><div class="bmpRT-replyName" id="replyName"></div><div class="bmpRT-replyText" id="replyText"></div></div><button type="button" class="bmpRT-replyCancel" onclick="cancelReply()" aria-label="لغو پاسخ">×</button></div><form class="bmpRT-composer" onsubmit="sendChat(event)"><input id="chatInput" autocomplete="off" maxlength="2000" placeholder="پیامت رو بنویس..."><button class="bmpRT-btn">ارسال</button></form></section>
-<div class="bmpRT-room-note">🔐 B.M.P COMMUNITY خصوصی است؛ 🌐 چت عمومی برای همه کاربران در دسترس است. تماس صوتی و ویدیویی هم برای B.M.P COMMUNITY فعال است.</div>
+  <section class="bmpRT-chat" id="chat"><div class="bmpRT-chatHead"><div><h3 id="chatTitle">چت</h3><div class="bmpRT-chatState" id="chatState">در حال آماده‌سازی...</div></div><button class="bmpRT-btn danger" onclick="leaveRoom()">خروج</button></div><div class="bmpRT-messages" id="messages"></div><section class="bmpV33-voicePanel" id="voicePanel"><div class="bmpV33-voiceHead"><h4 id="mediaPanelTitle">🎙️ اتاق صوتی</h4><span id="voiceState">میکروفون خاموش</span></div><div class="bmpV33-voiceGrid" id="voiceGrid"></div><div class="bmpV33-voiceControls"><button class="bmpRT-btn" id="micToggle" onclick="toggleMic()">🎙️ روشن کردن میکروفون</button></div></section><div class="bmpRT-replyBar" id="replyBar"><div class="bmpRT-replyLine"></div><div class="bmpRT-replyInfo"><div class="bmpRT-replyName" id="replyName"></div><div class="bmpRT-replyText" id="replyText"></div></div><button type="button" class="bmpRT-replyCancel" onclick="cancelReply()" aria-label="لغو پاسخ">×</button></div><form class="bmpRT-composer" onsubmit="sendChat(event)"><input id="chatInput" autocomplete="off" maxlength="2000" placeholder="پیامت رو بنویس..."><button class="bmpRT-btn">ارسال</button></form></section>
+<div class="bmpRT-room-note">🔐 B.M.P COMMUNITY خصوصی است؛ 🌐 چت عمومی برای همه کاربران در دسترس است. گفت‌وگوی صوتی برای B.M.P COMMUNITY فعال است.</div>
 </div>
 </section>
 
 <div class="bmpRT-modal" id="passwordModal"><div class="bmpRT-modalCard"><h3>ورود به B.M.P COMMUNITY</h3><p>این روم خصوصی است. رمز عبور را وارد کن تا اتصال به سرور و روم انجام شود.</p><input id="passwordInput" type="password" placeholder="رمز عبور" autocomplete="off"><div class="bmpRT-modalActions"><button class="bmpRT-btn secondary" onclick="closePassword()">لغو</button><button class="bmpRT-btn" onclick="confirmPassword()">ورود</button></div></div></div>
 <div class="bmpRT-modal" id="profileModal"><div class="bmpRT-modalCard bmpV33-modalCard"><h3>پروفایل B.M.P</h3><p>نام نمایشی و نام کاربری‌ای که بقیه در روم می‌بینند را تنظیم کن.</p><div class="bmpV33-modalGrid"><div><label>نام نمایشی</label><input id="profileNameInput" maxlength="40" placeholder="مثلاً Behrad"></div><div><label>نام کاربری</label><input id="profileUsernameInput" maxlength="24" placeholder="مثلاً behrad_mp" dir="ltr"></div></div><div class="bmpRT-modalActions"><button class="bmpRT-btn secondary" onclick="closeProfileModal()">لغو</button><button class="bmpRT-btn" onclick="saveProfile()">ذخیره</button></div></div></div>
-<div class="bmpRT-modal" id="createRoomModal"><div class="bmpRT-modalCard bmpV33-modalCard"><h3>ساخت روم جدید</h3><p>روم متنی یا صوتی بساز و با دکمه «ساخت لینک» لینک دعوت آماده کن.</p><div class="bmpV33-modalGrid"><div class="full"><label>نام روم</label><input id="createRoomName" maxlength="50" placeholder="مثلاً B.M.P Friends"></div><div><label>نوع روم</label><select id="createRoomType"><option value="text">💬 روم متنی</option><option value="voice">🎙️ روم صوتی</option><option value="video">📹 روم ویدیویی</option></select></div><div><label>رمز عبور (اختیاری)</label><input id="createRoomPassword" type="password" maxlength="64" placeholder="بدون رمز"></div></div><label class="bmpV33-check"><input type="checkbox" id="createRoomPrivate"> روم خصوصی باشد (ورود عادی با رمز)</label><div class="bmpV33-modalHint">لینک ساخته‌شده یک کلید دعوت دارد؛ هرکس از همان لینک وارد شود برای همان روم نیازی به وارد کردن رمز ندارد.</div><div class="bmpRT-modalActions"><button class="bmpRT-btn secondary" onclick="closeCreateRoomModal()">لغو</button><button class="bmpRT-btn" onclick="createRoom()">🔗 ساخت لینک</button></div></div></div>
+<div class="bmpRT-modal" id="createRoomModal"><div class="bmpRT-modalCard bmpV33-modalCard"><h3>ساخت روم جدید</h3><p>روم متنی یا صوتی بساز و با دکمه «ساخت لینک» لینک دعوت آماده کن.</p><div class="bmpV33-modalGrid"><div class="full"><label>نام روم</label><input id="createRoomName" maxlength="50" placeholder="مثلاً B.M.P Friends"></div><div><label>نوع روم</label><select id="createRoomType"><option value="text">💬 روم متنی</option><option value="voice">🎙️ روم صوتی</option></select></div><div><label>رمز عبور (اختیاری)</label><input id="createRoomPassword" type="password" maxlength="64" placeholder="بدون رمز"></div></div><label class="bmpV33-check"><input type="checkbox" id="createRoomPrivate"> روم خصوصی باشد (ورود عادی با رمز)</label><div class="bmpV33-modalHint">لینک ساخته‌شده یک کلید دعوت دارد؛ هرکس از همان لینک وارد شود برای همان روم نیازی به وارد کردن رمز ندارد.</div><div class="bmpRT-modalActions"><button class="bmpRT-btn secondary" onclick="closeCreateRoomModal()">لغو</button><button class="bmpRT-btn" onclick="createRoom()">🔗 ساخت لینک</button></div></div></div>
 <div class="bmpRT-modal" id="shareRoomModal"><div class="bmpRT-modalCard bmpV33-modalCard"><h3>🔗 لینک روم آماده است</h3><p id="shareRoomText">این لینک را برای ورود مستقیم به روم به اشتراک بگذار.</p><input id="shareRoomLink" class="bmpV33-joinLink" readonly><div class="bmpRT-modalActions"><button class="bmpRT-btn secondary" onclick="closeShareModal()">بستن</button><button class="bmpRT-btn" onclick="copyShareLink()">📋 کپی لینک</button></div></div></div>
 <div class="bmpRT-toast" id="toast"></div>
 <script>
 const API='https://behrad-m-player.onrender.com';
 const WS_URL='wss://behrad-m-player.onrender.com/ws';
-const defaultRooms={community:{name:'B.M.P COMMUNITY'},public:{name:'چت عمومی'},public_voice:{name:'گفتگوی صوتی عمومی',type:'voice'},public_video:{name:'تماس ویدیویی',type:'video'}};
+const defaultRooms={community:{name:'B.M.P COMMUNITY',type:'text',private:true,permanent:true},public:{name:'چت عمومی',type:'text',private:false,permanent:true}};
 let rooms={...defaultRooms};
 let roomOwnerTokens=JSON.parse(localStorage.getItem('bmp_room_owner_tokens')||'{}');
 let myPeerId='peer-'+crypto.randomUUID();
 let myName=localStorage.getItem('bmp_display_name')||('کاربر '+myPeerId.slice(-4));
 let myUsername=localStorage.getItem('bmp_username')||('user_'+myPeerId.slice(-6));
 let activeRoom=null,socket=null,password='',pendingRoom=null,inviteToken='',reconnectTimer=null,heartbeatTimer=null;
-let activeRoomType='text', mediaMode=null, localStream=null, micEnabled=false, cameraEnabled=false, audioContext=null, localAnalyser=null, localLevelRaf=null;
+let activeRoomType='text', mediaMode=null, localStream=null, micEnabled=false, audioContext=null, localAnalyser=null, localLevelRaf=null;
 let pendingCallMode='';
 const peers=new Map(),seenChatIds=new Set(),memberCache=new Map();
 function $(id){return document.getElementById(id)}
@@ -3031,18 +3063,19 @@ function saveProfile(){const n=$('profileNameInput').value.trim().slice(0,40),u=
 function copyProfile(){navigator.clipboard?.writeText('@'+myUsername).then(()=>toast('نام کاربری کپی شد')).catch(()=>toast('@'+myUsername))}
 function setRoomUI(id,state,members){if(!state)return;const card=document.querySelector('[data-room-id="'+CSS.escape(id)+'"]');if(!card)return;const c=card.querySelector('.bmpV33-connection'),r=card.querySelector('.bmpV33-response'),m=card.querySelector('.bmpV33-members'),s=card.querySelector('.bmpV33-sync');if(c)c.textContent=state.connectionCode||'0';if(r)r.textContent=state.responseCode||'0';if(m)m.textContent=(state.memberCount??(members||[]).length)+' نفر';if(s)s.textContent=state.memberCount?'آنلاین · همگام':'آماده';card.dataset.memberCount=state.memberCount??0}
 function renderRoomCard(st){
-  const type=st.type==='video'?'video':(st.type==='voice'?'voice':'text'),priv=!!st.private,permanent=!!st.permanent;
-  const icon=type==='video'?'📹':(type==='voice'?'🎙️':(priv?'🔒':'🌐'));
-  const badge=permanent?(type==='video'?'VIDEO • همیشگی':type==='voice'?'VOICE • همیشگی':'PUBLIC • همیشگی'):(type==='video'?'VIDEO':type==='voice'?'VOICE':(priv?'PRIVATE':'PUBLIC'));
-  const id=String(st.roomId);
-  const safeId=id.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-  const canJoin="joinRoom('"+safeId+"')";
-  const isOwner=!permanent&&!!roomOwnerTokens[id];
-  const deleteBtn=isOwner?'<button type="button" class="bmpRT-btn danger bmpV34-deleteBtn" data-room-id="'+esc(id)+'">🗑️ حذف روم</button>':'';
-  const communityCalls=id==='community'?'<div class="bmpV35-callBtns"><button type="button" class="bmpRT-btn secondary" onclick="joinAndCall(\'community\',\'audio\')">🎙️ تماس صوتی</button><button type="button" class="bmpRT-btn secondary" onclick="joinAndCall(\'community\',\'video\')">📹 تماس ویدیویی</button></div>':'';
-  return '<article class="bmpRT-room" id="room-'+esc(st.roomId)+'" data-room-id="'+esc(st.roomId)+'"><div class="bmpRT-roomHead"><div class="bmpRT-roomTitle"><div class="bmpRT-roomIcon">'+icon+'</div><div><h3>'+esc(st.name||'روم')+'</h3><p class="bmpRT-desc">'+(type==='video'?'تماس ویدیویی زنده':type==='voice'?'گفت‌وگوی صوتی زنده':'گفت‌وگوی متنی بلادرنگ')+(permanent?' · همیشه فعال':'')+'</p></div></div><span class="bmpRT-badge">'+badge+'</span></div><div class="bmpRT-codes"><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد اتصال</div><div class="bmpV33-connection bmpRT-code zero">0</div></div><div class="bmpRT-codeBox"><div class="bmpRT-codeLabel">کد پاسخ</div><div class="bmpV33-response bmpRT-code zero">0</div></div></div><div class="bmpRT-roomFoot"><span class="bmpRT-members">👥 <span class="bmpV33-members">'+(st.memberCount||0)+' نفر</span></span><span class="bmpV33-sync">آماده</span></div><div class="bmpRT-actions"><button type="button" class="bmpRT-btn" onclick="'+canJoin+'">ورود به روم</button>'+(st.shareUrl?'<button type="button" class="bmpRT-btn secondary" onclick="showShareLink('+JSON.stringify(st.shareUrl)+')">🔗 لینک</button>':'')+deleteBtn+'</div>'+communityCalls+'</article>';
+  // Video-call rooms are intentionally not rendered at all.
+  if(st.type==='video') return '';
+  const type=st.type==='voice'?'voice':'text',priv=!!st.private,permanent=!!st.permanent;
+  const icon=st.roomId==='community'?'✦':(type==='voice'?'◉':(priv?'◆':'✦'));
+  const badge=st.roomId==='community'?'COMMUNITY':(permanent?'همیشگی':(type==='voice'?'VOICE':(priv?'PRIVATE':'PUBLIC')));
+  const canJoin='joinRoom(\''+esc(st.roomId)+"\')";
+  const deleteBtn=(!permanent&&!priv)?'<button type=\"button\" class=\"bmpRT-btn danger bmpV34-deleteBtn\" data-room-id=\"'+esc(st.roomId)+'\">حذف</button>':'';
+  const desc=st.roomId==='community'?'گفت‌وگوی متنی و صوتی B.M.P COMMUNITY':(type==='voice'?'گفت‌وگوی صوتی زنده':'گفت‌وگوی متنی بلادرنگ');
+  const voiceAction=st.roomId==='community'?'<button type=\"button\" class=\"bmpRT-btn secondary voiceAction\" onclick=\"toggleCommunityVoice()\">🎙️ گفت‌وگوی صوتی</button>':'';
+  return '<article class=\"bmpRT-room\" id=\"room-'+esc(st.roomId)+'\" data-room-id=\"'+esc(st.roomId)+'\"><div class=\"bmpRT-roomHead\"><div class=\"bmpRT-roomTitle\"><div class=\"bmpRT-roomIcon\">'+icon+'</div><div><h3>'+esc(st.name||'روم')+'</h3><p class=\"bmpRT-desc\">'+desc+(permanent?' · همیشه فعال':'')+'</p></div></div><span class=\"bmpRT-badge\">'+badge+'</span></div><div class=\"bmpRT-codes\"><div class=\"bmpRT-codeBox\"><div class=\"bmpRT-codeLabel\">کد اتصال</div><div class=\"bmpV33-connection bmpRT-code zero\">0</div></div><div class=\"bmpRT-codeBox\"><div class=\"bmpRT-codeLabel\">کد پاسخ</div><div class=\"bmpV33-response bmpRT-code zero\">0</div></div></div><div class=\"bmpRT-roomFoot\"><span class=\"bmpRT-members\">👥 <span class=\"bmpV33-members\">'+(st.memberCount||0)+' نفر</span></span><span class=\"bmpV33-sync\">آماده</span></div><div class=\"bmpRT-actions\"><button type=\"button\" class=\"bmpRT-btn\" onclick=\"'+canJoin+'\">ورود به روم</button>'+(st.shareUrl?'<button type=\"button\" class=\"bmpRT-btn secondary\" onclick=\"showShareLink('+JSON.stringify(st.shareUrl)+')\">🔗 لینک</button>':'')+deleteBtn+voiceAction+'</div></article>';
 }
-function applyRooms(list){rooms={...defaultRooms};const box=$('roomList');if(!box)return;box.innerHTML='';for(const st of list||[]){rooms[st.roomId]={name:st.name,type:st.type||'text',private:!!st.private,permanent:!!st.permanent};box.insertAdjacentHTML('beforeend',renderRoomCard(st));setRoomUI(st.roomId,st,[])}box.querySelectorAll('.bmpV34-deleteBtn').forEach(btn=>btn.addEventListener('click',()=>deleteRoom(btn.dataset.roomId)));if(!box.children.length)box.innerHTML='<div class="bmpRT-room" style="grid-column:1/-1;text-align:center;color:#8995b1">هنوز رومی ساخته نشده.</div>'}
+
+function applyRooms(list){rooms={...defaultRooms};const box=$('roomList');if(!box)return;box.innerHTML='';for(const st of (list||[])){if(st.type==='video')continue;rooms[st.roomId]={name:st.name,type:st.type||'text',private:!!st.private,permanent:!!st.permanent};const card=renderRoomCard(st);if(card)box.insertAdjacentHTML('beforeend',card);setRoomUI(st.roomId,st,[])}box.querySelectorAll('.bmpV34-deleteBtn').forEach(btn=>btn.addEventListener('click',()=>deleteRoom(btn.dataset.roomId)));if(!box.children.length)box.innerHTML='<div class="bmpRT-room" style="grid-column:1/-1;text-align:center;color:#8995b1">هنوز رومی ساخته نشده.</div>'}
 async function loadRooms(){try{const r=await fetch(API+'/api/rooms',{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();applyRooms(d.rooms);setStatus('سرور آنلاین',true)}catch(e){setStatus('در انتظار سرور...',false)}}
 async function loadRoom(id){try{const r=await fetch(API+'/api/rooms/'+encodeURIComponent(id),{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();if(!rooms[id])rooms[id]={};rooms[id].name=d.room.name;rooms[id].type=d.room.type||'text';rooms[id].private=!!d.room.private;setRoomUI(id,d.room,d.members);return d}catch(e){return null}}
 function openCreateRoomModal(){ $('createRoomName').value='';$('createRoomPassword').value='';$('createRoomPrivate').checked=false;$('createRoomModal').classList.add('show') }
@@ -3050,7 +3083,7 @@ function closeCreateRoomModal(){ $('createRoomModal').classList.remove('show') }
 async function createRoom(){const name=$('createRoomName').value.trim(),type=$('createRoomType').value,pw=$('createRoomPassword').value,priv=$('createRoomPrivate').checked;if(!name)return toast('اسم روم را وارد کن');if(priv&&!pw)return toast('برای روم خصوصی رمز بگذار');try{const r=await fetch(API+'/api/rooms/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,type,password:pw,private:priv,ownerPeerId:myPeerId,ownerName:myName,ownerUsername:myUsername,baseUrl:new URL('./',location.href).href})});const d=await r.json();if(!r.ok)throw new Error(d.error||'ساخت روم ناموفق بود');if(d.ownerToken){roomOwnerTokens[d.room.roomId]=d.ownerToken;localStorage.setItem('bmp_room_owner_tokens',JSON.stringify(roomOwnerTokens))}closeCreateRoomModal();showShareLink(d.shareUrl);await loadRooms();toast('روم ساخته شد و لینک آماده است')}catch(e){toast(e.message||'ساخت روم ناموفق بود')}}
 async function deleteRoom(id){
   id=String(id||'');
-  if(!id||id==='community'||id==='public'||id==='public_voice'||id==='public_video')return toast('این روم همیشگی است و قابل حذف نیست');
+  if(!id||id==='community'||id==='public')return toast('این روم همیشگی است و قابل حذف نیست');
   const token=roomOwnerTokens[id];
   if(!token)return toast('کلید مالک این روم روی این دستگاه پیدا نشد');
   const roomName=rooms[id]?.name||'این روم';
@@ -3070,39 +3103,8 @@ function showShareLink(url){$('shareRoomLink').value=url;$('shareRoomText').text
 function closeShareModal(){$('shareRoomModal').classList.remove('show')}
 function copyShareLink(){navigator.clipboard?.writeText($('shareRoomLink').value).then(()=>toast('لینک روم کپی شد')).catch(()=>toast('کپی خودکار در این مرورگر در دسترس نیست'))}
 function joinRoom(id){const info=rooms[id]||{};pendingCallMode='';if(info.private){pendingRoom=id;$('passwordInput').value='';$('passwordModal').classList.add('show');setTimeout(()=>$('passwordInput').focus(),50)}else enterRoom(id,'')}
-function joinAndCall(id,mode){pendingCallMode=mode;const info=rooms[id]||{};if(info.private){pendingRoom=id;$('passwordInput').value='';$('passwordModal').classList.add('show');setTimeout(()=>$('passwordInput').focus(),50)}else enterRoom(id,'','',mode)}
-function closePassword(){$('passwordModal').classList.remove('show');pendingRoom=null}
-function confirmPassword(){const p=$('passwordInput').value;if(!p)return toast('رمز عبور را وارد کن');const id=pendingRoom,mode=pendingCallMode;pendingCallMode='';closePassword();enterRoom(id,p,'',mode)}
-$('passwordInput').addEventListener('keydown',e=>{if(e.key==='Enter')confirmPassword()})
-async function enterRoom(id,pw,token='',requestedMode=''){if(activeRoom)await leaveRoom();password=pw;inviteToken=token;setStatus('در حال ورود به روم...',false);const info=await loadRoom(id);activeRoomType=info?.room?.type||rooms[id]?.type||'text';mediaMode=requestedMode||(activeRoomType==='video'?'video':activeRoomType==='voice'?'audio':'');try{const res=await fetch(API+'/api/room/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:id,peerId:myPeerId,name:myName,username:myUsername,password:pw,inviteToken:token})});const data=await res.json();if(res.status===403)throw new Error('رمز عبور اشتباه است');if(!res.ok)throw new Error(data.error||'خطای ورود');rooms[id]={name:data.room.name,type:data.room.type||activeRoomType,private:!!data.room.private,permanent:!!data.room.permanent};setRoomUI(id,data.room,data.members);activeRoom=id;openChat(id);connectWS();if(mediaMode)await startMedia(mediaMode);toast('وارد روم شدی');}catch(e){setStatus('اتصال ناموفق',false);toast(e.message||'اتصال ناموفق بود')}}
-function openChat(id){$('chat').classList.add('open');$('chatTitle').textContent=rooms[id]?.name||'چت';$('chatState').textContent='در حال اتصال مستقیم کاربران...';$('messages').innerHTML='';$('voicePanel').classList.toggle('open',!!mediaMode);updateMediaPanel();if(mediaMode)renderVoiceMembers([])}
-function connectWS(){
-  clearTimeout(reconnectTimer);
-  if(socket){try{socket.close()}catch{}}
-  const ws=new WebSocket(WS_URL);
-  socket=ws;
-  ws.onopen=()=>{
-    if(socket!==ws)return;
-    setStatus('اتصال زنده برقرار است',true);
-    ws.send(JSON.stringify({type:'hello',roomId:activeRoom,peerId:myPeerId,name:myName,username:myUsername,password,inviteToken}));
-    clearInterval(heartbeatTimer);
-    heartbeatTimer=setInterval(()=>{if(socket===ws&&ws.readyState===1)ws.send(JSON.stringify({type:'presence'}))},20000);
-  };
-  ws.onmessage=ev=>{if(socket===ws)onWSMessage(ev)};
-  ws.onerror=()=>{if(socket===ws)setStatus('مشکل در اتصال زنده',false)};
-  ws.onclose=()=>{
-    clearInterval(heartbeatTimer);
-    // An old socket closing after a reconnect must not schedule another reconnect.
-    if(socket!==ws)return;
-    socket=null;
-    if(activeRoom){
-      setStatus('در حال تلاش برای اتصال مجدد...',false);
-      clearTimeout(reconnectTimer);
-      reconnectTimer=setTimeout(()=>{if(activeRoom)connectWS()},2500);
-    }
-  };
-}
-async function onWSMessage(ev){let m;try{m=JSON.parse(ev.data)}catch{return}if(m.event==='connected')return;if(m.event==='error'){toast(m.error==='invalid_password'?'رمز عبور اشتباه است':(m.error==='room_not_found'?'روم پیدا نشد':'خطای سرور: '+m.error));return}if(m.event==='room-deleted'){const deletedId=m.roomId;if(roomOwnerTokens[deletedId]){delete roomOwnerTokens[deletedId];localStorage.setItem('bmp_room_owner_tokens',JSON.stringify(roomOwnerTokens))}if(activeRoom===deletedId){activeRoom=null;clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);try{socket?.close()}catch{}socket=null;for(const item of peers.values()){try{item.pc.close()}catch{}if(item.audioEl)item.audioEl.remove()}peers.clear();await stopVoice();$('chat').classList.remove('open');password='';inviteToken='';setStatus('سرور آنلاین',true);toast('این روم توسط صاحبش حذف شد')}await loadRooms();return}if(m.event==='ready'||m.event==='room-state'||m.event==='presence'){const st=m.state||m.room;if(st){setRoomUI(activeRoom,st,m.members);activeRoomType=st.type||activeRoomType;if(!mediaMode&&activeRoomType==='video')mediaMode='video';if(!mediaMode&&activeRoomType==='voice')mediaMode='audio';$('voicePanel').classList.toggle('open',!!mediaMode);updateMediaPanel()}if(Array.isArray(m.members)){memberCache.clear();for(const x of m.members)memberCache.set(x.peerId,x);updatePeers(m.members);if(activeRoomType==='voice')renderVoiceMembers(m.members)}return}if(m.event==='signal'){if(m.to===myPeerId)handleSignal(m.from,m.data);return}if(m.event==='chat'){if(m.from!==myPeerId)addMessage(m.name||'کاربر',m.text,false,m.msgId,m.replyTo,m.replyName,m.replyText);}}
+function joinAndCall(id){pendingCallMode='audio';const info=rooms[id]||{};if(info.private){pendingRoom=id;$('passwordInput').value='';$('passwordModal').classList.add('show');setTimeout(()=>$('passwordInput').focus(),50)}else enterRoom(id,'','','audio')}
+async function onWSMessage(ev){let m;try{m=JSON.parse(ev.data)}catch{return}if(m.event==='connected')return;if(m.event==='error'){toast(m.error==='invalid_password'?'رمز عبور اشتباه است':(m.error==='room_not_found'?'روم پیدا نشد':'خطای سرور: '+m.error));return}if(m.event==='room-deleted'){const deletedId=m.roomId;if(roomOwnerTokens[deletedId]){delete roomOwnerTokens[deletedId];localStorage.setItem('bmp_room_owner_tokens',JSON.stringify(roomOwnerTokens))}if(activeRoom===deletedId){activeRoom=null;clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);try{socket?.close()}catch{}socket=null;for(const item of peers.values()){try{item.pc.close()}catch{}if(item.audioEl)item.audioEl.remove()}peers.clear();await stopVoice();$('chat').classList.remove('open');password='';inviteToken='';setStatus('سرور آنلاین',true);toast('این روم توسط صاحبش حذف شد')}await loadRooms();return}if(m.event==='ready'||m.event==='room-state'||m.event==='presence'){const st=m.state||m.room;if(st){setRoomUI(activeRoom,st,m.members);activeRoomType=st.type||activeRoomType;if(!mediaMode&&activeRoomType==='voice')mediaMode='audio';$('voicePanel').classList.toggle('open',!!mediaMode);updateMediaPanel()}if(Array.isArray(m.members)){memberCache.clear();for(const x of m.members)memberCache.set(x.peerId,x);updatePeers(m.members);if(activeRoomType==='voice')renderVoiceMembers(m.members)}return}if(m.event==='signal'){if(m.to===myPeerId)handleSignal(m.from,m.data);return}if(m.event==='chat'){if(m.from!==myPeerId)addMessage(m.name||'کاربر',m.text,false,m.msgId,m.replyTo,m.replyName,m.replyText);}}
 function updatePeers(members){if(!activeRoom)return;const ids=members.map(x=>x.peerId).filter(x=>x!==myPeerId);for(const [id,item] of peers){if(!ids.includes(id)){try{item.pc.close()}catch{};if(item.audioEl)item.audioEl.remove();peers.delete(id)}}for(const id of ids)ensurePeer(id,id<myPeerId);$('chatState').textContent=ids.length?'اتصال مستقیم فعال · '+(ids.length+1)+' کاربر':'منتظر کاربر دیگر...'}
 function ensurePeer(id,initiator){
   if(peers.has(id))return peers.get(id);
@@ -3116,7 +3118,7 @@ function ensurePeer(id,initiator){
     item.remoteStream=stream;
     if(!item.audioEl){const a=document.createElement('audio');a.autoplay=true;a.playsInline=true;a.style.display='none';document.body.appendChild(a);item.audioEl=a}
     item.audioEl.srcObject=stream;
-    if(mediaMode==='video'){const v=document.querySelector('[data-remote-video="'+CSS.escape(id)+'"]');if(v){v.srcObject=stream;bindVideoRatio(v)}}
+
     attachRemoteAnalyser(id,stream);
   };
   pc.onconnectionstatechange=()=>{if(['failed','closed','disconnected'].includes(pc.connectionState))$('chatState').textContent='اتصال مستقیم ناپایدار؛ در حال بازیابی...'};
@@ -3131,10 +3133,9 @@ async function startMedia(mode){
   if(localStream){mediaMode=mode;updateMediaPanel();return}
   mediaMode=mode;
   try{
-    localStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:mode==='video'});
+    localStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
     micEnabled=localStream.getAudioTracks().length>0;
-    cameraEnabled=localStream.getVideoTracks().length>0;
-    await setupLocalAnalyser();
+        await setupLocalAnalyser();
     updateMediaPanel();
     for(const [id,item] of peers){
       for(const track of localStream.getTracks()){try{item.pc.addTrack(track,localStream)}catch{}}
@@ -3143,7 +3144,7 @@ async function startMedia(mode){
     renderVoiceMembers(Array.from(memberCache.values()));
   }catch(e){
     localStream=null;micEnabled=false;cameraEnabled=false;
-    toast(mode==='video'?'دسترسی دوربین یا میکروفون داده نشد':'دسترسی میکروفون داده نشد');
+    toast('دسترسی میکروفون داده نشد');
     $('voiceState').textContent='دسترسی رسانه برقرار نشد';
   }
 }
@@ -3151,31 +3152,26 @@ function startVoice(){return startMedia('audio')}
 function updateMediaPanel(){
   const panel=$('voicePanel');if(!panel)return;
   panel.classList.toggle('open',!!mediaMode);
-  const title=$('mediaPanelTitle');if(title)title.textContent=mediaMode==='video'?'📹 تماس ویدیویی':'🎙️ اتاق صوتی';
-  const cam=$('cameraToggle');if(cam){cam.style.display=mediaMode==='video'?'inline-flex':'none';cam.textContent=cameraEnabled?'📹 خاموش کردن دوربین':'📹 روشن کردن دوربین'}
+  const title=$('mediaPanelTitle');if(title)title.textContent='🎙️ اتاق صوتی';
   const mic=$('micToggle');if(mic)mic.textContent=micEnabled?'🔇 خاموش کردن میکروفون':'🎙️ روشن کردن میکروفون';
   const st=$('voiceState');if(st)st.textContent=micEnabled?'میکروفون روشن':'میکروفون خاموش';
 }
-function toggleCamera(){if(!localStream||mediaMode!=='video')return startMedia('video');const tracks=localStream.getVideoTracks();if(!tracks.length)return;cameraEnabled=!cameraEnabled;tracks.forEach(t=>t.enabled=cameraEnabled);const localVideo=document.querySelector('[data-local-video="1"]');if(localVideo)localVideo.style.display=cameraEnabled?'block':'none';updateMediaPanel()}
 
 function setupLocalAnalyser(){if(!localStream)return;if(!audioContext)audioContext=new (window.AudioContext||window.webkitAudioContext)();localAnalyser=audioContext.createAnalyser();localAnalyser.fftSize=256;localAnalyser.smoothingTimeConstant=.72;audioContext.createMediaStreamSource(localStream).connect(localAnalyser);const data=new Uint8Array(localAnalyser.fftSize);cancelAnimationFrame(localLevelRaf);const tick=()=>{if(!localAnalyser)return;localAnalyser.getByteTimeDomainData(data);let sum=0;for(const v of data){const n=(v-128)/128;sum+=n*n}const rms=Math.min(1,Math.sqrt(sum/data.length)*3.2);setVoiceLevel(myPeerId,rms);localLevelRaf=requestAnimationFrame(tick)};tick()}
 function attachRemoteAnalyser(id,stream){if(!audioContext||!stream?.getAudioTracks?.().length)return;const item=peers.get(id);if(!item||item.analyser)item?.analyser;try{const analyser=audioContext.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.72;audioContext.createMediaStreamSource(stream).connect(analyser);item.analyser=analyser;const data=new Uint8Array(analyser.fftSize);const tick=()=>{if(!peers.has(id)||!item.analyser)return;analyser.getByteTimeDomainData(data);let sum=0;for(const v of data){const n=(v-128)/128;sum+=n*n}const rms=Math.min(1,Math.sqrt(sum/data.length)*3.2);setVoiceLevel(id,rms);requestAnimationFrame(tick)};tick()}catch{}}
 function setVoiceLevel(id,level){const el=document.querySelector('[data-voice-peer="'+CSS.escape(id)+'"]');if(!el)return;const ring=el.querySelector('.bmpV33-ring'),boost=1+Math.min(.42,level*.55),glow=Math.round(level*35);ring.style.transform='scale('+boost+')';ring.style.boxShadow='0 0 '+(8+glow)+'px rgba(0,190,255,'+(0.16+level*.65)+')';ring.style.borderColor='rgba(0,200,255,'+(0.25+level*.7)+')';el.classList.toggle('speaking',level>.08);const st=el.querySelector('.bmpV33-micState');if(st)st.classList.toggle('live',level>.08)}
-function bindVideoRatio(v){if(!v)return;const apply=()=>{if(v.videoWidth>0&&v.videoHeight>0){v.style.aspectRatio=v.videoWidth+'/'+v.videoHeight;v.style.width='auto';v.style.height='auto';}};v.addEventListener('loadedmetadata',apply,{once:true});v.addEventListener('resize',apply);if(v.readyState>=1)apply()}
 function renderVoiceMembers(members){
   const grid=$('voiceGrid');if(!grid)return;
   const all=[{peerId:myPeerId,name:myName,username:myUsername,local:true},...(members||[]).filter(x=>x.peerId!==myPeerId)];
   grid.innerHTML='';
   for(const m of all){
-    const video=mediaMode==='video'?'<video class="bmpV35-video'+(m.local?' mirror':'')+'" '+(m.local?'data-local-video="1"':'data-remote-video="'+esc(m.peerId)+'"')+' autoplay playsinline '+(m.local?'muted':'')+'></video>':'';
-    grid.insertAdjacentHTML('beforeend','<div class="bmpV33-voiceUser bmpV35-mediaUser" data-voice-peer="'+esc(m.peerId)+'"><div class="bmpV33-voiceAvatarWrap" '+(mediaMode==='video'?'style="display:none"':'')+'><div class="bmpV33-ring"></div><div class="bmpV33-voiceAvatar">'+esc(initials(m.name))+'</div></div>'+video+'<b>'+esc(m.name||'کاربر')+'</b><small>@'+esc(m.username||'user')+'</small><div class="bmpV33-micState '+(m.local&&micEnabled?'live':'')+'">'+(m.local?(micEnabled?'🎙️ میکروفون روشن':'🔇 میکروفون خاموش'):'🎙️ عضو صوتی')+'</div></div>');
+    const video='';
+    grid.insertAdjacentHTML('beforeend','<div class="bmpV33-voiceUser" data-voice-peer="'+esc(m.peerId)+'"><div class="bmpV33-voiceAvatarWrap"><div class="bmpV33-ring"></div><div class="bmpV33-voiceAvatar">'+esc(initials(m.name))+'</div></div><b>'+esc(m.name||'کاربر')+'</b><small>@'+esc(m.username||'user')+'</small><div class="bmpV33-micState '+(m.local&&micEnabled?'live':'')+'">'+(m.local?(micEnabled?'🎙️ میکروفون روشن':'🔇 میکروفون خاموش'):'🎙️ عضو صوتی')+'</div></div>');
   }
-  if(mediaMode==='video'&&localStream){const v=document.querySelector('[data-local-video="1"]');if(v){v.srcObject=localStream;bindVideoRatio(v)}}
-  for(const [id,item] of peers){if(item.remoteStream){const v=document.querySelector('[data-remote-video="'+CSS.escape(id)+'"]');if(v){v.srcObject=item.remoteStream;bindVideoRatio(v)}}}
 }
 function updateMicButton(){updateMediaPanel();renderVoiceMembers(Array.from(memberCache.values()))}
 function toggleMic(){if(!localStream)return startMedia(mediaMode||'audio').then(()=>{});micEnabled=!micEnabled;for(const t of localStream.getAudioTracks())t.enabled=micEnabled;updateMicButton()}
-async function stopVoice(){cancelAnimationFrame(localLevelRaf);localLevelRaf=null;if(localStream){for(const t of localStream.getTracks())t.stop();localStream=null}micEnabled=false;cameraEnabled=false;mediaMode=null;for(const item of peers.values()){if(item.audioEl)item.audioEl.remove();item.analyser=null}updateMediaPanel()}
+async function stopVoice(){cancelAnimationFrame(localLevelRaf);localLevelRaf=null;if(localStream){for(const t of localStream.getTracks())t.stop();localStream=null}micEnabled=false;mediaMode=null;for(const item of peers.values()){if(item.audioEl)item.audioEl.remove();item.analyser=null}updateMediaPanel()}
 let replyTarget=null;
 function escapeMsg(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function beginReply(msg){if(!msg||!msg.msgId)return;replyTarget={msgId:msg.msgId,name:msg.name||'کاربر',text:msg.text||''};$('replyName').textContent='پاسخ به '+replyTarget.name;$('replyText').textContent=replyTarget.text;$('replyBar').classList.add('show');$('chatInput').focus()}
@@ -6323,6 +6319,10 @@ document
 /* BMP V30 navigation safety */
 window.go=window.go||function(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
 window.aparat=window.aparat||function(){window.location.href='https://www.aparat.com/BEHRAD_M_PLAYER_1393';};
+</script>
+
+<script id="bmp3d-wire-background-js">
+(()=>{const root=document.documentElement,field=document.getElementById('bmp3dBackground');if(!field)return;const models=[...field.querySelectorAll('.bmp3d-model')];let tx=.5,ty=.5,x=.5,y=.5,h=195,raf=0;models.forEach((el,i)=>{el.dataset.i=i;el.style.setProperty('--r',((i%2)?-1:1)*(5+(i%7)*3)+'deg');});function pointer(px,py){tx=Math.max(0,Math.min(1,px));ty=Math.max(0,Math.min(1,py));h=185+Math.round(tx*145+ty*50)%170;root.style.setProperty('--bmp-hue',h);root.style.setProperty('--bmp-bg-x',(tx*100).toFixed(2)+'%');root.style.setProperty('--bmp-bg-y',(ty*100).toFixed(2)+'%');if(!raf)raf=requestAnimationFrame(frame)}function frame(){x+=(tx-x)*.08;y+=(ty-y)*.08;models.forEach((el,i)=>{const d=10+(i%6)*5,dx=(x-.5)*d,dy=(y-.5)*d,rx=(y-.5)*(18+(i%5)*8),ry=(x-.5)*(24+(i%7)*7),spin=(performance.now()/55)*(i%2?-.18:.14);el.style.transform='translate3d('+dx+'vw,'+dy+'vh,0) rotateX('+rx+'deg) rotateY('+ry+'deg) rotateZ('+spin+'deg)';});raf=requestAnimationFrame(frame)}window.addEventListener('pointermove',e=>pointer(e.clientX/innerWidth,e.clientY/innerHeight),{passive:true});window.addEventListener('touchmove',e=>{const t=e.touches[0];if(t)pointer(t.clientX/innerWidth,t.clientY/innerHeight)},{passive:true});pointer(.5,.5);})();
 </script>
 </body>
 </html>
