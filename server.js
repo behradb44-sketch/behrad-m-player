@@ -9,6 +9,7 @@ const COMMUNITY_PASSWORD = process.env.BMP_COMMUNITY_PASSWORD || 'bM.pcom.unityb
 const ROOMS = {
   community: { id: 'community', name: 'B.M.P COMMUNITY', type: 'text', private: true, password: COMMUNITY_PASSWORD, inviteToken: '', permanent: true },
   public: { id: 'public', name: 'چت عمومی', type: 'text', private: false, password: '', inviteToken: '', permanent: true },
+  public_voice: { id: 'public_voice', name: 'گفتگوی صوتی عمومی', type: 'voice', private: false, password: '', inviteToken: '', permanent: true },
 };
 
 const rooms = new Map();
