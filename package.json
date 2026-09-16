@@ -2,16 +2,9 @@
   "name": "behrad-m-player-realtime",
   "version": "1.0.0",
   "private": true,
-  "description": "Realtime rooms, WebRTC signaling, chat and online games backend for BEHRAD M PLAYER (no database)",
+  "description": "Realtime rooms, WebRTC signaling and chat backend for BEHRAD M PLAYER",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "check": "node --check server.js"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "dependencies": {
-    "ws": "^8.18.3"
-  }
+  "scripts": { "start": "node server.js", "check": "node --check server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "ws": "^8.18.3" }
 }
