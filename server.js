@@ -18,18 +18,6 @@ for (const r of Object.values(ROOMS)) {
   rooms.set(r.id, { ...r, connectionCode: '0', responseCode: '0', revision: 0, members: new Map(), sockets: new Set(), hostPeerId: null, updatedAt: Date.now() });
 }
 
-const USERS=new Map();
-const GAME_ROOMS=new Map();
-
-// V41: intentionally database-free. User/rank state lives in server memory.
-function normalizeUsername(v){return String(v||'').replace(/^@/,'').trim().replace(/[^a-zA-Z0-9_.-]/g,'_').slice(0,24)}
-function ensureUser(username,name){username=normalizeUsername(username);if(!username)return null;let u=USERS.get(username);if(!u)u={username,name:String(name||'کاربر').slice(0,40),rank:'عضو جدید',wins:0,streak:0,lastGames:[],lastSeen:Date.now()};else{u.name=String(name||u.name||'کاربر').slice(0,40);u.lastSeen=Date.now()}USERS.set(username,u);return u}
-function updateRank(u,gameId,won){if(!u||!won)return;u.wins++;u.streak++;u.lastGames=[...u.lastGames.slice(-4),gameId];const unique3=new Set(u.lastGames.slice(-3));if(u.wins>=50)u.rank='گاد پلیر';else if(u.streak>=10)u.rank='پرو پلیر';else if(u.streak>=3&&unique3.size===3)u.rank='پلیر'}
-function makeGameRoomId(){return 'game_'+crypto.randomBytes(8).toString('base64url')}
-function publicGameRoom(g){return {id:g.id,gameId:g.gameId,maxPlayers:g.maxPlayers,playerCount:g.players.size,inviteToken:g.inviteToken,private:g.private,state:g.state}}
-function broadcastGame(g,msg,except){const d=JSON.stringify(msg);for(const ws of g.sockets){if(ws!==except&&ws.readyState===1)try{ws.send(d)}catch{}}}
-function gamePlayerList(g){return [...g.players.values()].map(p=>({peerId:p.peerId,username:p.username,name:p.name,rank:p.rank,score:p.score||0,index:p.index}))}
-
 function json(res, status, body) {
   const text = JSON.stringify(body);
   res.writeHead(status, {
@@ -88,7 +76,7 @@ function publicRoom(room) {
 }
 
 function publicMembers(room) {
-  return Array.from(room.members.values()).map(m => ({ peerId: m.peerId, name: m.name, username: m.username || '', rank: USERS.get(m.username)?.rank || 'عضو جدید', joinedAt: m.joinedAt }));
+  return Array.from(room.members.values()).map(m => ({ peerId: m.peerId, name: m.name, username: m.username || '', joinedAt: m.joinedAt }));
 }
 
 function broadcast(room, message, except) {
@@ -142,8 +130,8 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://' + (req.headers.host || 'localhost'));
   const path = url.pathname;
 
-  if (req.method === 'GET' && (path === '/health' || path === '/api/health')) {
-    return json(res, 200, { ok: true, service: 'BEHRAD M PLAYER realtime', database: false, usersInMemory: USERS.size, rooms: rooms.size, gameRooms: GAME_ROOMS.size, time: Date.now() });
+  if (req.method === 'GET' && path === '/health') {
+    return json(res, 200, { ok: true, service: 'BEHRAD M PLAYER realtime', time: new Date().toISOString() });
   }
 
   if (req.method === 'GET' && path === '/api/rooms') {
@@ -193,9 +181,7 @@ const server = http.createServer(async (req, res) => {
       if (!room || !peerId) return json(res, 400, { ok: false, error: 'bad_request' });
       const inviteOk = !!room.inviteToken && String(b.inviteToken || '') === room.inviteToken;
       if (room.private && !inviteOk && String(b.password || '') !== room.password) return json(res, 403, { ok: false, error: 'invalid_password' });
-      const username = normalizeUsername(b.username || '');
-      const profileUser=ensureUser(username,name);
-      
+      const username = String(b.username || '').replace(/^@/, '').slice(0, 24);
       room.members.set(peerId, { peerId, name, username, joinedAt: Date.now() });
       ensureCodes(room);
       room.revision++;
@@ -267,9 +253,8 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, { ok: true });
     } catch (e) { return json(res, 400, { ok: false, error: e.message || 'bad_request' }); }
   }
-  if (req.method === 'POST' && path === '/api/games/create') { try{const b=await readBody(req);const allowed=['ttt','connect4','reaction'];const gameId=allowed.includes(String(b.gameId))?String(b.gameId):'ttt';const id=makeGameRoomId(),token=makeToken(18);const state=gameId==='ttt'?{board:Array(9).fill(''),turn:0,winner:null}:gameId==='connect4'?{board:Array(42).fill(''),turn:0,winner:null}:{status:'waiting',goAt:0,winner:null};const g={id,gameId,maxPlayers:2,inviteToken:token,private:true,players:new Map(),sockets:new Set(),state};GAME_ROOMS.set(id,g);const base=String(b.baseUrl||'').replace(/\/+$/,'')||'https://behrad-m-player.github.io';return json(res,201,{ok:true,room:publicGameRoom(g),shareUrl:base+'/?game='+encodeURIComponent(id)+'&key='+encodeURIComponent(token)});}catch(e){return json(res,400,{ok:false,error:e.message});} }
-  if (req.method === 'POST' && path === '/api/games/quick') { try{const b=await readBody(req);const allowed=['clickrush','memory','tapbattle'];const gameId=allowed.includes(String(b.gameId))?String(b.gameId):'clickrush';let g=[...GAME_ROOMS.values()].find(x=>!x.private&&x.gameId===gameId&&x.players.size<x.maxPlayers);if(!g){const id=makeGameRoomId();g={id,gameId,maxPlayers:8,inviteToken:'',private:false,players:new Map(),sockets:new Set(),state:gameId==='memory'?{cards:[],flips:[],scores:{}}:{scores:{},round:1}};GAME_ROOMS.set(id,g);if(gameId==='memory'){const vals=['🍎','🍋','🍇','🍉','🍒','🥝','🥭','🍓'];g.state.cards=[...vals,...vals].sort(()=>Math.random()-.5)}}return json(res,200,{ok:true,room:publicGameRoom(g)});}catch(e){return json(res,400,{ok:false,error:e.message});} }
-  if (req.method === 'GET' && path === '/') return json(res, 200, { ok: true, service: 'BEHRAD M PLAYER realtime', database: false, endpoints: ['/health', '/api/rooms', '/ws'] });
+
+  if (req.method === 'GET' && path === '/') return json(res, 200, { ok: true, service: 'BEHRAD M PLAYER realtime', endpoints: ['/health', '/api/rooms', '/ws'] });
   return json(res, 404, { ok: false, error: 'NOT_FOUND' });
 });
 
@@ -309,11 +294,10 @@ wss.on('connection', ws => {
         try { existingSocket.close(4001, 'replaced_by_new_connection'); } catch {}
       }
       room.sockets.add(ws);
-      ensureUser(normalizeUsername(m.username || existingMember?.username || ''), String(m.name || existingMember?.name || 'کاربر'));
       room.members.set(peerId, {
         peerId,
         name: String(m.name || existingMember?.name || 'کاربر').slice(0, 40),
-        username: normalizeUsername(m.username || existingMember?.username || ''),
+        username: String(m.username || existingMember?.username || '').replace(/^@/, '').slice(0, 24),
         joinedAt: existingMember?.joinedAt || Date.now(),
         ws
       });
@@ -325,15 +309,13 @@ wss.on('connection', ws => {
       return;
     }
 
-    if ((!room || !peerId) && !String(m.type||'').startsWith('game-')) return ws.send(JSON.stringify({ event: 'error', error: 'not_joined' }));
+    if (!room || !peerId) return ws.send(JSON.stringify({ event: 'error', error: 'not_joined' }));
 
     if (m.type === 'profile') {
       const member = room.members.get(peerId);
       if (member) {
         member.name = String(m.name || member.name || 'کاربر').slice(0, 40);
-        member.username = normalizeUsername(m.username || member.username || '');
-        const profileUser=ensureUser(member.username,member.name);
-        
+        member.username = String(m.username || member.username || '').replace(/^@/, '').slice(0, 24);
         member.ws = ws;
         room.members.set(peerId, member);
         room.updatedAt = Date.now();
@@ -370,8 +352,6 @@ wss.on('connection', ws => {
         event: 'chat',
         from: peerId,
         name: room.members.get(peerId)?.name || 'کاربر',
-        username: room.members.get(peerId)?.username || '',
-        rank: USERS.get(room.members.get(peerId)?.username || '')?.rank || 'عضو جدید',
         text,
         msgId: m.msgId || '',
         replyTo: String(m.replyTo || '').slice(0, 200),
@@ -381,22 +361,9 @@ wss.on('connection', ws => {
       }, null);
       return;
     }
-
-
-    if (m.type === 'game-hello') { if(!peerId) peerId=String(m.peerId||'').slice(0,128); const g=GAME_ROOMS.get(String(m.gameRoomId||'')); if(!g)return ws.send(JSON.stringify({event:'game-error',error:'game_not_found'})); if(g.private&&String(m.inviteToken||'')!==g.inviteToken)return ws.send(JSON.stringify({event:'game-error',error:'invalid_game_link'})); if(!g.players.has(peerId)&&g.players.size>=g.maxPlayers)return ws.send(JSON.stringify({event:'game-error',error:'game_full'})); const u=ensureUser(m.username,m.name); g.sockets.add(ws); const old=g.players.get(peerId); g.players.set(peerId,{peerId,name:String(m.name||'کاربر').slice(0,40),username:normalizeUsername(m.username),rank:u?.rank||'عضو جدید',score:old?.score||0,index:old?.index??g.players.size}); ws._gameRoom=g;ws._gamePeer=peerId; ws.send(JSON.stringify({event:'game-ready',room:publicGameRoom(g),players:gamePlayerList(g),state:g.state})); broadcastGame(g,{event:'game-state',players:gamePlayerList(g),state:g.state},ws); return; }
-    if (m.type === 'game-action') { const g=ws._gameRoom,p=g?.players.get(peerId);if(!g||!p)return;const a=m.action||{};
-      if(g.gameId==='ttt'){const s=g.state;if(s.winner!==null||s.turn!==p.index||!Number.isInteger(a.cell)||a.cell<0||a.cell>8||s.board[a.cell])return;s.board[a.cell]=p.index===0?'X':'O';const W=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];const won=W.some(w=>w.every(i=>s.board[i]));if(won){s.winner=p.index;updateRank(ensureUser(p.username,p.name),g.gameId,true);p.rank=USERS.get(p.username)?.rank||p.rank}else if(s.board.every(Boolean))s.winner='draw';else s.turn=1-s.turn;}
-      else if(g.gameId==='connect4'){const s=g.state;if(s.winner!==null||s.turn!==p.index||!Number.isInteger(a.col)||a.col<0||a.col>6)return;let row=-1;for(let r=5;r>=0;r--){const i=r*7+a.col;if(!s.board[i]){s.board[i]=p.index===0?'R':'Y';row=r;break}}if(row<0)return;const dirs=[[1,0],[0,1],[1,1],[1,-1]];let won=false;for(const [dr,dc] of dirs){let c=1;for(const q of [1,-1]){let rr=row+dr*q,cc=a.col+dc*q;while(rr>=0&&rr<6&&cc>=0&&cc<7&&s.board[rr*7+cc]===s.board[row*7+a.col]){c++;rr+=dr*q;cc+=dc*q}}if(c>=4)won=true}if(won){s.winner=p.index;updateRank(ensureUser(p.username,p.name),g.gameId,true);p.rank=USERS.get(p.username)?.rank||p.rank}else if(s.board.every(Boolean))s.winner='draw';else s.turn=1-s.turn;}
-      else if(g.gameId==='reaction'){const s=g.state;if(g.players.size<2)return;if(s.status==='waiting'){s.status='ready';s.goAt=Date.now()+1500+Math.floor(Math.random()*1500)}else if(s.status==='ready'&&Date.now()>=s.goAt){s.status='done';s.winner=p.index;updateRank(ensureUser(p.username,p.name),g.gameId,true);p.rank=USERS.get(p.username)?.rank||p.rank}}
-      else if(g.gameId==='clickrush'||g.gameId==='tapbattle'){if(a.click){p.score=(p.score||0)+1;g.state.scores[p.index]=p.score}}
-      else if(g.gameId==='memory'){const s=g.state;if(!Number.isInteger(a.index)||a.index<0||a.index>=s.cards.length||s.flips.includes(a.index)||s.flips.length>=2)return;s.flips.push(a.index);if(s.flips.length===2){const [x,y]=s.flips;if(s.cards[x]===s.cards[y]){p.score=(p.score||0)+1;s.scores[p.index]=p.score;s.flips=[]}else setTimeout(()=>{s.flips=[];broadcastGame(g,{event:'game-state',players:gamePlayerList(g),state:g.state})},650)}}
-      broadcastGame(g,{event:'game-state',players:gamePlayerList(g),state:g.state});return; }  });
-
-
-
+  });
 
   ws.on('close', () => {
-    const g=ws._gameRoom;if(g){g.sockets.delete(ws);if(ws._gamePeer)g.players.delete(ws._gamePeer);broadcastGame(g,{event:'game-state',players:gamePlayerList(g),state:g.state})}
     if (!room || !peerId) return;
     room.sockets.delete(ws);
     // Only the currently registered socket may remove this peer.
@@ -416,22 +383,11 @@ setInterval(() => {
       try { ws.ping(); } catch {}
     }
   }
-}, 20000);
+}, 30000);
 
-
-setInterval(() => {
-  for (const g of GAME_ROOMS.values()) {
-    for (const ws of g.sockets) {
-      if (ws.isAlive === false) { try { ws.terminate(); } catch {} continue; }
-      ws.isAlive = false;
-      try { ws.ping(); } catch {}
-    }
-  }
-}, 20000);
 wss.on('connection', ws => {
   ws.isAlive = true;
   ws.on('pong', () => { ws.isAlive = true; });
 });
 
-server.listen(PORT, HOST, () => console.log('BEHRAD M PLAYER realtime server listening on ' + HOST + ':' + PORT + ' (database-free, in-memory ranks)'));
-
+server.listen(PORT, HOST, () => console.log('BEHRAD M PLAYER realtime server listening on ' + HOST + ':' + PORT));
