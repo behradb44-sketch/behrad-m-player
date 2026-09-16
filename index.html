@@ -2682,10 +2682,9 @@ button:active,.main-btn:active,.card-btn:active,.play-btn:active,.room-action-bt
 </section>
 
 <section id="social" class="bmpV38-section">
-<div class="section-title"><h2>✨ <span>همه‌چیز B.M.P</span></h2><p>بازی، رنک، فالو و جستجوی کاربران؛ اطلاعات با کمترین تأخیر همگام می‌شود. ⚡</p></div>
+<div class="section-title"><h2>✨ <span>همه‌چیز B.M.P</span></h2><p>بازی و رنک؛ اطلاعات رنک فقط هنگام بازی و گفت‌وگو نمایش داده می‌شود. ⚡</p></div>
 <div class="bmpV38-shell"><div class="bmpV38-grid">
-<div class="bmpV38-card"><h3>🔎 جستجوی بازیکن</h3><div class="bmpV38-muted">کاربرانی که نام کاربری‌شان در سرور ثبت شده را پیدا کن و فالو کن.</div><div class="bmpV38-search"><input id="userSearchInput" placeholder="username یا نام نمایشی" dir="ltr"><button class="bmpRT-btn" onclick="searchUsers()">جستجو</button></div><div class="bmpV38-users" id="userSearchResults"><div class="bmpV38-muted">برای شروع جستجو کن.</div></div></div>
-<div class="bmpV38-card"><h3>🏆 آموزش رنک‌ها</h3><div class="bmpV38-muted">رنک فقط با بردهای پشت‌سرهم در بازی‌های دونفره محاسبه می‌شود. بازی‌های چندنفره هیچ رنکی نمی‌دهند.</div><div class="bmpV38-rankList"><div class="bmpV38-rankRow"><span class="bmpV38-rank rank-new">عضو جدید</span><small>شروع مسیر</small></div><div class="bmpV38-rankRow"><span class="bmpV38-rank rank-player">پلیر</span><small>۳ برد پشت‌سرهم در ۳ بازی دونفره متفاوت</small></div><div class="bmpV38-rankRow"><span class="bmpV38-rank rank-pro">پرو پلیر</span><small>۱۰ برد پشت‌سرهم در بازی‌های دونفره</small></div><div class="bmpV38-rankRow"><span class="bmpV38-rank rank-god">گاد پلیر</span><small>۵۰ برد در بازی‌های دونفره</small></div></div><div class="bmpV38-tip">رنک بازیکن در پروفایل، روم‌های متنی، صوتی و تصویری نمایش داده می‌شود.</div></div>
+<div class="bmpV38-card"><h3>🏆 آموزش رنک‌ها</h3><div class="bmpV38-muted">رنک فقط با بردهای پشت‌سرهم در بازی‌های دونفره محاسبه می‌شود. بازی‌های چندنفره هیچ رنکی نمی‌دهند.</div><div class="bmpV38-rankList"><div class="bmpV38-rankRow"><span class="bmpV38-rank rank-new">عضو جدید</span><small>شروع مسیر</small></div><div class="bmpV38-rankRow"><span class="bmpV38-rank rank-player">پلیر</span><small>۳ برد پشت‌سرهم در ۳ بازی دونفره متفاوت</small></div><div class="bmpV38-rankRow"><span class="bmpV38-rank rank-pro">پرو پلیر</span><small>۱۰ برد پشت‌سرهم در بازی‌های دونفره</small></div><div class="bmpV38-rankRow"><span class="bmpV38-rank rank-god">گاد پلیر</span><small>۵۰ برد در بازی‌های دونفره</small></div></div><div class="bmpV38-tip">رنک فقط داخل بازی‌ها و گفت‌وگوهای زنده نمایش داده می‌شود.</div></div>
 </div>
 <div class="bmpV38-card" style="margin-top:18px"><h3>🎮 بازی با دیگران</h3><div class="bmpV38-muted">سه بازی دونفره رنک‌دار و سه بازی چندنفره بدون رنک. برای بازی دونفره لینک روم را برای یک نفر بفرست.</div><div class="bmpV38-games">
 <div class="bmpV38-game"><h4>⭕❌ دوز آنلاین</h4><p>۲ نفره · رنک‌دار</p><div class="bmpV38-gameBtns"><button class="bmpRT-btn" onclick="createOnlineGame('ttt')">ساخت لینک</button></div></div>
@@ -3019,7 +3018,7 @@ button:active,.main-btn:active,.card-btn:active,.play-btn:active,.room-action-bt
 </div>
 <div class="bmpRT-shell">
 <div class="bmpRT-serverbar"><span class="bmpRT-statusdot" id="bmpRoomStatusDot"></span><span id="bmpRoomStatusText">در حال اتصال به سرور...</span><span class="bmpRT-serverhint">WebSocket + WebRTC</span></div>
-<div class="bmpV33-profileBar"><div class="bmpV33-profileMain"><div class="bmpV33-avatar" id="profileAvatar">ب</div><div class="bmpV33-profileText"><b id="profileDisplayName">کاربر</b><small id="profileUsername">@user</small><span id="profileRank" class="bmpV38-rank rank-new" style="display:inline-block;margin-top:4px">عضو جدید</span></div></div><div class="bmpV33-profileBtns"><button class="bmpV33-miniBtn" onclick="openProfileModal()">✏️ ویرایش پروفایل</button><button class="bmpV33-miniBtn" onclick="copyProfile()">📋 کپی نام کاربری</button></div></div>
+<div class="bmpV33-profileBar"><div class="bmpV33-profileMain"><div class="bmpV33-avatar" id="profileAvatar">ب</div><div class="bmpV33-profileText"><b id="profileDisplayName">کاربر</b><small id="profileUsername">@user</small></div></div><div class="bmpV33-profileBtns"><button class="bmpV33-miniBtn" onclick="openProfileModal()">✏️ ویرایش پروفایل</button><button class="bmpV33-miniBtn" onclick="copyProfile()">📋 کپی نام کاربری</button></div></div>
 <div class="bmpV33-roomTools"><button class="bmpRT-btn" onclick="openCreateRoomModal()">＋ ساخت روم جدید</button><button class="bmpRT-btn secondary" onclick="loadRooms();toast('لیست روم‌ها تازه شد')">↻ بروزرسانی روم‌ها</button></div>
 <section class="bmpRT-rooms" id="roomList"></section>
   <section class="bmpRT-chat" id="chat"><div class="bmpRT-chatHead"><div><h3 id="chatTitle">چت</h3><div class="bmpRT-chatState" id="chatState">در حال آماده‌سازی...</div></div><button class="bmpRT-btn danger" onclick="leaveRoom()">خروج</button></div><div class="bmpRT-messages" id="messages"></div><section class="bmpV33-voicePanel" id="voicePanel"><div class="bmpV33-voiceHead"><h4 id="mediaPanelTitle">🎙️ اتاق صوتی</h4><span id="voiceState">میکروفون خاموش</span></div><div class="bmpV33-voiceGrid" id="voiceGrid"></div><div class="bmpV33-voiceControls"><button class="bmpRT-btn" id="micToggle" onclick="toggleMic()">🎙️ روشن کردن میکروفون</button><button class="bmpRT-btn secondary bmpV35-cameraBtn" id="cameraToggle" onclick="toggleCamera()" style="display:none">📹 خاموش کردن دوربین</button></div></section><div class="bmpRT-replyBar" id="replyBar"><div class="bmpRT-replyLine"></div><div class="bmpRT-replyInfo"><div class="bmpRT-replyName" id="replyName"></div><div class="bmpRT-replyText" id="replyText"></div></div><button type="button" class="bmpRT-replyCancel" onclick="cancelReply()" aria-label="لغو پاسخ">×</button></div><form class="bmpRT-composer" onsubmit="sendChat(event)"><input id="chatInput" autocomplete="off" maxlength="2000" placeholder="پیامت رو بنویس..."><button class="bmpRT-btn">ارسال</button></form></section>
@@ -3043,7 +3042,7 @@ let roomOwnerTokens=JSON.parse(localStorage.getItem('bmp_room_owner_tokens')||'{
 let myPeerId='peer-'+crypto.randomUUID();
 let myName=localStorage.getItem('bmp_display_name')||('کاربر '+myPeerId.slice(-4));
 let myUsername=localStorage.getItem('bmp_username')||('user_'+myPeerId.slice(-6));
-let activeRoom=null,socket=null,password='',pendingRoom=null,inviteToken='',reconnectTimer=null,heartbeatTimer=null;
+let activeRoom=null,socket=null,password='',pendingRoom=null,inviteToken='',reconnectTimer=null,heartbeatTimer=null,reconnectDelay=1000;
 let activeRoomType='text', mediaMode=null, localStream=null, micEnabled=false, cameraEnabled=false, audioContext=null, localAnalyser=null, localLevelRaf=null;
 let pendingCallMode='';
 const peers=new Map(),seenChatIds=new Set(),memberCache=new Map();
@@ -3053,7 +3052,7 @@ function initials(v){const a=String(v||'ب').trim();return (a[0]||'ب').toUpperC
 function toast(t){const x=$('toast');x.textContent=t;x.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove('show'),2600)}
 function setStatus(t,on=false){const a=$('bmpRoomStatusText'),d=$('bmpRoomStatusDot');if(a)a.textContent=t;if(d)d.classList.toggle('on',on)}
 let currentUserRank='عضو جدید';
-function refreshProfileUI(){ $('profileDisplayName').textContent=myName; $('profileUsername').textContent='@'+myUsername; $('profileAvatar').textContent=initials(myName); const r=$('profileRank'); if(r){r.textContent=currentUserRank;r.className='bmpV38-rank '+rankClass(currentUserRank)} }
+function refreshProfileUI(){ $('profileDisplayName').textContent=myName; $('profileUsername').textContent='@'+myUsername; $('profileAvatar').textContent=initials(myName); }
 function openProfileModal(){ $('profileNameInput').value=myName; $('profileUsernameInput').value=myUsername; $('profileModal').classList.add('show') }
 function closeProfileModal(){ $('profileModal').classList.remove('show') }
 function saveProfile(){const n=$('profileNameInput').value.trim().slice(0,40),u=$('profileUsernameInput').value.trim().replace(/^@/,'').replace(/[^a-zA-Z0-9_.-]/g,'_').slice(0,24);if(!n||!u)return toast('نام نمایشی و نام کاربری را کامل کن');myName=n;myUsername=u;localStorage.setItem('bmp_display_name',n);localStorage.setItem('bmp_username',u);refreshProfileUI();closeProfileModal();if(socket?.readyState===1)socket.send(JSON.stringify({type:'profile',name:myName,username:myUsername}));toast('پروفایل ذخیره شد')}
@@ -3107,29 +3106,38 @@ async function enterRoom(id,pw,token='',requestedMode=''){if(activeRoom)await le
 function openChat(id){$('chat').classList.add('open');$('chatTitle').textContent=rooms[id]?.name||'چت';$('chatState').textContent='در حال اتصال مستقیم کاربران...';$('messages').innerHTML='';$('voicePanel').classList.toggle('open',!!mediaMode);updateMediaPanel();if(mediaMode)renderVoiceMembers([])}
 function connectWS(){
   clearTimeout(reconnectTimer);
+  if(!activeRoom)return;
   if(socket){try{socket.close()}catch{}}
   const ws=new WebSocket(WS_URL);
   socket=ws;
+  const startedAt=Date.now();
   ws.onopen=()=>{
     if(socket!==ws)return;
+    reconnectDelay=1000;
     setStatus('اتصال زنده برقرار است',true);
     ws.send(JSON.stringify({type:'hello',roomId:activeRoom,peerId:myPeerId,name:myName,username:myUsername,password,inviteToken}));
     clearInterval(heartbeatTimer);
-    heartbeatTimer=setInterval(()=>{if(socket===ws&&ws.readyState===1)ws.send(JSON.stringify({type:'presence'}))},20000);
+    heartbeatTimer=setInterval(()=>{
+      if(socket===ws&&ws.readyState===1){
+        try{ws.send(JSON.stringify({type:'presence'}));}catch{}
+      }
+    },15000);
   };
   ws.onmessage=ev=>{if(socket===ws)onWSMessage(ev)};
-  ws.onerror=()=>{if(socket===ws)setStatus('مشکل در اتصال زنده',false)};
+  ws.onerror=()=>{if(socket===ws)setStatus('اتصال ناپایدار؛ تلاش خودکار برای بازیابی...',false)};
   ws.onclose=()=>{
     clearInterval(heartbeatTimer);
-    // An old socket closing after a reconnect must not schedule another reconnect.
     if(socket!==ws)return;
     socket=null;
     if(activeRoom){
-      setStatus('در حال تلاش برای اتصال مجدد...',false);
+      setStatus('اتصال قطع شد؛ تلاش خودکار برای اتصال مجدد...',false);
       clearTimeout(reconnectTimer);
-      reconnectTimer=setTimeout(()=>{if(activeRoom)connectWS()},2500);
+      reconnectTimer=setTimeout(()=>{if(activeRoom)connectWS()},reconnectDelay);
+      reconnectDelay=Math.min(Math.round(reconnectDelay*1.6),10000);
     }
   };
+  // If a browser reports a connection that never reaches OPEN, force a clean retry.
+  setTimeout(()=>{if(socket===ws&&ws.readyState!==1){try{ws.close()}catch{}}},12000);
 }
 async function onWSMessage(ev){let m;try{m=JSON.parse(ev.data)}catch{return}if(m.event==='connected')return;if(m.event==='error'){toast(m.error==='invalid_password'?'رمز عبور اشتباه است':(m.error==='room_not_found'?'روم پیدا نشد':'خطای سرور: '+m.error));return}if(m.event==='room-deleted'){const deletedId=m.roomId;if(roomOwnerTokens[deletedId]){delete roomOwnerTokens[deletedId];localStorage.setItem('bmp_room_owner_tokens',JSON.stringify(roomOwnerTokens))}if(activeRoom===deletedId){activeRoom=null;clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);try{socket?.close()}catch{}socket=null;for(const item of peers.values()){try{item.pc.close()}catch{}if(item.audioEl)item.audioEl.remove()}peers.clear();await stopVoice();$('chat').classList.remove('open');password='';inviteToken='';setStatus('سرور آنلاین',true);toast('این روم توسط صاحبش حذف شد')}await loadRooms();return}if(m.event==='ready'||m.event==='room-state'||m.event==='presence'){const st=m.state||m.room;if(st){setRoomUI(activeRoom,st,m.members);activeRoomType=st.type||activeRoomType;if(!mediaMode&&activeRoomType==='video')mediaMode='video';if(!mediaMode&&activeRoomType==='voice')mediaMode='audio';$('voicePanel').classList.toggle('open',!!mediaMode);updateMediaPanel()}if(Array.isArray(m.members)){memberCache.clear();for(const x of m.members){memberCache.set(x.peerId,x);if(x.peerId===myPeerId)currentUserRank=x.rank||currentUserRank;}refreshProfileUI();updatePeers(m.members);if(mediaMode)renderVoiceMembers(m.members)}return}if(m.event==='signal'){if(m.to===myPeerId)handleSignal(m.from,m.data);return}if(m.event==='chat'){if(m.from!==myPeerId)addMessage(m.name||'کاربر',m.text,false,m.msgId,m.replyTo,m.replyName,m.replyText,m.rank||'عضو جدید',m.username||'');}}
 function updatePeers(members){if(!activeRoom)return;const ids=members.map(x=>x.peerId).filter(x=>x!==myPeerId);for(const [id,item] of peers){if(!ids.includes(id)){try{item.pc.close()}catch{};if(item.audioEl)item.audioEl.remove();peers.delete(id)}}for(const id of ids)ensurePeer(id,id<myPeerId);$('chatState').textContent=ids.length?'اتصال مستقیم فعال · '+(ids.length+1)+' کاربر':'منتظر کاربر دیگر...'}
@@ -6356,14 +6364,25 @@ window.aparat=window.aparat||function(){window.location.href='https://www.aparat
 /* =========================================================
    V38 SOCIAL + ONLINE GAMES
 ========================================================= */
-let gameSocket=null,gameRoomId=null,gameInviteToken='',gameIdNow='',gameIndex=-1,gameState=null,gamePlayers=[];
+let gameSocket=null,gameRoomId=null,gameInviteToken='',gameIdNow='',gameIndex=-1,gameState=null,gamePlayers=[],gameReconnectTimer=null,gameReconnectDelay=1000;
 const gameNames={ttt:'⭕❌ دوز آنلاین',connect4:'🟡 چهار در خط',reaction:'⚡ دوئل واکنش',clickrush:'🔥 Click Rush',memory:'🧠 Memory Party',tapbattle:'👆 Tap Battle'};
 const rankClass=r=>r==='گاد پلیر'?'rank-god':r==='پرو پلیر'?'rank-pro':r==='پلیر'?'rank-player':'rank-new';
 function openGameModal(){ $('onlineGameModal').classList.add('show') }
-function closeOnlineGame(){try{gameSocket?.close()}catch{}gameSocket=null;gameRoomId=null;gameState=null;$('onlineGameModal').classList.remove('show')}
+function closeOnlineGame(){clearTimeout(gameReconnectTimer);try{gameSocket?.close()}catch{}gameSocket=null;gameRoomId=null;gameState=null;gameReconnectDelay=1000;$('onlineGameModal').classList.remove('show')}
 async function createOnlineGame(id){try{const r=await fetch(API+'/api/games/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({gameId:id,baseUrl:new URL('./',location.href).href})});const d=await r.json();if(!r.ok)throw Error(d.error||'ساخت بازی ناموفق بود');gameRoomId=d.room.id;gameInviteToken=d.room.inviteToken;gameIdNow=id;openGameModal();$('onlineGameTitle').textContent=gameNames[id];$('onlineGameInvite').style.display='flex';$('onlineGameLink').value=d.shareUrl;connectGameSocket();toast('لینک بازی ساخته شد؛ برای یک نفر بفرست')}catch(e){toast(e.message||'خطا')}}
 async function joinQuickGame(id){try{const r=await fetch(API+'/api/games/quick',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({gameId:id})});const d=await r.json();if(!r.ok)throw Error(d.error||'ورود ناموفق');gameRoomId=d.room.id;gameInviteToken='';gameIdNow=id;openGameModal();$('onlineGameInvite').style.display='none';connectGameSocket()}catch(e){toast(e.message||'خطا')}}
-function connectGameSocket(){$('onlineGameTitle').textContent=gameNames[gameIdNow]||'بازی آنلاین';try{gameSocket?.close()}catch{};gameSocket=new WebSocket(WS_URL);gameSocket.onopen=()=>gameSocket.send(JSON.stringify({type:'game-hello',gameRoomId,inviteToken:gameInviteToken,peerId:myPeerId,name:myName,username:myUsername}));gameSocket.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch{return}if(m.event==='game-error'){toast(m.error==='game_full'?'بازی پر است':m.error==='invalid_game_link'?'لینک بازی معتبر نیست':'بازی پیدا نشد');return}if(m.event==='game-ready'||m.event==='game-state'){gamePlayers=m.players||[];gameState=m.state||gameState;gameIndex=gamePlayers.find(x=>x.peerId===myPeerId)?.index??-1;renderOnlineGame()} };gameSocket.onclose=()=>{if($('onlineGameModal').classList.contains('show'))$('onlineGameStatus').textContent='ارتباط بازی قطع شد'} }
+function connectGameSocket(){
+  $('onlineGameTitle').textContent=gameNames[gameIdNow]||'بازی آنلاین';
+  clearTimeout(gameReconnectTimer);
+  try{gameSocket?.close()}catch{}
+  const ws=new WebSocket(WS_URL);gameSocket=ws;
+  ws.onopen=()=>{if(gameSocket!==ws)return;gameReconnectDelay=1000;ws.send(JSON.stringify({type:'game-hello',gameRoomId,inviteToken:gameInviteToken,peerId:myPeerId,name:myName,username:myUsername}));$('onlineGameStatus').textContent='🟢 اتصال بازی برقرار است'};
+  ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch{return}if(m.event==='game-error'){toast(m.error==='game_full'?'بازی پر است':m.error==='invalid_game_link'?'لینک بازی معتبر نیست':'بازی پیدا نشد');return}if(m.event==='game-ready'||m.event==='game-state'){gamePlayers=m.players||[];gameState=m.state||gameState;gameIndex=gamePlayers.find(x=>x.peerId===myPeerId)?.index??-1;renderOnlineGame()}};
+  ws.onerror=()=>{if(gameSocket===ws)$('onlineGameStatus').textContent='🟡 اتصال ناپایدار؛ بازی در حال بازیابی است...'};
+  ws.onclose=()=>{if(gameSocket!==ws)return;if($('onlineGameModal').classList.contains('show')&&gameRoomId){$('onlineGameStatus').textContent='🟡 اتصال قطع شد؛ تلاش مجدد...';gameReconnectTimer=setTimeout(()=>connectGameSocket(),gameReconnectDelay);gameReconnectDelay=Math.min(Math.round(gameReconnectDelay*1.6),10000)}};
+  setTimeout(()=>{if(gameSocket===ws&&ws.readyState!==1){try{ws.close()}catch{}}},12000);
+}
+
 function gameSend(action){if(gameSocket?.readyState===1)gameSocket.send(JSON.stringify({type:'game-action',action}))}
 function renderOnlineGame(){const id=gameIdNow,s=gameState||{};$('onlineGamePlayers').textContent=(gamePlayers.length||0)+' نفر · '+(id==='ttt'||id==='connect4'||id==='reaction'?'رنک‌دار':'بدون رنک');$('onlineGameScores').innerHTML=gamePlayers.map(p=>'<span class="bmpV38-score '+rankClass(p.rank)+'">'+esc(p.name)+' · '+esc(p.score||0)+' · '+esc(p.rank)+'</span>').join('');const b=$('onlineGameBoard');if(!b)return;
  if(id==='ttt'){b.innerHTML='<div class="bmpV38-board bmpV38-ttt">'+s.board.map((x,i)=>'<button class="bmpV38-cell" onclick="gameSend({cell:'+i+'})">'+(x||'')+'</button>').join('')+'</div><div class="bmpV38-status">'+(s.winner===null?(s.turn===gameIndex?'نوبت توئه':'نوبت حریف'):(s.winner==='draw'?'مساوی شد':s.winner===gameIndex?'بردی! 🏆':'حریف برد'))+'</div>';}
@@ -6373,10 +6392,7 @@ function renderOnlineGame(){const id=gameIdNow,s=gameState||{};$('onlineGamePlay
  else if(id==='memory'){b.innerHTML='<div class="bmpV38-board bmpV38-memory">'+s.cards.map((x,i)=>'<button class="bmpV38-cell" onclick="gameSend({index:'+i+'})">'+(s.flips?.includes(i)?x:'❓')+'</button>').join('')+'</div><div class="bmpV38-status">جفت‌ها را پیدا کن! این بازی رنک ندارد.</div>';}
 }
 function copyOnlineGameLink(){navigator.clipboard?.writeText($('onlineGameLink').value).then(()=>toast('لینک بازی کپی شد')).catch(()=>toast('لینک آماده است'))}
-async function searchUsers(){const q=$('userSearchInput').value.trim();const r=await fetch(API+'/api/users/search?q='+encodeURIComponent(q),{cache:'no-store'});const d=await r.json();const box=$('userSearchResults');box.innerHTML=d.users?.length?d.users.map(u=>'<div class="bmpV38-user"><div class="bmpV38-userAvatar">'+esc(initials(u.name))+'</div><div class="bmpV38-userInfo"><b>'+esc(u.name)+'</b><small>@'+esc(u.username)+'</small></div><span class="bmpV38-rank '+rankClass(u.rank)+'">'+esc(u.rank)+'</span><button class="bmpRT-btn secondary" onclick="toggleFollow(\''+esc(u.username)+'\')">+ فالو</button></div>').join(''):'<div class="bmpV38-muted">کاربری پیدا نشد.</div>'}
-async function toggleFollow(username){const r=await fetch(API+'/api/users/follow',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fromUsername:myUsername,fromName:myName,toUsername:username,follow:true})});const d=await r.json();toast(d.ok?'فالو شد ✓':'خطا در فالو')}
 // Register the current profile quickly so search/follow becomes available even before joining a room.
-fetch(API+'/api/users/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:myUsername,name:myName})}).then(r=>r.json()).then(d=>{if(d.user){currentUserRank=d.user.rank||'عضو جدید';refreshProfileUI()}}).catch(()=>{});
 // Invite links for two-player games.
 (function handleGameInvite(){const q=new URLSearchParams(location.search),gid=q.get('game'),key=q.get('key');if(gid&&key){setTimeout(()=>{gameRoomId=gid;gameInviteToken=key;openGameModal();$('onlineGameInvite').style.display='none';connectGameSocket()},500)}})();
 
