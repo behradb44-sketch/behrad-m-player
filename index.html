@@ -2313,7 +2313,7 @@ position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-g
 .bmpV33-modalCard{width:min(480px,100%)}.bmpV33-modalGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bmpV33-modalGrid label{display:block;color:#9eabc0;font-size:11px;margin-bottom:6px}.bmpV33-modalGrid input,.bmpV33-modalGrid select{width:100%;background:#060914;color:#eef8ff;border:1px solid var(--bmp-rt-line);padding:12px;border-radius:12px;outline:none}.bmpV33-modalGrid .full{grid-column:1/-1}.bmpV33-modalHint{font-size:11px;color:#7f8ba5;line-height:1.8;margin-top:10px}.bmpV33-check{display:flex;align-items:center;gap:8px;color:#b8c3d5;font-size:11px;margin-top:9px}.bmpV33-check input{accent-color:#00c8ff}
 @media(max-width:600px){.bmpV33-profileBar{align-items:flex-start;flex-direction:column}.bmpV33-profileBtns{width:100%;justify-content:stretch}.bmpV33-profileBtns button{flex:1}.bmpV33-modalGrid{grid-template-columns:1fr}.bmpV33-modalGrid .full{grid-column:auto}.bmpV33-voiceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 <style id="bmp-v35-media">
-.bmpV35-video{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:13px;background:#02050b;border:1px solid rgba(67,232,255,.12);display:block;margin-bottom:9px}.bmpV35-video.mirror{transform:scaleX(-1)}.bmpV35-callBtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.bmpV35-callBtns button{font-size:10px;padding:7px 9px;flex:1;min-width:92px}.bmpV35-mediaUser{min-width:150px}.bmpV35-cameraBtn{min-width:120px}
+.bmpV35-video{width:auto;height:auto;max-width:100%;max-height:70vh;aspect-ratio:auto;object-fit:contain;object-position:center;border-radius:13px;background:#02050b;border:1px solid rgba(67,232,255,.12);display:block;margin:0 auto 9px}.bmpV35-video.mirror{transform:scaleX(-1)}.bmpV35-callBtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.bmpV35-callBtns button{font-size:10px;padding:7px 9px;flex:1;min-width:92px}.bmpV35-mediaUser{min-width:150px;min-width:0;align-self:start}.bmpV35-cameraBtn{min-width:120px}
 </style>
 </style>
 </head>
@@ -3076,7 +3076,32 @@ function confirmPassword(){const p=$('passwordInput').value;if(!p)return toast('
 $('passwordInput').addEventListener('keydown',e=>{if(e.key==='Enter')confirmPassword()})
 async function enterRoom(id,pw,token='',requestedMode=''){if(activeRoom)await leaveRoom();password=pw;inviteToken=token;setStatus('در حال ورود به روم...',false);const info=await loadRoom(id);activeRoomType=info?.room?.type||rooms[id]?.type||'text';mediaMode=requestedMode||(activeRoomType==='video'?'video':activeRoomType==='voice'?'audio':'');try{const res=await fetch(API+'/api/room/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId:id,peerId:myPeerId,name:myName,username:myUsername,password:pw,inviteToken:token})});const data=await res.json();if(res.status===403)throw new Error('رمز عبور اشتباه است');if(!res.ok)throw new Error(data.error||'خطای ورود');rooms[id]={name:data.room.name,type:data.room.type||activeRoomType,private:!!data.room.private,permanent:!!data.room.permanent};setRoomUI(id,data.room,data.members);activeRoom=id;openChat(id);connectWS();if(mediaMode)await startMedia(mediaMode);toast('وارد روم شدی');}catch(e){setStatus('اتصال ناموفق',false);toast(e.message||'اتصال ناموفق بود')}}
 function openChat(id){$('chat').classList.add('open');$('chatTitle').textContent=rooms[id]?.name||'چت';$('chatState').textContent='در حال اتصال مستقیم کاربران...';$('messages').innerHTML='';$('voicePanel').classList.toggle('open',!!mediaMode);updateMediaPanel();if(mediaMode)renderVoiceMembers([])}
-function connectWS(){clearTimeout(reconnectTimer);if(socket){try{socket.close()}catch{}}socket=new WebSocket(WS_URL);socket.onopen=()=>{setStatus('اتصال زنده برقرار است',true);socket.send(JSON.stringify({type:'hello',roomId:activeRoom,peerId:myPeerId,name:myName,username:myUsername,password,inviteToken}));clearInterval(heartbeatTimer);heartbeatTimer=setInterval(()=>{if(socket?.readyState===1)socket.send(JSON.stringify({type:'presence'}))},20000)};socket.onmessage=onWSMessage;socket.onerror=()=>setStatus('مشکل در اتصال زنده',false);socket.onclose=()=>{clearInterval(heartbeatTimer);if(activeRoom){setStatus('در حال تلاش برای اتصال مجدد...',false);clearTimeout(reconnectTimer);reconnectTimer=setTimeout(connectWS,2500)}}}
+function connectWS(){
+  clearTimeout(reconnectTimer);
+  if(socket){try{socket.close()}catch{}}
+  const ws=new WebSocket(WS_URL);
+  socket=ws;
+  ws.onopen=()=>{
+    if(socket!==ws)return;
+    setStatus('اتصال زنده برقرار است',true);
+    ws.send(JSON.stringify({type:'hello',roomId:activeRoom,peerId:myPeerId,name:myName,username:myUsername,password,inviteToken}));
+    clearInterval(heartbeatTimer);
+    heartbeatTimer=setInterval(()=>{if(socket===ws&&ws.readyState===1)ws.send(JSON.stringify({type:'presence'}))},20000);
+  };
+  ws.onmessage=ev=>{if(socket===ws)onWSMessage(ev)};
+  ws.onerror=()=>{if(socket===ws)setStatus('مشکل در اتصال زنده',false)};
+  ws.onclose=()=>{
+    clearInterval(heartbeatTimer);
+    // An old socket closing after a reconnect must not schedule another reconnect.
+    if(socket!==ws)return;
+    socket=null;
+    if(activeRoom){
+      setStatus('در حال تلاش برای اتصال مجدد...',false);
+      clearTimeout(reconnectTimer);
+      reconnectTimer=setTimeout(()=>{if(activeRoom)connectWS()},2500);
+    }
+  };
+}
 async function onWSMessage(ev){let m;try{m=JSON.parse(ev.data)}catch{return}if(m.event==='connected')return;if(m.event==='error'){toast(m.error==='invalid_password'?'رمز عبور اشتباه است':(m.error==='room_not_found'?'روم پیدا نشد':'خطای سرور: '+m.error));return}if(m.event==='room-deleted'){const deletedId=m.roomId;if(roomOwnerTokens[deletedId]){delete roomOwnerTokens[deletedId];localStorage.setItem('bmp_room_owner_tokens',JSON.stringify(roomOwnerTokens))}if(activeRoom===deletedId){activeRoom=null;clearTimeout(reconnectTimer);clearInterval(heartbeatTimer);try{socket?.close()}catch{}socket=null;for(const item of peers.values()){try{item.pc.close()}catch{}if(item.audioEl)item.audioEl.remove()}peers.clear();await stopVoice();$('chat').classList.remove('open');password='';inviteToken='';setStatus('سرور آنلاین',true);toast('این روم توسط صاحبش حذف شد')}await loadRooms();return}if(m.event==='ready'||m.event==='room-state'||m.event==='presence'){const st=m.state||m.room;if(st){setRoomUI(activeRoom,st,m.members);activeRoomType=st.type||activeRoomType;if(!mediaMode&&activeRoomType==='video')mediaMode='video';if(!mediaMode&&activeRoomType==='voice')mediaMode='audio';$('voicePanel').classList.toggle('open',!!mediaMode);updateMediaPanel()}if(Array.isArray(m.members)){memberCache.clear();for(const x of m.members)memberCache.set(x.peerId,x);updatePeers(m.members);if(activeRoomType==='voice')renderVoiceMembers(m.members)}return}if(m.event==='signal'){if(m.to===myPeerId)handleSignal(m.from,m.data);return}if(m.event==='chat'){if(m.from!==myPeerId)addMessage(m.name||'کاربر',m.text,false,m.msgId,m.replyTo,m.replyName,m.replyText);}}
 function updatePeers(members){if(!activeRoom)return;const ids=members.map(x=>x.peerId).filter(x=>x!==myPeerId);for(const [id,item] of peers){if(!ids.includes(id)){try{item.pc.close()}catch{};if(item.audioEl)item.audioEl.remove();peers.delete(id)}}for(const id of ids)ensurePeer(id,id<myPeerId);$('chatState').textContent=ids.length?'اتصال مستقیم فعال · '+(ids.length+1)+' کاربر':'منتظر کاربر دیگر...'}
 function ensurePeer(id,initiator){
@@ -3091,7 +3116,7 @@ function ensurePeer(id,initiator){
     item.remoteStream=stream;
     if(!item.audioEl){const a=document.createElement('audio');a.autoplay=true;a.playsInline=true;a.style.display='none';document.body.appendChild(a);item.audioEl=a}
     item.audioEl.srcObject=stream;
-    if(mediaMode==='video'){const v=document.querySelector('[data-remote-video="'+CSS.escape(id)+'"]');if(v)v.srcObject=stream;}
+    if(mediaMode==='video'){const v=document.querySelector('[data-remote-video="'+CSS.escape(id)+'"]');if(v){v.srcObject=stream;bindVideoRatio(v)}}
     attachRemoteAnalyser(id,stream);
   };
   pc.onconnectionstatechange=()=>{if(['failed','closed','disconnected'].includes(pc.connectionState))$('chatState').textContent='اتصال مستقیم ناپایدار؛ در حال بازیابی...'};
@@ -3136,6 +3161,7 @@ function toggleCamera(){if(!localStream||mediaMode!=='video')return startMedia('
 function setupLocalAnalyser(){if(!localStream)return;if(!audioContext)audioContext=new (window.AudioContext||window.webkitAudioContext)();localAnalyser=audioContext.createAnalyser();localAnalyser.fftSize=256;localAnalyser.smoothingTimeConstant=.72;audioContext.createMediaStreamSource(localStream).connect(localAnalyser);const data=new Uint8Array(localAnalyser.fftSize);cancelAnimationFrame(localLevelRaf);const tick=()=>{if(!localAnalyser)return;localAnalyser.getByteTimeDomainData(data);let sum=0;for(const v of data){const n=(v-128)/128;sum+=n*n}const rms=Math.min(1,Math.sqrt(sum/data.length)*3.2);setVoiceLevel(myPeerId,rms);localLevelRaf=requestAnimationFrame(tick)};tick()}
 function attachRemoteAnalyser(id,stream){if(!audioContext||!stream?.getAudioTracks?.().length)return;const item=peers.get(id);if(!item||item.analyser)item?.analyser;try{const analyser=audioContext.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.72;audioContext.createMediaStreamSource(stream).connect(analyser);item.analyser=analyser;const data=new Uint8Array(analyser.fftSize);const tick=()=>{if(!peers.has(id)||!item.analyser)return;analyser.getByteTimeDomainData(data);let sum=0;for(const v of data){const n=(v-128)/128;sum+=n*n}const rms=Math.min(1,Math.sqrt(sum/data.length)*3.2);setVoiceLevel(id,rms);requestAnimationFrame(tick)};tick()}catch{}}
 function setVoiceLevel(id,level){const el=document.querySelector('[data-voice-peer="'+CSS.escape(id)+'"]');if(!el)return;const ring=el.querySelector('.bmpV33-ring'),boost=1+Math.min(.42,level*.55),glow=Math.round(level*35);ring.style.transform='scale('+boost+')';ring.style.boxShadow='0 0 '+(8+glow)+'px rgba(0,190,255,'+(0.16+level*.65)+')';ring.style.borderColor='rgba(0,200,255,'+(0.25+level*.7)+')';el.classList.toggle('speaking',level>.08);const st=el.querySelector('.bmpV33-micState');if(st)st.classList.toggle('live',level>.08)}
+function bindVideoRatio(v){if(!v)return;const apply=()=>{if(v.videoWidth>0&&v.videoHeight>0){v.style.aspectRatio=v.videoWidth+'/'+v.videoHeight;v.style.width='auto';v.style.height='auto';}};v.addEventListener('loadedmetadata',apply,{once:true});v.addEventListener('resize',apply);if(v.readyState>=1)apply()}
 function renderVoiceMembers(members){
   const grid=$('voiceGrid');if(!grid)return;
   const all=[{peerId:myPeerId,name:myName,username:myUsername,local:true},...(members||[]).filter(x=>x.peerId!==myPeerId)];
@@ -3144,8 +3170,8 @@ function renderVoiceMembers(members){
     const video=mediaMode==='video'?'<video class="bmpV35-video'+(m.local?' mirror':'')+'" '+(m.local?'data-local-video="1"':'data-remote-video="'+esc(m.peerId)+'"')+' autoplay playsinline '+(m.local?'muted':'')+'></video>':'';
     grid.insertAdjacentHTML('beforeend','<div class="bmpV33-voiceUser bmpV35-mediaUser" data-voice-peer="'+esc(m.peerId)+'"><div class="bmpV33-voiceAvatarWrap" '+(mediaMode==='video'?'style="display:none"':'')+'><div class="bmpV33-ring"></div><div class="bmpV33-voiceAvatar">'+esc(initials(m.name))+'</div></div>'+video+'<b>'+esc(m.name||'کاربر')+'</b><small>@'+esc(m.username||'user')+'</small><div class="bmpV33-micState '+(m.local&&micEnabled?'live':'')+'">'+(m.local?(micEnabled?'🎙️ میکروفون روشن':'🔇 میکروفون خاموش'):'🎙️ عضو صوتی')+'</div></div>');
   }
-  if(mediaMode==='video'&&localStream){const v=document.querySelector('[data-local-video="1"]');if(v)v.srcObject=localStream}
-  for(const [id,item] of peers){if(item.remoteStream){const v=document.querySelector('[data-remote-video="'+CSS.escape(id)+'"]');if(v)v.srcObject=item.remoteStream}}
+  if(mediaMode==='video'&&localStream){const v=document.querySelector('[data-local-video="1"]');if(v){v.srcObject=localStream;bindVideoRatio(v)}}
+  for(const [id,item] of peers){if(item.remoteStream){const v=document.querySelector('[data-remote-video="'+CSS.escape(id)+'"]');if(v){v.srcObject=item.remoteStream;bindVideoRatio(v)}}}
 }
 function updateMicButton(){updateMediaPanel();renderVoiceMembers(Array.from(memberCache.values()))}
 function toggleMic(){if(!localStream)return startMedia(mediaMode||'audio').then(()=>{});micEnabled=!micEnabled;for(const t of localStream.getAudioTracks())t.enabled=micEnabled;updateMicButton()}
