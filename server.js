@@ -7,8 +7,8 @@ const HOST = '0.0.0.0';
 const COMMUNITY_PASSWORD = process.env.BMP_COMMUNITY_PASSWORD || 'bM.pcom.unitybrsecrityu';
 
 const ROOMS = {
-  community: { id: 'community', name: 'B.M.P COMMUNITY', private: true, password: COMMUNITY_PASSWORD },
-  public: { id: 'public', name: 'چت عمومی', private: false, password: '' }
+  community: { id: 'community', name: 'B.M.P COMMUNITY', type: 'text', private: true, password: COMMUNITY_PASSWORD, inviteToken: '' },
+  public: { id: 'public', name: 'چت عمومی', type: 'text', private: false, password: '', inviteToken: '' }
 };
 
 const rooms = new Map();
@@ -27,6 +27,12 @@ function json(res, status, body) {
     'Content-Length': Buffer.byteLength(text)
   });
   res.end(text);
+}
+
+function makeToken(bytes = 24) { return crypto.randomBytes(bytes).toString('hex'); }
+
+function makeRoomId() {
+  return 'room_' + crypto.randomBytes(9).toString('base64url');
 }
 
 function makeCode() {
@@ -56,6 +62,7 @@ function publicRoom(room) {
     roomId: room.id,
     name: room.name,
     private: room.private,
+    type: room.type || 'text',
     connectionCode: room.connectionCode,
     responseCode: room.responseCode,
     revision: room.revision,
@@ -66,7 +73,7 @@ function publicRoom(room) {
 }
 
 function publicMembers(room) {
-  return Array.from(room.members.values()).map(m => ({ peerId: m.peerId, name: m.name, joinedAt: m.joinedAt }));
+  return Array.from(room.members.values()).map(m => ({ peerId: m.peerId, name: m.name, username: m.username || '', joinedAt: m.joinedAt }));
 }
 
 function broadcast(room, message, except) {
@@ -135,6 +142,33 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { ok: true, room: publicRoom(room), members: publicMembers(room) });
   }
 
+  if (req.method === 'POST' && path === '/api/rooms/create') {
+    try {
+      const b = await readBody(req);
+      const name = String(b.name || '').trim().slice(0, 50);
+      const type = b.type === 'voice' ? 'voice' : 'text';
+      const roomPassword = String(b.password || '').slice(0, 64);
+      const privateRoom = !!b.private || !!roomPassword;
+      const ownerPeerId = String(b.ownerPeerId || '').slice(0, 128);
+      const ownerName = String(b.ownerName || 'سازنده روم').slice(0, 40);
+      const ownerUsername = String(b.ownerUsername || '').slice(0, 24);
+      const baseUrl = String(b.baseUrl || '').replace(/\/+$/, '');
+      if (!name) return json(res, 400, { ok: false, error: 'room_name_required' });
+      if (privateRoom && !roomPassword) return json(res, 400, { ok: false, error: 'room_password_required' });
+      let id = makeRoomId();
+      while (rooms.has(id)) id = makeRoomId();
+      const inviteToken = makeToken(24);
+      const room = {
+        id, name, type, private: privateRoom, password: privateRoom ? roomPassword : '', inviteToken,
+        connectionCode: '0', responseCode: '0', revision: 0, members: new Map(), sockets: new Set(),
+        hostPeerId: ownerPeerId || null, ownerPeerId: ownerPeerId || null, ownerName, ownerUsername, updatedAt: Date.now()
+      };
+      rooms.set(id, room);
+      const shareUrl = (baseUrl || 'https://behrad-m-player.github.io') + '/?room=' + encodeURIComponent(id) + '&key=' + encodeURIComponent(inviteToken);
+      return json(res, 201, { ok: true, room: publicRoom(room), shareUrl });
+    } catch (e) { return json(res, 400, { ok: false, error: e.message || 'bad_request' }); }
+  }
+
   if (req.method === 'POST' && path === '/api/room/join') {
     try {
       const b = await readBody(req);
@@ -142,8 +176,10 @@ const server = http.createServer(async (req, res) => {
       const peerId = String(b.peerId || '').slice(0, 128);
       const name = String(b.name || 'کاربر').slice(0, 40);
       if (!room || !peerId) return json(res, 400, { ok: false, error: 'bad_request' });
-      if (room.private && String(b.password || '') !== room.password) return json(res, 403, { ok: false, error: 'invalid_password' });
-      room.members.set(peerId, { peerId, name, joinedAt: Date.now() });
+      const inviteOk = !!room.inviteToken && String(b.inviteToken || '') === room.inviteToken;
+      if (room.private && !inviteOk && String(b.password || '') !== room.password) return json(res, 403, { ok: false, error: 'invalid_password' });
+      const username = String(b.username || '').replace(/^@/, '').slice(0, 24);
+      room.members.set(peerId, { peerId, name, username, joinedAt: Date.now() });
       ensureCodes(room);
       room.revision++;
       room.updatedAt = Date.now();
@@ -217,12 +253,13 @@ wss.on('connection', ws => {
       const nextRoom = validRoom(String(m.roomId || ''));
       const nextPeer = String(m.peerId || '').slice(0, 128);
       if (!nextRoom || !nextPeer) return ws.send(JSON.stringify({ event: 'error', error: 'bad_hello' }));
-      if (nextRoom.private && String(m.password || '') !== nextRoom.password) return ws.send(JSON.stringify({ event: 'error', error: 'invalid_password' }));
+      const inviteOk = !!nextRoom.inviteToken && String(m.inviteToken || '') === nextRoom.inviteToken;
+      if (nextRoom.private && !inviteOk && String(m.password || '') !== nextRoom.password) return ws.send(JSON.stringify({ event: 'error', error: 'invalid_password' }));
       if (room && room !== nextRoom) removeMember(room, peerId);
       room = nextRoom;
       peerId = nextPeer;
       room.sockets.add(ws);
-      room.members.set(peerId, { peerId, name: String(m.name || 'کاربر').slice(0, 40), joinedAt: Date.now() });
+      room.members.set(peerId, { peerId, name: String(m.name || 'کاربر').slice(0, 40), username: String(m.username || '').replace(/^@/, '').slice(0, 24), joinedAt: Date.now() });
       ensureCodes(room);
       room.revision++;
       room.updatedAt = Date.now();
@@ -232,6 +269,18 @@ wss.on('connection', ws => {
     }
 
     if (!room || !peerId) return ws.send(JSON.stringify({ event: 'error', error: 'not_joined' }));
+
+    if (m.type === 'profile') {
+      const member = room.members.get(peerId);
+      if (member) {
+        member.name = String(m.name || member.name || 'کاربر').slice(0, 40);
+        member.username = String(m.username || member.username || '').replace(/^@/, '').slice(0, 24);
+        room.members.set(peerId, member);
+        room.updatedAt = Date.now();
+        broadcast(room, { event: 'presence', members: publicMembers(room), state: publicRoom(room) });
+      }
+      return;
+    }
 
     if (m.type === 'room-state') {
       if (m.connectionCode && /^\d{10}$/.test(String(m.connectionCode))) room.connectionCode = String(m.connectionCode);
