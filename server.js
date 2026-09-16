@@ -7,8 +7,9 @@ const HOST = '0.0.0.0';
 const COMMUNITY_PASSWORD = process.env.BMP_COMMUNITY_PASSWORD || 'bM.pcom.unitybrsecrityu';
 
 const ROOMS = {
-  community: { id: 'community', name: 'B.M.P COMMUNITY', type: 'text', private: true, password: COMMUNITY_PASSWORD, inviteToken: '' },
-  public: { id: 'public', name: 'چت عمومی', type: 'text', private: false, password: '', inviteToken: '' }
+  community: { id: 'community', name: 'B.M.P COMMUNITY', type: 'text', private: true, password: COMMUNITY_PASSWORD, inviteToken: '', permanent: true },
+  public: { id: 'public', name: 'چت عمومی', type: 'text', private: false, password: '', inviteToken: '', permanent: true },
+  public_voice: { id: 'public_voice', name: 'گفتگوی صوتی عمومی', type: 'voice', private: false, password: '', inviteToken: '', permanent: true }
 };
 
 const rooms = new Map();
@@ -68,7 +69,8 @@ function publicRoom(room) {
     revision: room.revision,
     memberCount: room.members.size,
     hostPeerId: room.hostPeerId,
-    updatedAt: room.updatedAt
+    updatedAt: room.updatedAt,
+    permanent: !!room.permanent
   };
 }
 
@@ -161,11 +163,11 @@ const server = http.createServer(async (req, res) => {
       const room = {
         id, name, type, private: privateRoom, password: privateRoom ? roomPassword : '', inviteToken,
         connectionCode: '0', responseCode: '0', revision: 0, members: new Map(), sockets: new Set(),
-        hostPeerId: ownerPeerId || null, ownerPeerId: ownerPeerId || null, ownerName, ownerUsername, updatedAt: Date.now()
+        hostPeerId: ownerPeerId || null, ownerPeerId: ownerPeerId || null, ownerName, ownerUsername, ownerToken: makeToken(32), permanent: false, updatedAt: Date.now()
       };
       rooms.set(id, room);
       const shareUrl = (baseUrl || 'https://behrad-m-player.github.io') + '/?room=' + encodeURIComponent(id) + '&key=' + encodeURIComponent(inviteToken);
-      return json(res, 201, { ok: true, room: publicRoom(room), shareUrl });
+      return json(res, 201, { ok: true, room: publicRoom(room), shareUrl, ownerToken: room.ownerToken });
     } catch (e) { return json(res, 400, { ok: false, error: e.message || 'bad_request' }); }
   }
 
@@ -185,6 +187,29 @@ const server = http.createServer(async (req, res) => {
       room.updatedAt = Date.now();
       broadcastState(room);
       return json(res, 200, { ok: true, room: publicRoom(room), members: publicMembers(room) });
+    } catch (e) { return json(res, 400, { ok: false, error: e.message || 'bad_request' }); }
+  }
+
+  if (req.method === 'POST' && path === '/api/rooms/delete') {
+    try {
+      const b = await readBody(req);
+      const id = String(b.roomId || '');
+      const room = validRoom(id);
+      if (!room) return json(res, 404, { ok: false, error: 'room_not_found' });
+      if (room.permanent || id === 'community' || id === 'public' || id === 'public_voice') {
+        return json(res, 403, { ok: false, error: 'room_cannot_be_deleted' });
+      }
+      const ownerToken = String(b.ownerToken || '');
+      if (!ownerToken || ownerToken !== room.ownerToken) {
+        return json(res, 403, { ok: false, error: 'not_room_owner' });
+      }
+      const notice = JSON.stringify({ event: 'room-deleted', roomId: room.id, name: room.name });
+      for (const ws of room.sockets) {
+        if (ws.readyState === 1) { try { ws.send(notice); } catch {} }
+      }
+      for (const ws of room.sockets) { try { ws.close(4004, 'room_deleted'); } catch {} }
+      rooms.delete(id);
+      return json(res, 200, { ok: true, roomId: id });
     } catch (e) { return json(res, 400, { ok: false, error: e.message || 'bad_request' }); }
   }
 
