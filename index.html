@@ -6413,7 +6413,7 @@ window.aparat=window.aparat||function(){window.location.href='https://www.aparat
     if(btn){btn.disabled=true;btn.style.opacity='.65'}
     try{
       const r=await fetch('/api/aparat-videos?ts='+Date.now(),{cache:'no-store'}); const d=await r.json();
-      if(!d.ok)throw new Error(d.error||'fetch_failed'); render(d.videos||[]); window.__aparatVideos=d.videos||[];
+      if(!d.ok)throw new Error(d.message||d.error||'fetch_failed'); render(d.videos||[]); window.__aparatVideos=d.videos||[];
     }catch(err){
       if(!window.__aparatVideos){g.innerHTML='<div class="bmp-aparat-loading"><b>دریافت ویدیوهای آپارات انجام نشد. دوباره تلاش کن.</b></div>'}
     }finally{if(btn){btn.disabled=false;btn.style.opacity=''}}
