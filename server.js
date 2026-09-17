@@ -217,29 +217,54 @@ const server = http.createServer(async (req, res) => {
         } catch (e) { lastError = e; }
       }
 
-      // Compatibility fallback for deployments where the RSS endpoint is temporarily unavailable.
+      // API fallback. The current public Aparat profile API exposes the account first;
+      // using that numeric account id is more reliable than guessing a username route.
       if (!videos.length) {
+        let userId = '';
+        try {
+          const infoText = await fetchText(`https://www.aparat.com/api/fa/v1/user/user/information/username/${encodeURIComponent(username)}`);
+          const info = JSON.parse(infoText);
+          const d = info?.data || {};
+          userId = String(d.id || d.user_id || d.uid || d.attributes?.id || d.attributes?.user_id || '').trim();
+        } catch (e) { lastError = e; }
+
         const candidates = [
+          ...(userId ? [
+            `https://www.aparat.com/api/fa/v1/video/video/list/user/${encodeURIComponent(userId)}?per_page=100`,
+            `https://www.aparat.com/api/fa/v1/video/video/list/user/${encodeURIComponent(userId)}?page=1&per_page=100`,
+            `https://www.aparat.com/api/fa/v1/video/video/list/user/${encodeURIComponent(userId)}`
+          ] : []),
+          `https://www.aparat.com/api/fa/v1/video/video/list/username/${encodeURIComponent(username)}?page=1&per_page=100`,
           `https://www.aparat.com/api/fa/v1/video/video/list/username/${encodeURIComponent(username)}?per_page=100`,
-          `https://www.aparat.com/api/fa/v1/video/video/list/user/${encodeURIComponent(username)}?per_page=100`,
-          `https://www.aparat.com/api/fa/v1/video/video/list?username=${encodeURIComponent(username)}&per_page=100`
+          `https://www.aparat.com/api/fa/v1/video/video/list?username=${encodeURIComponent(username)}&page=1&per_page=100`
         ];
+        const extractList = (data) => {
+          const roots = [data, data?.data, data?.data?.attributes, data?.result, data?.videos, data?.items];
+          for (const root of roots) {
+            if (Array.isArray(root)) return root;
+            if (root && typeof root === 'object') {
+              for (const k of ['video','videos','items','data','results']) if (Array.isArray(root[k])) return root[k];
+            }
+          }
+          return [];
+        };
         for (const u of candidates) {
           try {
             const text = await fetchText(u);
             const data = JSON.parse(text);
-            const list = Array.isArray(data) ? data : (data.data || data.videos || data.result || data.items || []);
+            const list = extractList(data);
             if (Array.isArray(list) && list.length) {
               videos = list.map(v => {
-                const id = String(v.hash_id || v.videohash || v.uid || v.id || '').trim();
+                const a = v?.attributes || v || {};
+                const id = String(a.hash_id || a.videohash || a.uid || a.video_hash || a.id || '').trim();
                 return id ? {
                   id,
-                  title: String(v.title || v.name || 'ویدیوی BEHRAD M PLAYER'),
-                  thumbnail: absolute(v.thumbnail || v.big_poster || v.poster || v.image || '') || `https://static.cdn.asset.aparat.com/avt/${id}/320.jpg`,
-                  url: absolute(v.url || v.link || '') || `https://www.aparat.com/v/${id}`
+                  title: String(a.title || a.name || 'ویدیوی BEHRAD M PLAYER'),
+                  thumbnail: absolute(a.thumbnail || a.big_poster || a.poster || a.image || a.cover || '') || `https://static.cdn.asset.aparat.com/avt/${id}/320.jpg`,
+                  url: absolute(a.url || a.link || a.video_url || '') || `https://www.aparat.com/v/${id}`
                 } : null;
               }).filter(Boolean).slice(0, 100);
-              if (videos.length) { source = 'Aparat API'; break; }
+              if (videos.length) { source = userId ? 'Aparat public API' : 'Aparat public API fallback'; break; }
             }
           } catch (e) { lastError = e; }
         }
