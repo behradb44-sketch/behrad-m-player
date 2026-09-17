@@ -129,6 +129,87 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://' + (req.headers.host || 'localhost'));
   const path = url.pathname;
 
+
+  if (req.method === 'GET' && path === '/api/aparat-videos') {
+    const username = 'BEHRAD_M_PLAYER_1393';
+    const clean = v => String(v ?? '').replace(/\\\//g, '/').trim();
+    const abs = v => {
+      const x = clean(v);
+      if (!x) return '';
+      if (/^https?:\/\//i.test(x)) return x;
+      if (x.startsWith('//')) return 'https:' + x;
+      if (x.startsWith('/')) return 'https://www.aparat.com' + x;
+      return x;
+    };
+    const pick = (o, keys) => {
+      if (!o || typeof o !== 'object') return '';
+      for (const k of keys) if (o[k] != null && String(o[k]).trim()) return o[k];
+      return '';
+    };
+    const normalize = raw => {
+      const out=[];
+      const seen=new Set();
+      const walk = (x) => {
+        if (!x) return;
+        if (Array.isArray(x)) { for (const y of x) walk(y); return; }
+        if (typeof x !== 'object') return;
+        const a=x.attributes && typeof x.attributes==='object' ? x.attributes : x;
+        const id=pick(a,['uid','videohash','video_hash','hash','id']);
+        const title=pick(a,['title','name']);
+        const thumb=pick(a,['big_poster','poster','thumbnail','thumb','image','image_url','frame','preview']);
+        const link=pick(a,['link','url','web_url','video_url']);
+        if (id && (title || thumb || link)) {
+          const key=String(id);
+          if(!seen.has(key)){
+            seen.add(key);
+            const uid=key;
+            out.push({id:uid,title:String(title||'ویدیوی BEHRAD M PLAYER'),thumbnail:abs(thumb)||`https://static.cdn.asset.aparat.com/avt/${uid}/320.jpg`,url:abs(link)||`https://www.aparat.com/v/${uid}`});
+          }
+        }
+        for (const k of Object.keys(x)) {
+          if (k !== 'attributes') walk(x[k]);
+        }
+      };
+      walk(raw);
+      return out.slice(0,100);
+    };
+    try {
+      const headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36','Accept':'application/json,text/plain,*/*','Referer':`https://www.aparat.com/${username}`};
+      const candidates=[
+        `https://www.aparat.com/api/fa/v1/user/user/information/username/${encodeURIComponent(username)}`,
+        `https://www.aparat.com/api/fa/v1/video/video/list/username/${encodeURIComponent(username)}?per_page=100`,
+        `https://www.aparat.com/api/fa/v1/video/video/list/user/${encodeURIComponent(username)}?per_page=100`,
+        `https://www.aparat.com/api/fa/v1/video/video/list?username=${encodeURIComponent(username)}&per_page=100`
+      ];
+      let info=null, videos=[];
+      for(const u of candidates){
+        try{
+          const r=await fetch(u,{headers,redirect:'follow'});
+          if(!r.ok) continue;
+          const text=await r.text();
+          let data=null; try{data=JSON.parse(text)}catch{}
+          if(!info && /information\/username/.test(u) && data) info=data;
+          if(data){ const got=normalize(data); if(got.length){videos=got; break;} }
+        }catch{}
+      }
+      if(!videos.length){
+        try{
+          const r=await fetch(`https://www.aparat.com/${username}`,{headers,redirect:'follow'});
+          const html=await r.text();
+          const jsonMatches=[...html.matchAll(/<script[^>]+type=["']application\/json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+          for(const m of jsonMatches){try{const d=JSON.parse(m[1]); const got=normalize(d); if(got.length){videos=got;break;}}catch{}}
+          if(!videos.length){
+            const ids=[...html.matchAll(/(?:\/v\/|videohash["']?\s*[:=]\s*["'])([A-Za-z0-9_-]{4,})/g)].map(m=>m[1]);
+            const titles=[...html.matchAll(/(?:title|name)["']?\\s*[:=]\\s*["']([^"']{2,180})["']/g)].map(m=>m[1]);
+            const seen=new Set();
+            ids.forEach((id,i)=>{if(!seen.has(id)){seen.add(id);videos.push({id,title:titles[i]||'ویدیوی BEHRAD M PLAYER',thumbnail:`https://static.cdn.asset.aparat.com/avt/${id}/320.jpg`,url:`https://www.aparat.com/v/${id}`});}});
+          }
+        }catch{}
+      }
+      return json(res,200,{ok:true,source:'Aparat',username,updatedAt:new Date().toISOString(),videos});
+    }catch(e){ return json(res,502,{ok:false,error:'aparat_fetch_failed',message:e.message||'fetch_failed',videos:[]}); }
+  }
+
   if (req.method === 'GET' && path === '/health') {
     return json(res, 200, { ok: true, service: 'BEHRAD M PLAYER realtime', time: new Date().toISOString() });
   }
